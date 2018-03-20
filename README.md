@@ -28,4 +28,4 @@ Unit tests use [Jest](https://facebook.github.io/jest/).
 
 This project was generated with the [Create React App](https://github.com/facebookincubator/create-react-app) version 1.1.1.
 
-More details in the [user guide](https://github.com/facebook/create-react-app/blob/master/packages/react-scripts/template/README.md)
+More details in the [user guide](https://github.com/facebook/create-react-app/blob/master/packages/react-scripts/template/README.md).
