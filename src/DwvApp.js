@@ -1,7 +1,19 @@
 import React from 'react';
 import './DwvApp.css';
-
 import dwv from 'dwv';
+
+// gui overrides
+
+// decode query
+dwv.utils.decodeQuery = dwv.utils.base.decodeQuery;
+// progress
+dwv.gui.displayProgress = function () {};
+// window
+dwv.gui.getWindowSize = dwv.gui.base.getWindowSize;
+// get element
+dwv.gui.getElement = dwv.gui.base.getElement;
+// refresh element
+dwv.gui.refreshElement = dwv.gui.base.refreshElement;
 
 class DwvApp extends React.Component {
 
@@ -16,6 +28,7 @@ class DwvApp extends React.Component {
     return (
       <div id="dwv">
         <div className="button-row">
+          <button value="Scroll" onClick={this.onClick.bind(this)}>Scroll</button>
           <button value="WindowLevel" onClick={this.onClick.bind(this)}>WindowLevel</button>
           <button value="ZoomAndPan" onClick={this.onClick.bind(this)}>ZoomAndPan</button>
         </div>
@@ -29,34 +42,23 @@ class DwvApp extends React.Component {
   }
 
   componentDidMount() {
-    
-    // overrides (appgui.js)
-
-    // Progress
-    dwv.gui.displayProgress = function () {};
-    // Window
-    dwv.gui.getWindowSize = dwv.gui.base.getWindowSize;
-    // get element
-    dwv.gui.getElement = dwv.gui.base.getElement;
-
-    // launch (applauncher.js)
-    var myapp = new dwv.App();
-    
-    myapp.init({
+    // create app
+    var app = new dwv.App();
+    // initialise app
+    app.init({
       "containerDivId": "dwv",
       "fitToWindow": true,
       "tools": ["Scroll", "ZoomAndPan", "WindowLevel"],
       "isMobile": true
     });
-    
-    // load local dicom
-    myapp.loadURLs(["./assets/bbmri-53323131.dcm"]);
-    
-    this.setState({myapp: myapp});
+    // store
+    this.setState({dwvApp: app});
   }
 
   onClick(event) {
-    this.state.myapp.onChangeTool(event)
+    if ( this.state.dwvApp ) {
+      this.state.dwvApp.onChangeTool(event);
+    }
   }
 
 }

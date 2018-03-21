@@ -1,3 +1,5 @@
+#dwv { font-family: Arial, Helvetica, sans-serif; }
+
 .button-row {
   text-align: center;
   justify-content: space-around;
@@ -12,7 +14,6 @@ button:disabled { background-color: #08b; }
 
 .legend {
   text-align: center;
-  font-family: Arial, Helvetica, sans-serif;
   font-size: 8pt;
 }
 
