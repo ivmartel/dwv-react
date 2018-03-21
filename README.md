@@ -1,5 +1,7 @@
 # dwv-react
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/ivmartel/dwv-react.svg)](https://greenkeeper.io/)
+
 Medical viewer using [DWV](https://github.com/ivmartel/dwv) (DICOM Web Viewer) and [React](https://reactjs.org/).
 
 All coding/implementation contributions and comments are welcome.
