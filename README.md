@@ -12,16 +12,16 @@ dwv-react is not certified for diagnostic use. Released under GNU GPL-3.0 licens
 
 ``` bash
 # install dependencies
-npm install
+yarn install
 
 # serve with hot reload at localhost:3000
-npm start
+yarn start
 
 # build for production with minification
-npm run build
+yarn run build
 
 # run unit tests
-npm test
+yarn test
 ```
 
 Unit tests use [Jest](https://facebook.github.io/jest/).
