@@ -11,6 +11,12 @@ before_install: yarn global add greenkeeper-lockfile@1
 before_script: greenkeeper-lockfile-update
 after_script: greenkeeper-lockfile-upload
 
+# main
+script:
+# base href is set in package.json at homepage
+- yarn run build
+- yarn run test
+
 after_success:
 # update gh-page only for master and not pull requests
 - if [ "$TRAVIS_BRANCH" == "master" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ]; then

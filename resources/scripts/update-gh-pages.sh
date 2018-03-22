@@ -4,10 +4,6 @@
 # we should be in /home/travis/build/ivmartel/dwv-react
 echo -e "Starting to update gh-pages\n"
 
-# build deploy version (result in ./build)
-# base href is set in package.json at homepage
-yarn run build || exit 1
-
 # go to home and setup git
 cd $HOME
 git config --global user.email "travis@travis-ci.org"
