@@ -5,12 +5,12 @@
   "author": "ivmartel",
   "license": "GPL-3.0",
   "private": true,
-  "homepage": "/dwv-react/demo/trunk/", 
+  "homepage": "/dwv-react/demo/trunk/",
   "dependencies": {
+    "dwv": "0.23.2",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
-    "react-scripts": "1.1.1",
-    "dwv": "0.23.2"
+    "react-scripts": "1.1.1"
   },
   "scripts": {
     "start": "react-scripts start",
