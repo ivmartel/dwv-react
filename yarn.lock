@@ -2129,9 +2129,9 @@ duplexer@^0.1.1:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/duplexer/-/duplexer-0.1.1.tgz#ace6ff808c1ce66b57d1ebf97977acb02334cfc1"
 
-dwv@0.23.2:
-  version "0.23.2"
-  resolved "https://registry.yarnpkg.com/dwv/-/dwv-0.23.2.tgz#38cc0c655d4cd11dafa0ea6312a25331d76b0907"
+dwv@0.23.3:
+  version "0.23.3"
+  resolved "https://registry.yarnpkg.com/dwv/-/dwv-0.23.3.tgz#8db532dd28f52d8581bb9d002a27c3f3371a6b3b"
   dependencies:
     i18next "~10.5.0"
     i18next-browser-languagedetector "~2.1.0"
