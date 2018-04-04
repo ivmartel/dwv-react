@@ -2,15 +2,11 @@
 
 .button-row {
   text-align: center;
-  justify-content: space-around;
+  margin: 0.2em;
 }
 button {
-    margin: 5px; padding: 10px 10px;
-    border: 0 none; border-radius: 4px;
-    font-size: 14px; font-weight: 600;
-    color: #fff; background-color: #444; }
-button:hover { background-color: #555; }
-button:disabled { background-color: #08b; }
+  margin: 10px;
+}
 
 .legend {
   text-align: center;

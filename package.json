@@ -8,6 +8,7 @@
   "homepage": "/dwv-react/demo/trunk/",
   "dependencies": {
     "dwv": "0.23.3",
+    "material-ui": "~1.0.0-beta",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-scripts": "1.1.1"

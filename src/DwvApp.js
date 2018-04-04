@@ -1,6 +1,14 @@
 import React from 'react';
+import Button from 'material-ui/Button';
 import './DwvApp.css';
 import dwv from 'dwv';
+
+// button margin
+const styles = {
+  button: {
+    margin: 2,
+  }
+};
 
 // gui overrides
 
@@ -28,9 +36,9 @@ class DwvApp extends React.Component {
     return (
       <div id="dwv">
         <div className="button-row">
-          <button value="Scroll" onClick={this.onClick.bind(this)}>Scroll</button>
-          <button value="WindowLevel" onClick={this.onClick.bind(this)}>WindowLevel</button>
-          <button value="ZoomAndPan" onClick={this.onClick.bind(this)}>ZoomAndPan</button>
+          <Button variant="raised" color="primary" value="Scroll" onClick={this.onClick.bind(this)} style={styles.button}>Scroll</Button>
+          <Button variant="raised" color="primary" value="WindowLevel" onClick={this.onClick.bind(this)} style={styles.button}>WindowLevel</Button>
+          <Button variant="raised" color="primary" value="ZoomAndPan" onClick={this.onClick.bind(this)} style={styles.button}>ZoomAndPan</Button>
         </div>
         <div className="layerContainer">
           <div className="dropBox"></div>
