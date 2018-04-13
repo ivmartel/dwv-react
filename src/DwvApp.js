@@ -46,10 +46,12 @@ class DwvApp extends React.Component {
           <Button variant="raised" color="primary" value="Scroll" onClick={this.onClick.bind(this)} style={styles.button}>Scroll</Button>
           <Button variant="raised" color="primary" value="WindowLevel" onClick={this.onClick.bind(this)} style={styles.button}>WindowLevel</Button>
           <Button variant="raised" color="primary" value="ZoomAndPan" onClick={this.onClick.bind(this)} style={styles.button}>ZoomAndPan</Button>
+          <Button variant="raised" color="primary" value="Draw" onClick={this.onClick.bind(this)} style={styles.button}>Draw</Button>
         </div>
         <div className="layerContainer">
           <div className="dropBox"></div>
           <canvas className="imageLayer">Only for HTML5 compatible browsers...</canvas>
+          <div className="drawDiv"></div>
         </div>
         <div className="legend">{this.state.legend}</div>
       </div>
@@ -63,7 +65,8 @@ class DwvApp extends React.Component {
     app.init({
       "containerDivId": "dwv",
       "fitToWindow": true,
-      "tools": ["Scroll", "ZoomAndPan", "WindowLevel"],
+      "tools": ["Scroll", "ZoomAndPan", "WindowLevel", "Draw"],
+      "shapes": ["Ruler"],
       "isMobile": true
     });
     // store
