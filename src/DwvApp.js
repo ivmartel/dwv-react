@@ -1,5 +1,6 @@
 import React from 'react';
 import Button from 'material-ui/Button';
+import LinearProgress from 'material-ui/Progress/LinearProgress';
 import './DwvApp.css';
 import dwv from 'dwv';
 
@@ -35,13 +36,15 @@ class DwvApp extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      legend: 'Powered by dwv ' + dwv.getVersion() + ' and React ' + React.version
+      legend: 'Powered by dwv ' + dwv.getVersion() + ' and React ' + React.version,
+      loaded: 0
     };
   }
 
   render() {
     return (
       <div id="dwv">
+        <LinearProgress variant="determinate" value={this.state.loaded} />
         <div className="button-row">
           <Button variant="raised" color="primary" value="Scroll" onClick={this.onClick.bind(this)} style={styles.button}>Scroll</Button>
           <Button variant="raised" color="primary" value="WindowLevel" onClick={this.onClick.bind(this)} style={styles.button}>WindowLevel</Button>
@@ -68,6 +71,11 @@ class DwvApp extends React.Component {
       "tools": ["Scroll", "ZoomAndPan", "WindowLevel", "Draw"],
       "shapes": ["Ruler"],
       "isMobile": true
+    });
+    // progress
+    var self = this;
+    app.addEventListener("load-progress", function (event) {
+      self.setState({loaded: event.loaded});
     });
     // store
     this.setState({dwvApp: app});
