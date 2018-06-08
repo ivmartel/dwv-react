@@ -8,13 +8,14 @@ import { InputAdornment } from '@material-ui/core/Input';
 import Dialog from '@material-ui/core/Dialog';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import IconButton from '@material-ui/icons/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
 import TextField from '@material-ui/core/TextField';
+
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
 import Search from '@material-ui/icons/Search';
 
-import Table, { TableBody, TableCell, TableHead, TableRow, TablePagination } from 'material-ui/Table';
+import Table, { TableBody, TableCell, TableHead, TableRow, TablePagination } from '@material-ui/core/Table';
 
 const styles = theme => ({
   appBar: {
