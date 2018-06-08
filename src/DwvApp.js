@@ -1,6 +1,6 @@
 import React from 'react';
-import Button from 'material-ui/Button';
-import LinearProgress from 'material-ui/Progress/LinearProgress';
+import Button from '@material-ui/core/Button';
+import LinearProgress from '@material-ui/core/LinearProgress';
 import TagsDialog from './TagsDialog';
 
 import './DwvApp.css';
