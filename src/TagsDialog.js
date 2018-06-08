@@ -3,15 +3,15 @@ import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import Typography from 'material-ui/Typography';
 
-import Button from 'material-ui/Button';
-import { InputAdornment } from 'material-ui/Input';
-import Dialog from 'material-ui/Dialog';
-import AppBar from 'material-ui/AppBar';
-import Toolbar from 'material-ui/Toolbar';
-import IconButton from 'material-ui/IconButton';
+import Button from '@material-ui/core/Button';
+import { InputAdornment } from '@material-ui/core/Input';
+import Dialog from '@material-ui/core/Dialog';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import IconButton from '@material-ui/icons/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
-import Slide from 'material-ui/transitions/Slide';
-import TextField from 'material-ui/TextField';
+import Slide from '@material-ui/core/Slide';
+import TextField from '@material-ui/core/TextField';
 import Search from '@material-ui/icons/Search';
 
 import Table, { TableBody, TableCell, TableHead, TableRow, TablePagination } from 'material-ui/Table';
