@@ -1,6 +1,8 @@
 import React from 'react';
-import Button from 'material-ui/Button';
-import LinearProgress from 'material-ui/Progress/LinearProgress';
+import Button from '@material-ui/core/Button';
+import LinearProgress from '@material-ui/core/LinearProgress';
+import TagsDialog from './TagsDialog';
+
 import './DwvApp.css';
 import dwv from 'dwv';
 
@@ -37,7 +39,8 @@ class DwvApp extends React.Component {
     super(props);
     this.state = {
       legend: 'Powered by dwv ' + dwv.getVersion() + ' and React ' + React.version,
-      loaded: 0
+      loaded: 0,
+      tags: []
     };
   }
 
@@ -50,6 +53,7 @@ class DwvApp extends React.Component {
           <Button variant="raised" color="primary" value="WindowLevel" onClick={this.onClick.bind(this)} style={styles.button}>WindowLevel</Button>
           <Button variant="raised" color="primary" value="ZoomAndPan" onClick={this.onClick.bind(this)} style={styles.button}>ZoomAndPan</Button>
           <Button variant="raised" color="primary" value="Draw" onClick={this.onClick.bind(this)} style={styles.button}>Draw</Button>
+          <TagsDialog data={this.state.tags} />
         </div>
         <div className="layerContainer">
           <div className="dropBox"></div>
@@ -76,6 +80,9 @@ class DwvApp extends React.Component {
     var self = this;
     app.addEventListener("load-progress", function (event) {
       self.setState({loaded: event.loaded});
+    });
+    app.addEventListener("load-end", function (event) {
+      self.setState({tags: app.getTags()});
     });
     // store
     this.setState({dwvApp: app});

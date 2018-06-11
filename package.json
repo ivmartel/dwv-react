@@ -8,9 +8,10 @@
   "homepage": "/dwv-react/demo/trunk/",
   "dependencies": {
     "dwv": "0.23.5",
-    "material-ui": "~1.0.0-beta",
-    "react": "^16.2.0",
-    "react-dom": "^16.2.0",
+    "@material-ui/core": "^1.2.1",
+    "@material-ui/icons": "^1.1.0",
+    "react": "^16.4.0",
+    "react-dom": "^16.4.0",
     "react-scripts": "1.1.4"
   },
   "scripts": {
