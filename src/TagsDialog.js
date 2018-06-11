@@ -4,7 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 import Button from '@material-ui/core/Button';
-import { InputAdornment } from '@material-ui/core/Input';
+import InputAdornment from '@material-ui/core/InputAdornment';
 import Dialog from '@material-ui/core/Dialog';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -15,7 +15,12 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import Search from '@material-ui/icons/Search';
 
-import Table, { TableBody, TableCell, TableHead, TableRow, TablePagination } from '@material-ui/core/Table';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import TablePagination from '@material-ui/core/TablePagination';
 
 const styles = theme => ({
   appBar: {
@@ -115,7 +120,7 @@ class TagsDialog extends React.Component {
           fullScreen
           open={this.state.open}
           onClose={this.handleClose}
-          transition={Transition}
+          TransitionComponent={Transition}
         >
           <AppBar className={classes.appBar}>
             <Toolbar>
@@ -125,21 +130,21 @@ class TagsDialog extends React.Component {
               <Typography variant="title" color="inherit" className={classes.flex}>
                 DICOM Tags
               </Typography>
-            <TextField
-              id="search"
-              type="search"
-              value={searchfor}
-              className={classes.searchField}
-              onChange={this.filterList}
-              margin="normal"
-              InputProps={{
+              <TextField
+                id="search"
+                type="search"
+                value={searchfor}
+                className={classes.searchField}
+                onChange={this.filterList}
+                margin="normal"
+                InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
                       <Search />
                     </InputAdornment>
                   )
                 }}
-            />
+              />
             </Toolbar>
           </AppBar>
           
