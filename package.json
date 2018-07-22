@@ -9,7 +9,7 @@
   "dependencies": {
     "dwv": "0.23.6",
     "@material-ui/core": "^1.2.1",
-    "@material-ui/icons": "^1.1.0",
+    "@material-ui/icons": "^2.0.0",
     "react": "^16.4.0",
     "react-dom": "^16.4.0",
     "react-scripts": "1.1.4"
