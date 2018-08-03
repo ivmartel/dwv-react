@@ -2,10 +2,6 @@
 
 .button-row {
   text-align: center;
-  margin: 0.2em;
-}
-button {
-  margin: 10px;
 }
 
 .legend {
@@ -26,5 +22,7 @@ button {
 /* drag&drop */
 .dropBox {
     border: 5px dashed #ccc;
-    margin: auto; text-align: center; }
+    margin: auto;
+    text-align: center; vertical-align: middle;
+    background: white; color: grey; }
 .dropBox.hover { border: 5px dashed #cc0; }
