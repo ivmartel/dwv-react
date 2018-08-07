@@ -112,6 +112,11 @@ class DwvApp extends React.Component {
           </Menu>
 
           <Button variant="raised" color="primary"
+            disabled={!dataLoaded}
+            onClick={this.onReset}
+          >Reset</Button>
+
+          <Button variant="raised" color="primary"
             onClick={this.handleTagsDialogOpen}
             disabled={!dataLoaded}
             className={classes.button}
@@ -182,6 +187,12 @@ class DwvApp extends React.Component {
     if ( this.state.dwvApp ) {
       this.setState({selectedTool: tool});
       this.state.dwvApp.onChangeTool({currentTarget: { value: tool } });
+    }
+  }
+
+  onReset = tool => {
+    if ( this.state.dwvApp ) {
+      this.state.dwvApp.onDisplayReset();
     }
   }
 
