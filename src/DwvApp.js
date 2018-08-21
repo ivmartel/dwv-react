@@ -70,7 +70,7 @@ class DwvApp extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      legend: 'Powered by <a href="https://github.com/ivmartel/dwv" title="dwv on github">dwv</a> ' +
+      legend: 'Powered by ' + <a href='https://github.com/ivmartel/dwv' title='dwv on github'>dwv</a> +
         dwv.getVersion() + ' and React ' + React.version,
       tools: ['Scroll', 'ZoomAndPan', 'WindowLevel', 'Draw'],
       selectedTool: 'Select Tool',
