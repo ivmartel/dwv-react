@@ -70,12 +70,15 @@ class DwvApp extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      legend: 'Powered by ' + <a href='https://github.com/ivmartel/dwv' title='dwv on github'>dwv</a> +
-        dwv.getVersion() + ' and React ' + React.version,
+      versions: {
+        dwv: dwv.getVersion(),
+        react: React.version
+      },
       tools: ['Scroll', 'ZoomAndPan', 'WindowLevel', 'Draw'],
       selectedTool: 'Select Tool',
       loadProgress: 0,
       dataLoaded: false,
+      dwvApp: null,
       tags: [],
       showDicomTags: false,
       toolMenuAnchorEl: null
@@ -84,7 +87,7 @@ class DwvApp extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const { legend, tools, loadProgress, dataLoaded, tags, toolMenuAnchorEl } = this.state;
+    const { versions, tools, loadProgress, dataLoaded, tags, toolMenuAnchorEl } = this.state;
 
     const toolsMenuItems = tools.map( (tool) =>
       <MenuItem onClick={this.handleMenuItemClick.bind(this, tool)} key={tool} value={tool}>{tool}</MenuItem>
@@ -147,7 +150,11 @@ class DwvApp extends React.Component {
           <canvas className="imageLayer">Only for HTML5 compatible browsers...</canvas>
           <div className="drawDiv"></div>
         </div>
-        <div className="legend">{legend}</div>
+        <div className="legend"><p>Powered by <a
+          href="https://github.com/ivmartel/dwv"
+          title="dwv on github">dwv
+        </a> {versions.dwv} and React {versions.react}
+        </p></div>
       </div>
     );
   }
