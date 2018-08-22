@@ -19,7 +19,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 
 import TagsTable from './TagsTable';
 
-import './DwvApp.css';
+import './DwvComponent.css';
 import dwv from 'dwv';
 
 // gui overrides
@@ -65,7 +65,7 @@ function TransitionUp(props) {
   return <Slide direction="up" {...props} />;
 }
 
-class DwvApp extends React.Component {
+class DwvComponent extends React.Component {
 
   constructor(props) {
     super(props);
@@ -227,8 +227,8 @@ class DwvApp extends React.Component {
 
 }
 
-DwvApp.propTypes = {
+DwvComponent.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(DwvApp);
+export default withStyles(styles)(DwvComponent);

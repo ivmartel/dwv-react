@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import './App.css';
-import DwvApp from './DwvApp';
+import DwvComponent from './DwvComponent';
 
 class App extends Component {
   render() {
     return (
       <div className="App">
-        <DwvApp />
+        <DwvComponent />
       </div>
     );
   }
