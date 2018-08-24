@@ -7,7 +7,7 @@
   "private": true,
   "homepage": "/dwv-react/demo/trunk/",
   "dependencies": {
-    "dwv": "0.23.6",
+    "dwv": "0.24.0",
     "@material-ui/core": "^1.2.1",
     "@material-ui/icons": "^2.0.0",
     "react": "^16.4.0",
