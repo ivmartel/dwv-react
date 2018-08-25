@@ -2244,15 +2244,15 @@ duplexer@^0.1.1:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/duplexer/-/duplexer-0.1.1.tgz#ace6ff808c1ce66b57d1ebf97977acb02334cfc1"
 
-dwv@0.23.6:
-  version "0.23.6"
-  resolved "https://registry.yarnpkg.com/dwv/-/dwv-0.23.6.tgz#8899015c16bef4a5ca22b9883979e95e0083b8de"
+dwv@0.24.0:
+  version "0.24.0"
+  resolved "https://registry.yarnpkg.com/dwv/-/dwv-0.24.0.tgz#4bd54b22a559f3e184b0a9683ddebe822dc2977d"
   dependencies:
-    i18next "~10.5.0"
-    i18next-browser-languagedetector "~2.1.0"
+    i18next "~11.6.0"
+    i18next-browser-languagedetector "~2.2.0"
     i18next-xhr-backend "~1.5.1"
     jszip "~3.1.3"
-    konva "~1.7.3"
+    konva "~2.2.1"
     magic-wand-js "~1.0.0"
 
 ecc-jsbn@~0.1.1:
@@ -3462,17 +3462,17 @@ hyphenate-style-name@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/hyphenate-style-name/-/hyphenate-style-name-1.0.2.tgz#31160a36930adaf1fc04c6074f7eb41465d4ec4b"
 
-i18next-browser-languagedetector@~2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/i18next-browser-languagedetector/-/i18next-browser-languagedetector-2.1.0.tgz#1b0e17b09507f84e7a1fa761539a07544f92a0df"
+i18next-browser-languagedetector@~2.2.0:
+  version "2.2.3"
+  resolved "https://registry.yarnpkg.com/i18next-browser-languagedetector/-/i18next-browser-languagedetector-2.2.3.tgz#4196a9964b6d51b76254706a267ba746c9ca19de"
 
 i18next-xhr-backend@~1.5.1:
   version "1.5.1"
   resolved "https://registry.yarnpkg.com/i18next-xhr-backend/-/i18next-xhr-backend-1.5.1.tgz#50282610780c6a696d880dfa7f4ac1d01e8c3ad5"
 
-i18next@~10.5.0:
-  version "10.5.1"
-  resolved "https://registry.yarnpkg.com/i18next/-/i18next-10.5.1.tgz#f8e1ca4e15c440ebc3a9a5c3d015c3a6d2887890"
+i18next@~11.6.0:
+  version "11.6.0"
+  resolved "https://registry.yarnpkg.com/i18next/-/i18next-11.6.0.tgz#e0047aa3e3a0080f6f318426f90597cbb0d6ddd5"
 
 iconv-lite@0.4.19, iconv-lite@^0.4.17, iconv-lite@~0.4.13:
   version "0.4.19"
@@ -4440,9 +4440,9 @@ klaw@^1.0.0:
   optionalDependencies:
     graceful-fs "^4.1.9"
 
-konva@~1.7.3:
-  version "1.7.6"
-  resolved "https://registry.yarnpkg.com/konva/-/konva-1.7.6.tgz#7aceef1058b04127077c8f44653556b35b1133e6"
+konva@~2.2.1:
+  version "2.2.2"
+  resolved "https://registry.yarnpkg.com/konva/-/konva-2.2.2.tgz#e83c8a2ec979f31b10793f3b001554715f26b7bc"
 
 latest-version@^3.0.0:
   version "3.1.0"
