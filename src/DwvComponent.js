@@ -28,8 +28,6 @@ import dwv from 'dwv';
 dwv.utils.decodeQuery = dwv.utils.base.decodeQuery;
 // progress
 dwv.gui.displayProgress = function () {};
-// window
-dwv.gui.getWindowSize = dwv.gui.base.getWindowSize;
 // get element
 dwv.gui.getElement = dwv.gui.base.getElement;
 // refresh element
@@ -165,7 +163,6 @@ class DwvComponent extends React.Component {
     // initialise app
     app.init({
       "containerDivId": "dwv",
-      "fitToWindow": true,
       "tools": this.state.tools,
       "shapes": ["Ruler"],
       "isMobile": true
