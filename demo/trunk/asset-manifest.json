@@ -1,6 +1,13 @@
 {
-  "main.css": "static/css/main.103b5908.css",
-  "main.css.map": "static/css/main.103b5908.css.map",
-  "main.js": "static/js/main.c714ce9a.js",
-  "main.js.map": "static/js/main.c714ce9a.js.map"
+  "main.css": "/dwv-react/demo/trunk/static/css/main.759aa372.chunk.css",
+  "main.js": "/dwv-react/demo/trunk/static/js/main.61d1fa09.chunk.js",
+  "main.js.map": "/dwv-react/demo/trunk/static/js/main.61d1fa09.chunk.js.map",
+  "static/js/1.8622eeb8.chunk.js": "/dwv-react/demo/trunk/static/js/1.8622eeb8.chunk.js",
+  "static/js/1.8622eeb8.chunk.js.map": "/dwv-react/demo/trunk/static/js/1.8622eeb8.chunk.js.map",
+  "runtime~main.js": "/dwv-react/demo/trunk/static/js/runtime~main.bc567991.js",
+  "runtime~main.js.map": "/dwv-react/demo/trunk/static/js/runtime~main.bc567991.js.map",
+  "static/css/main.759aa372.chunk.css.map": "/dwv-react/demo/trunk/static/css/main.759aa372.chunk.css.map",
+  "index.html": "/dwv-react/demo/trunk/index.html",
+  "precache-manifest.fb6b795dead1cc713219f9c761a7fdc3.js": "/dwv-react/demo/trunk/precache-manifest.fb6b795dead1cc713219f9c761a7fdc3.js",
+  "service-worker.js": "/dwv-react/demo/trunk/service-worker.js"
 }
