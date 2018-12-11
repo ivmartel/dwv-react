@@ -95,7 +95,7 @@ class DwvComponent extends React.Component {
       <div id="dwv">
         <LinearProgress variant="determinate" value={loadProgress} />
         <div className="button-row">
-          <Button variant="raised" color="primary"
+          <Button variant="contained" color="primary"
             aria-owns={toolMenuAnchorEl ? 'simple-menu' : null}
             aria-haspopup="true"
             onClick={this.handleMenuButtonClick}
@@ -113,12 +113,12 @@ class DwvComponent extends React.Component {
             {toolsMenuItems}
           </Menu>
 
-          <Button variant="raised" color="primary"
+          <Button variant="contained" color="primary"
             disabled={!dataLoaded}
             onClick={this.onReset}
           >Reset</Button>
 
-          <Button variant="raised" color="primary"
+          <Button variant="contained" color="primary"
             onClick={this.handleTagsDialogOpen}
             disabled={!dataLoaded}
             className={classes.button}
