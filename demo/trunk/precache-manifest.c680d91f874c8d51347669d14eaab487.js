@@ -4,19 +4,19 @@ self.__precacheManifest = [
     "url": "/dwv-react/demo/trunk/static/js/runtime~main.bc567991.js"
   },
   {
-    "revision": "859e72ddb464052cfa18",
-    "url": "/dwv-react/demo/trunk/static/js/main.859e72dd.chunk.js"
+    "revision": "cc58cb933da9cbccf1ad",
+    "url": "/dwv-react/demo/trunk/static/js/main.cc58cb93.chunk.js"
   },
   {
     "revision": "366ab01d16882eb873b4",
     "url": "/dwv-react/demo/trunk/static/js/1.366ab01d.chunk.js"
   },
   {
-    "revision": "859e72ddb464052cfa18",
+    "revision": "cc58cb933da9cbccf1ad",
     "url": "/dwv-react/demo/trunk/static/css/main.e6d11638.chunk.css"
   },
   {
-    "revision": "4e42eaf8ff2d6bd224bf1f5b6e0161b2",
+    "revision": "a32966d061a764b2da39586558886df1",
     "url": "/dwv-react/demo/trunk/index.html"
   }
 ];
