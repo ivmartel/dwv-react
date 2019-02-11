@@ -13,9 +13,9 @@ after_script: greenkeeper-lockfile-upload
 
 # main
 script:
+- yarn run test
 # base href is set in package.json at homepage
 - yarn run build
-- yarn run test
 
 after_success:
 # update gh-page only for master and not pull requests
