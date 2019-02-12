@@ -13,6 +13,7 @@ after_script: greenkeeper-lockfile-upload
 
 # main
 script:
+# react runs unique tests if the CI environment variable is set
 - yarn run test
 # base href is set in package.json at homepage
 - yarn run build

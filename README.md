@@ -17,11 +17,11 @@ yarn install
 # serve with hot reload at localhost:3000
 yarn run start
 
-# build for production with minification
-yarn run build
-
 # run unit tests
 yarn run test
+
+# build for production
+yarn run build
 ```
 
 Unit tests use [Jest](https://facebook.github.io/jest/).
