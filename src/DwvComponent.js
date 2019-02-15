@@ -1,28 +1,15 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-
-import Button from '@material-ui/core/Button';
-import LinearProgress from '@material-ui/core/LinearProgress';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
-
-import Dialog from '@material-ui/core/Dialog';
-import AppBar from '@material-ui/core/AppBar';
-import Slide from '@material-ui/core/Slide';
-import Toolbar from '@material-ui/core/Toolbar';
-
-import TagsTable from './TagsTable';
-
 import './DwvComponent.css';
 import dwv from 'dwv';
+import Dialog from '@material-ui/core/Dialog';
+import AppBar from '@material-ui/core/AppBar';
+import TagsTable from './TagsTable';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+import Typography from '@material-ui/core/Typography';
+import Toolbar from '@material-ui/core/Toolbar';
 
-// gui overrides
+
 
 // decode query
 dwv.utils.decodeQuery = dwv.utils.base.decodeQuery;
@@ -33,6 +20,8 @@ dwv.gui.getElement = dwv.gui.base.getElement;
 // refresh element
 dwv.gui.refreshElement = dwv.gui.base.refreshElement;
 
+// dwv.gui.FileLoad = dwv.gui.base.FileLoad;
+
 // Image decoders (for web workers)
 dwv.image.decoderScripts = {
     "jpeg2000": "assets/dwv/decoders/pdfjs/decode-jpeg2000.js",
@@ -41,191 +30,115 @@ dwv.image.decoderScripts = {
 };
 
 const styles = theme => ({
-  button: {
-    margin: theme.spacing.unit,
-  },
-  appBar: {
-    position: 'relative',
-  },
-  title: {
-    flex: '0 0 auto',
-  },
-  tagsDialog: {
-    minHeight: '90vh', maxHeight: '90vh',
-    minWidth: '90vw', maxWidth: '90vw',
-  },
-  iconSmall: {
-    fontSize: 20,
-  },
-});
+    appBar: {
+      position: 'relative',
+    },
+    title: {
+      flex: '0 0 auto',
+    },
+    tagsDialog: {
+      minHeight: '90vh', maxHeight: '90vh',
+      minWidth: '90vw', maxWidth: '90vw',
+    },
+    
+  });
 
-function TransitionUp(props) {
-  return <Slide direction="up" {...props} />;
-}
+class DwvComponentModified extends React.Component{
+    constructor(props){
+        super(props);
+        this.state={
+            tools: ['Scroll', 'ZoomAndPan', 'WindowLevel', 'Draw'],
+            loadProgress: 0,
+            dataLoaded: false,
+            dwvApp: null,
+            tags: [],
+            showDicomTags: false,
+        };
+    }
+    render() {
+        return (
+            <div id="dwv">
+                <button disabled={!this.state.dataLoaded} onClick={this.onReset}>Reset</button>
+                <button onClick={this.loadFromURL}>LoadImage</button>
+                <button disabled={!this.state.dataLoaded} onClick={this.handleTagsDialogOpen}>Tags</button>
+                <Dialog open={this.state.showDicomTags}
+                    onClose={this.handleTagsDialogClose}
+                >
+                    <AppBar >
+                        <Toolbar>
+                        <IconButton color="inherit" onClick={this.handleTagsDialogClose} aria-label="Close">
+                            <CloseIcon />
+                        </IconButton>
+                        <Typography variant="title" color="inherit">
+                            DICOM Tags
+                        </Typography>
+                        </Toolbar>
+                    </AppBar>
+                    <TagsTable data={this.state.tags} ></TagsTable>
+                    </Dialog>
+                <div className="layerContainer">
+                    <div className="dropBox">Drag and drop data here.</div>
+                    <canvas className="imageLayer">Only for HTML5 compatible browsers...</canvas>
+                    <div className="drawDiv"></div>
+                </div>
+            </div>
+        );
+    }
+    
+    componentDidMount(){
+        var dcmApp = new dwv.App()
+        dcmApp.init({
+            "containerDivId":"dwv",
+            "tools": this.state.tools,
+            "shapes": ["Ruler","FreeHand", "Protractor", "Rectangle", "Roi", "Ellipse", "Arrow"],
+            "isMobile": true
+        })
+        var self = this;
+        // dcmApp.addEventListener("load-progress", function (event) {
+        //     self.setState({loadProgress: event.loaded});
+        //   });
+          dcmApp.addEventListener("load-end", function (event) {
+            // set data loaded flag
+            self.setState({dataLoaded: true});
+            // set dicom tags
+            self.setState({tags: dcmApp.getTags()});
+            // set the selected tool
+            if (dcmApp.isMonoSliceData() && dcmApp.getImage().getNumberOfFrames() === 1) {
+              self.setState({selectedTool: 'ZoomAndPan'});
+            } else {
+              self.setState({selectedTool: 'Scroll'});
+            }
+          });
+          // store
+          this.setState({dwvApp: dcmApp});
+    }
 
-class DwvComponent extends React.Component {
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      versions: {
-        dwv: dwv.getVersion(),
-        react: React.version
-      },
-      tools: ['Scroll', 'ZoomAndPan', 'WindowLevel', 'Draw'],
-      selectedTool: 'Select Tool',
-      loadProgress: 0,
-      dataLoaded: false,
-      dwvApp: null,
-      tags: [],
-      showDicomTags: false,
-      toolMenuAnchorEl: null
-    };
-  }
-
-  render() {
-    const { classes } = this.props;
-    const { versions, tools, loadProgress, dataLoaded, tags, toolMenuAnchorEl } = this.state;
-
-    const toolsMenuItems = tools.map( (tool) =>
-      <MenuItem onClick={this.handleMenuItemClick.bind(this, tool)} key={tool} value={tool}>{tool}</MenuItem>
-    );
-
-    return (
-      <div id="dwv">
-        <LinearProgress variant="determinate" value={loadProgress} />
-        <div className="button-row">
-          <Button variant="contained" color="primary"
-            aria-owns={toolMenuAnchorEl ? 'simple-menu' : null}
-            aria-haspopup="true"
-            onClick={this.handleMenuButtonClick}
-            disabled={!dataLoaded}
-            className={classes.button}
-            size="medium"
-          >{ this.state.selectedTool }
-          <ArrowDropDownIcon className={classes.iconSmall}/></Button>
-          <Menu
-            id="simple-menu"
-            anchorEl={toolMenuAnchorEl}
-            open={Boolean(toolMenuAnchorEl)}
-            onClose={this.handleMenuClose}
-          >
-            {toolsMenuItems}
-          </Menu>
-
-          <Button variant="contained" color="primary"
-            disabled={!dataLoaded}
-            onClick={this.onReset}
-          >Reset</Button>
-
-          <Button variant="contained" color="primary"
-            onClick={this.handleTagsDialogOpen}
-            disabled={!dataLoaded}
-            className={classes.button}
-            size="medium">Tags</Button>
-          <Dialog
-            open={this.state.showDicomTags}
-            onClose={this.handleTagsDialogClose}
-            TransitionComponent={TransitionUp}
-            classes={{ paper: classes.tagsDialog }}
-            >
-              <AppBar className={classes.appBar}>
-                <Toolbar>
-                  <IconButton color="inherit" onClick={this.handleTagsDialogClose} aria-label="Close">
-                    <CloseIcon />
-                  </IconButton>
-                  <Typography variant="title" color="inherit" className={classes.flex}>
-                    DICOM Tags
-                  </Typography>
-                </Toolbar>
-              </AppBar>
-              <TagsTable data={tags} />
-          </Dialog>
-        </div>
-
-        <div className="layerContainer">
-          <div className="dropBox">Drag and drop data here.</div>
-          <canvas className="imageLayer">Only for HTML5 compatible browsers...</canvas>
-          <div className="drawDiv"></div>
-        </div>
-        <div className="legend"><p>Powered by <a
-          href="https://github.com/ivmartel/dwv"
-          title="dwv on github">dwv
-        </a> {versions.dwv} and React {versions.react}
-        </p></div>
-      </div>
-    );
-  }
-
-  componentDidMount() {
-    // create app
-    var app = new dwv.App();
-    // initialise app
-    app.init({
-      "containerDivId": "dwv",
-      "tools": this.state.tools,
-      "shapes": ["Ruler"],
-      "isMobile": true
-    });
-    // progress
-    var self = this;
-    app.addEventListener("load-progress", function (event) {
-      self.setState({loadProgress: event.loaded});
-    });
-    app.addEventListener("load-end", function (event) {
-      // set data loaded flag
-      self.setState({dataLoaded: true});
-      // set dicom tags
-      self.setState({tags: app.getTags()});
-      // set the selected tool
-      if (app.isMonoSliceData() && app.getImage().getNumberOfFrames() === 1) {
-        self.setState({selectedTool: 'ZoomAndPan'});
-      } else {
-        self.setState({selectedTool: 'Scroll'});
+    onChangeTool = tool => {
+        if ( this.state.dwvApp ) {
+          this.setState({selectedTool: tool});
+          this.state.dwvApp.onChangeTool({currentTarget: { value: tool } });
+        }
       }
-    });
-    // store
-    this.setState({dwvApp: app});
-  }
+      
+      onReset = tool => {
+        if ( this.state.dwvApp ) {
+            this.state.dwvApp.onDisplayReset();
+            }
+      }
+    
+      handleTagsDialogOpen = () => {
+        this.setState({ showDicomTags: true });
+      }
+    
+      handleTagsDialogClose = () => {
+        this.setState({ showDicomTags: false });
+      }
 
-  onChangeTool = tool => {
-    if ( this.state.dwvApp ) {
-      this.setState({selectedTool: tool});
-      this.state.dwvApp.onChangeTool({currentTarget: { value: tool } });
-    }
-  }
-
-  onReset = tool => {
-    if ( this.state.dwvApp ) {
-      this.state.dwvApp.onDisplayReset();
-    }
-  }
-
-  handleTagsDialogOpen = () => {
-    this.setState({ showDicomTags: true });
-  };
-
-  handleTagsDialogClose = () => {
-    this.setState({ showDicomTags: false });
-  };
-
-  handleMenuButtonClick = event => {
-    this.setState({ toolMenuAnchorEl: event.currentTarget });
-  };
-
-  handleMenuClose = event => {
-    this.setState({ toolMenuAnchorEl: null });
-  };
-
-  handleMenuItemClick = tool => {
-    this.setState({ toolMenuAnchorEl: null });
-    this.onChangeTool(tool);
-  };
-
-}
-
-DwvComponent.propTypes = {
-  classes: PropTypes.object.isRequired,
+      loadFromURL = (e, urlsArray = null) => {
+        this.state.dwvApp.loadURLs(urlsArray ? urlsArray : ['https://raw.githubusercontent.com/ivmartel/dwv/master/tests/data/bbmri-53323851.dcm']);
+      }
 };
 
-export default withStyles(styles)(DwvComponent);
+
+
+export default DwvComponentModified;
