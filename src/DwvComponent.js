@@ -18,6 +18,8 @@ dwv.gui.getElement = dwv.gui.base.getElement;
 // refresh element
 dwv.gui.refreshElement = dwv.gui.base.refreshElement;
 
+dwv.gui.Undo = dwv.gui.base.Undo;
+
 // dwv.gui.FileLoad = dwv.gui.base.FileLoad;
 
 // Image decoders (for web workers)
@@ -56,6 +58,8 @@ class DwvComponent extends React.Component{
             showDicomTags: false,
         };
         this.handleChange = this.handleChange.bind(this);
+        this.handleUndo = this.handleUndo.bind(this);
+        this.handleRedo = this.handleRedo.bind(this);
         this.onStateSave= this.onStateSave.bind(this);
         this.onChangeTool = this.onChangeTool.bind(this);
         this.onChangeShape = this.onChangeShape.bind(this);
@@ -85,7 +89,7 @@ class DwvComponent extends React.Component{
         return (
             <div id="dwv" className="uk-grid uk-grid-divider" style={imageLayerStyle}>
               <div className="uk-width-2-5">
-                <div className="uk-align-center" onChange={this.onChangeTool} hidden={!this.state.dataLoaded}>
+                <div onChange={this.onChangeTool} hidden={!this.state.dataLoaded}>
                   <input className="uk-radio" type="radio" value="ZoomAndPan" name="tool" checked={this.state.selectedTool == 'ZoomAndPan'}/>Zoom and Pan
                   <input className="uk-radio" type="radio" value="Scroll" name="tool" checked={this.state.selectedTool == 'Scroll'}/>Scroll
                   <input className="uk-radio" type="radio" value="WindowLevel" name="tool" checked={this.state.selectedTool == 'WindowLevel'}/>WindowLevel
@@ -110,7 +114,9 @@ class DwvComponent extends React.Component{
                     <button className="uk-button uk-button-secondary" disabled={!this.state.dataLoaded} onClick={this.onReset}>Reset</button>
                     <button className="uk-button uk-button-secondary" disabled={!this.state.dataLoaded} onClick={this.handleTagsDialogOpen}>Tags</button>
                   </div>
-                  <a  className="uk-button uk-button-primary" className="download-state" onClick={(this.state.dataLoaded)?this.onStateSave:"javascript:void(0)"}>Save</a>
+                  {(this.state.dataLoaded) ? <a  className="uk-button uk-button-primary" className="download-state" onClick={this.onStateSave}>Save</a> : ''}
+                  {(this.state.selectedTool=="Draw")?
+                  <div><button onClick={this.handleUndo}>Undo</button><button onClick={this.handleRedo}>Redo</button></div>: ''}
                   <Dialog open={this.state.showDicomTags}
                       onClose={this.handleTagsDialogClose}
                   >
@@ -134,6 +140,7 @@ class DwvComponent extends React.Component{
                     <div className="drawDiv" ></div>
                 </div>
               </div>
+              <div className="history" hidden></div>
             </div>
         );
     }
@@ -143,6 +150,7 @@ class DwvComponent extends React.Component{
         dcmApp.init({
             "containerDivId":"dwv",
             "tools": this.state.tools,
+            "gui":["undo"],
             "shapes": ["Ruler","FreeHand", "Protractor", "Rectangle", "Roi", "Ellipse", "Arrow"],
             "isMobile": true
         })
@@ -179,6 +187,19 @@ class DwvComponent extends React.Component{
         }
       }
 
+      handleUndo = ()=>{
+        console.log("called");
+        if(this.state.dwvApp){
+          this.state.dwvApp.onUndo();
+        }
+      }
+      
+      handleRedo = ()=>{
+        if(this.state.dwvApp){
+          this.state.dwvApp.onRedo();
+        }
+      }
+
       handleKeyDown = event => {
         if(event.shiftKey && event.which == 90){
           if ( this.state.dwvApp ) {
@@ -210,7 +231,6 @@ class DwvComponent extends React.Component{
       onReset = tool => {
         if ( this.state.dwvApp ) {
             this.state.dwvApp.onDisplayReset();
-            this.state.dwvApp.deleteDraws();
             }
       }
     
