@@ -122,8 +122,8 @@ class DwvComponent extends React.Component{
     return (
       <div id="dwv" className="uk-grid" style={imageLayerStyle}>
         <div className="uk-width-2-5">
-          <div className="sectionDiv">
-            <label className="uk-label uk-label-primary">Enter Url:</label>
+          <div className="sectionDiv urlSection">
+            <label className="uk-label">Enter Url</label>
             <input className="uk-input" value={this.state.url} onChange={this.handleChange}/>
             <br/> 
 
@@ -131,23 +131,23 @@ class DwvComponent extends React.Component{
               <button className="uk-button uk-button-secondary" onClick={this.loadFromURL}>LoadImage</button>
               <button className="uk-button uk-button-secondary" disabled={!this.state.dataLoaded} onClick={this.handleTagsDialogOpen}>Tags</button>
             </div>
-            {(this.state.dataLoaded) && <a  className="uk-button uk-button-primary" className="download-state" onClick={this.onStateSave}>Save</a>}
+            {(this.state.dataLoaded) && <a  className="uk-button uk-button-primary download-state" onClick={this.onStateSave}>Save</a>}
           </div>           
           
 
-          <div className="sectionDiv">
+          <div className="sectionDiv toolSection">
             <div onChange={this.onChangeTool} hidden={!this.state.dataLoaded}>
-              <label className="uk-label uk-label-primary">Select a tool:</label>
+              <label className="uk-label">Select a tool</label>
               <br/>
-              <input className="uk-radio" type="radio" value="ZoomAndPan" name="tool" checked={this.state.selectedTool === 'ZoomAndPan'}/>Zoom and Pan
-              <input className="uk-radio" type="radio" value="Scroll" name="tool" checked={this.state.selectedTool === 'Scroll'}/>Scroll
+                <input className="uk-radio" type="radio" value="ZoomAndPan" name="tool" checked={this.state.selectedTool === 'ZoomAndPan'}/>Zoom and Pan 
+                <input className="uk-radio" type="radio" value="Scroll" name="tool" checked={this.state.selectedTool === 'Scroll'}/>Scroll 
               <br/>
-              <input className="uk-radio" type="radio" value="WindowLevel" name="tool" checked={this.state.selectedTool === 'WindowLevel'}/>WindowLevel
-              <input className="uk-radio" type="radio" value="Draw" name="tool" checked={this.state.selectedTool === 'Draw'}/>Draw
+                <input className="uk-radio" type="radio" value="WindowLevel" name="tool" checked={this.state.selectedTool === 'WindowLevel'}/>WindowLevel 
+                <input className="uk-radio" type="radio" value="Draw" name="tool" checked={this.state.selectedTool === 'Draw'}/>Draw 
             </div>
 
             <div onChange={this.onChangeShape} hidden={this.state.selectedTool !== "Draw"}>
-              <label className="uk-label uk-label-primary">Select a shape:</label>
+              <label className="uk-label">Select a shape</label>
               <br/>
               <input className="uk-radio" type="radio" value="Ruler" name="shape" checked={this.state.selectedShape === 'Ruler'}/>Ruler
               <input className="uk-radio" type="radio" value="FreeHand" name="shape" />FreeHand 
@@ -160,16 +160,16 @@ class DwvComponent extends React.Component{
             </div>
           </div>
           
-          <div className="sectionDiv" hidden={!this.state.dataLoaded}>
-            <label className="uk-label uk-label-primary">Actions</label> 
+          <div className="sectionDiv actSection" hidden={!this.state.dataLoaded}>
+            <label className="uk-label">Actions</label> 
             <br/>
             <button className="uk-button uk-button-secondary" onClick={this.onReset}>Reset Zoom</button>
             <button className="uk-button uk-button-secondary" onClick={this.handleUndo}>Undo</button>
             <button className="uk-button uk-button-secondary" onClick={this.handleRedo}>Redo</button>
           </div>
             
-          <div className="sectionDiv" hidden={!this.state.dataLoaded}>
-            <label className="uk-label uk-label-primary">Additional Tags:</label>
+          <div className="sectionDiv tagSection" hidden={!this.state.dataLoaded}>
+            <label className="uk-label">Additional Tags</label>
             <ReactTags tags={caseTags}
                 suggestions={suggestions}
                 handleDelete={this.handleDelete}
