@@ -8,39 +8,16 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
 import Toolbar from '@material-ui/core/Toolbar';
+import { WithContext as ReactTags } from 'react-tag-input';
+import axios from 'axios';
+ 
+const KeyCodes = {
+  comma: 188,
+  enter: 13,
+};
+ 
+const delimiters = [KeyCodes.comma, KeyCodes.enter];
 
-const IMAGE_PROPERTIES = [
-  {
-    type : "x",
-    property:[
-      {
-        flag: "a",
-        value: true,
-        propertyType: "checkbox"
-      },
-      {
-        flag: "b",
-        value: false,
-        propertyType: "checkbox"
-      } 
-    ]
-  },
-  {
-    type : "y",
-    property:[
-      {
-        flag: "a",
-        value: true,
-        propertyType: "radio"
-      },
-      {
-        flag: "b",
-        value: false,
-        propertyType: "radio"
-      } 
-    ]
-  }
-]
 
 // decode query
 dwv.utils.decodeQuery = dwv.utils.base.decodeQuery;
@@ -52,6 +29,12 @@ dwv.gui.getElement = dwv.gui.base.getElement;
 dwv.gui.refreshElement = dwv.gui.base.refreshElement;
 
 dwv.gui.Undo = dwv.gui.base.Undo;
+
+dwv.gui.Loadbox = dwv.gui.base.Loadbox;
+// File loader
+dwv.gui.FileLoad = dwv.gui.base.FileLoad;
+// Folder loader
+dwv.gui.FolderLoad = dwv.gui.base.FolderLoad;
 
 // Image decoders (for web workers)
 dwv.image.decoderScripts = {
@@ -69,8 +52,9 @@ class DwvComponent extends React.Component{
       dataLoaded: false,
       dwvApp: null,
       tags: [],
-      caseTags: {},
-      url: '',
+      caseTags: [],
+      suggestions: [],
+      url: '', 
       currentPosition: '',
       selectedTool: 'ZoomAndPan',
       selectedShape: 'Ruler',
@@ -84,7 +68,32 @@ class DwvComponent extends React.Component{
     this.onStateSave= this.onStateSave.bind(this);
     this.onChangeTool = this.onChangeTool.bind(this);
     this.onChangeShape = this.onChangeShape.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
+    this.handleAddition = this.handleAddition.bind(this);
+    this.handleDrag = this.handleDrag.bind(this);
   }
+  handleDelete(i) {
+    const { caseTags } = this.state;
+    this.setState({
+     caseTags: caseTags.filter((caseTag, index) => index !== i),
+    });
+  }
+
+  handleAddition(caseTag) {
+      this.setState(state => ({ caseTags: [...state.caseTags, caseTag] }));
+  }
+
+  handleDrag(caseTag, currPos, newPos) {
+      const caseTags = [...this.state.caseTags];
+      const newTags = caseTags.slice();
+
+      newTags.splice(currPos, 1);
+      newTags.splice(newPos, 0, caseTag);
+
+      // re-render
+      this.setState({ caseTags: newTags });
+  }
+
   handleChange(event){
     this.setState({
       tools: this.state.tools,
@@ -92,6 +101,7 @@ class DwvComponent extends React.Component{
       dataLoaded: this.state.dataLoaded,
       dwvApp: this.state.dwvApp,
       tags: this.state.tags,
+      caseTags: this.state.caseTags,
       url: event.target.value,
       selectedTool: this.state.selectedTool,
       selectedShape: this.state.selectedShape,
@@ -107,24 +117,25 @@ class DwvComponent extends React.Component{
       height : '100%',
       backgroundColor : '#333333'
     }
+    const { caseTags, suggestions } = this.state;
     
     return (
       <div id="dwv" className="uk-grid" style={imageLayerStyle}>
         <div className="uk-width-2-5">
-          <label className="uk-label uk-label-primary">Enter Url:</label>
-          <input className="uk-input" value={this.state.url} onChange={this.handleChange}/>
-          <br/>
+          <div className="sectionDiv">
+            <label className="uk-label uk-label-primary">Enter Url:</label>
+            <input className="uk-input" value={this.state.url} onChange={this.handleChange}/>
+            <br/> 
 
-          <div className="uk-button-group">                 
-            <button className="uk-button uk-button-secondary" onClick={this.loadFromURL}>LoadImage</button>
-            <button className="uk-button uk-button-secondary" disabled={!this.state.dataLoaded} onClick={this.onReset}>Reset</button>
-            <button className="uk-button uk-button-secondary" disabled={!this.state.dataLoaded} onClick={this.handleTagsDialogOpen}>Tags</button>
-          </div>
-          {(this.state.dataLoaded) && <a  className="uk-button uk-button-primary" className="download-state" onClick={this.onStateSave}>Save</a>}
-                      
-          <div><button className="uk-button uk-button-secondary" disabled={!this.state.dataLoaded} onClick={this.handleUndo}>Undo</button><button className="uk-button uk-button-secondary" disabled={!this.state.dataLoaded} onClick={this.handleRedo}>Redo</button></div>
+            <div className="uk-button-group">                 
+              <button className="uk-button uk-button-secondary" onClick={this.loadFromURL}>LoadImage</button>
+              <button className="uk-button uk-button-secondary" disabled={!this.state.dataLoaded} onClick={this.handleTagsDialogOpen}>Tags</button>
+            </div>
+            {(this.state.dataLoaded) && <a  className="uk-button uk-button-primary" className="download-state" onClick={this.onStateSave}>Save</a>}
+          </div>           
+          
 
-          <div>
+          <div className="sectionDiv">
             <div onChange={this.onChangeTool} hidden={!this.state.dataLoaded}>
               <label className="uk-label uk-label-primary">Select a tool:</label>
               <br/>
@@ -149,7 +160,24 @@ class DwvComponent extends React.Component{
             </div>
           </div>
           
+          <div className="sectionDiv" hidden={!this.state.dataLoaded}>
+            <label className="uk-label uk-label-primary">Actions</label> 
+            <br/>
+            <button className="uk-button uk-button-secondary" onClick={this.onReset}>Reset Zoom</button>
+            <button className="uk-button uk-button-secondary" onClick={this.handleUndo}>Undo</button>
+            <button className="uk-button uk-button-secondary" onClick={this.handleRedo}>Redo</button>
+          </div>
             
+          <div className="sectionDiv" hidden={!this.state.dataLoaded}>
+            <label className="uk-label uk-label-primary">Additional Tags:</label>
+            <ReactTags tags={caseTags}
+                suggestions={suggestions}
+                handleDelete={this.handleDelete}
+                handleAddition={this.handleAddition}
+                handleDrag={this.handleDrag}
+                delimiters={delimiters} />
+          </div>
+
           <Dialog open={this.state.showDicomTags} onClose={this.handleTagsDialogClose}>
             <AppBar >
               <Toolbar>
@@ -165,7 +193,9 @@ class DwvComponent extends React.Component{
           </Dialog>
 
         </div>
-        
+        <div className="loaderlist" hidden></div>
+
+
         <div className="uk-width-3-5 ">
           <div className="layerContainer">
               <div className="dropBox" style={background}>Drag and drop dcm file here.</div>
@@ -180,38 +210,56 @@ class DwvComponent extends React.Component{
         </div>
                         
         <div className="history" hidden></div>
-
       </div>
     );
   }
   
   componentDidMount(){
-      var dcmApp = new dwv.App()
-      dcmApp.init({
-          "containerDivId":"dwv",
-          "tools": this.state.tools,
-          "gui":["undo"],
-          "shapes": ["Ruler","FreeHand", "Protractor", "Rectangle", "Roi", "Ellipse", "Arrow"],
-          "isMobile": true
+    axios.get('http://localhost:4000/suggestions')
+      .then(response => {
+        this.setState({ suggestions: response.data });
       })
-      var self = this;
-        dcmApp.addEventListener("load-end", function (event) {
-          // set data loaded flag
-          self.setState({dataLoaded: true});
-          // set dicom tags
-          self.setState({tags: dcmApp.getTags(), currentPosition: dcmApp.getViewController().getCurrentPosition().k + 1 });
-          if(dcmApp.isMonoSliceData() && dcmApp.getImage().getNumberOfFrames() ===1 ){
-            self.setState({selectedTool:'ZoomAndPan'})
-          }else{
-            self.setState({selectedTool: 'Scroll'});
-          }
-        });
-        this.setState({caseTags: IMAGE_PROPERTIES[0]})
-        // store
-        this.setState({dwvApp: dcmApp});
-        dcmApp.addEventListener("slice-change", function () {
-          self.setState({currentPosition: dcmApp.getViewController().getCurrentPosition().k + 1});
-        });
+      .catch(function (error) {
+        console.log(error);
+      })
+    
+    var dcmApp = new dwv.App()
+    dcmApp.init({
+        "containerDivId":"dwv",
+        "tools": this.state.tools,
+        "loaders": ["File", "Folder", "Url"],
+        "gui":["undo", "load"],
+        "shapes": ["Ruler","FreeHand", "Protractor", "Rectangle", "Roi", "Ellipse", "Arrow"],
+        "isMobile": true
+    })
+    var self = this;
+    dcmApp.addEventListener("load-end", function (event) {
+      // set data loaded flag
+      self.setState({dataLoaded: true});
+      // set dicom tags
+      self.setState({tags: dcmApp.getTags(), currentPosition: dcmApp.getViewController().getCurrentPosition().k + 1 });
+      if(dcmApp.isMonoSliceData() && dcmApp.getImage().getNumberOfFrames() ===1 ){
+        self.setState({selectedTool:'ZoomAndPan'})
+      }else{
+        self.setState({selectedTool: 'Scroll'});
+      }
+    });
+    dcmApp.onStateSave = function(){
+      var state = new dwv.State();
+      var data = JSON.parse(state.toJSON(self.state.dwvApp));
+      data.caseTags = self.state.caseTags;
+        // add href to link (html5)
+        var element = self.state.dwvApp.getElement("download-state");
+        var blob = new Blob([JSON.stringify(data)], {type: 'application/json'});
+        element.href = window.URL.createObjectURL(blob);
+    }
+    // store
+    this.setState({dwvApp: dcmApp});
+    dcmApp.addEventListener("slice-change", function () {
+      self.setState({currentPosition: dcmApp.getViewController().getCurrentPosition().k + 1});
+    });
+    console.log("component mounted")
+    
   }
 
   componentWillMount(){
@@ -251,6 +299,12 @@ class DwvComponent extends React.Component{
       let fname = this.state.tags.filter(i => i.name === 'PatientName');
       this.state.dwvApp.getElement("download-state").download = fname[0].value+".json"
     }
+    // let data = this.state.caseTags;
+    axios
+      .post('http://localhost:4000/suggestions',{suggestions: this.state.caseTags})
+      .then(res=>{
+        console.log(res);
+      })
   }
 
   handleUndo = ()=>{

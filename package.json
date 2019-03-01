@@ -9,21 +9,32 @@
   "dependencies": {
     "@material-ui/core": "^3.9.1",
     "@material-ui/icons": "^3.0.2",
+    "axios": "^0.18.0",
+    "cors": "^2.8.5",
     "dwv": "0.25.2",
     "react": "^16.7.0",
+    "react-dnd": "^5.0.0",
+    "react-dnd-html5-backend": "^3.0.2",
     "react-dom": "^16.7.0",
     "react-scripts": "2.1.5",
+    "react-tag-input": "^6.3.0",
+    "typescript": "^3.3.3333",
     "uikit": "^3.0.3"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom"
+    "test": "react-scripts test --env=jsdom",
+    "server": "node server/server.js",
+    "app": "concurrently \"yarn run start\" \"yarn run server\""
   },
   "browserslist": [
     ">0.2%",
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "devDependencies": {
+    "concurrently": "^4.1.0"
+  }
 }
