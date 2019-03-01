@@ -123,13 +123,11 @@ class DwvComponent extends React.Component{
       <div id="dwv" className="uk-grid">
         <div className="uk-width-2-5 sectionsContainer">
           <div className="sectionDiv urlSection">
-            <input placeHolder="Enter URL" className="uk-input" value={this.state.url} onChange={this.handleChange}/>
+            <input placeholder="Enter URL" className="inputField" value={this.state.url} onChange={this.handleChange}/>
+            <button className="uk-button uk-button-secondary" onClick={this.loadFromURL}>Load Image</button>
             <br/> 
 
-            <div className="uk-button-group">                 
-              <button className="uk-button uk-button-secondary" onClick={this.loadFromURL}>LoadImage</button>
-              <button className="uk-button uk-button-secondary" disabled={!this.state.dataLoaded} onClick={this.handleTagsDialogOpen}>Tags</button>
-            </div>
+            {(this.state.dataLoaded) && <button className="uk-button uk-button-secondary" onClick={this.handleTagsDialogOpen}>Tags</button>}
             {(this.state.dataLoaded) && <a  className="uk-button uk-button-primary download-state" onClick={this.onStateSave}>Save</a>}
           </div>           
           
@@ -138,11 +136,11 @@ class DwvComponent extends React.Component{
             <div onChange={this.onChangeTool} hidden={!this.state.dataLoaded}>
               <label className="uk-label">Select a tool</label>
               <br/>
+
               <span className="radios">
                 <input className="uk-radio" type="radio" value="ZoomAndPan" name="tool" checked={this.state.selectedTool === 'ZoomAndPan'}/>Zoom and Pan 
                 <input className="uk-radio" type="radio" value="Scroll" name="tool" checked={this.state.selectedTool === 'Scroll'}/>Scroll 
-              </span>
-              <span className="radios">
+
                 <input className="uk-radio" type="radio" value="WindowLevel" name="tool" checked={this.state.selectedTool === 'WindowLevel'}/>WindowLevel 
                 <input className="uk-radio" type="radio" value="Draw" name="tool" checked={this.state.selectedTool === 'Draw'}/>Draw 
               </span>
@@ -154,8 +152,7 @@ class DwvComponent extends React.Component{
               <span className="radios">
                 <input className="uk-radio" type="radio" value="Ruler" name="shape" checked={this.state.selectedShape === 'Ruler'}/>Ruler
                 <input className="uk-radio" type="radio" value="FreeHand" name="shape" />FreeHand 
-              </span>
-              <span className="radios">
+
                 <input className="uk-radio" type="radio" value="Protractor" name="shape" />Protractor
                 <input className="uk-radio" type="radio" value="Rectangle" name="shape" />Rectangle
               </span>

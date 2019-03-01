@@ -127,3 +127,10 @@ span.radios label {
 .uk-button-primary.download-state:focus{
   background-color: #164d85;
 }
+
+/*URL input field  */
+.inputField{
+  height: 40px;
+  width:50%;
+}
+
