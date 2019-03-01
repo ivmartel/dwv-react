@@ -1,9 +1,6 @@
 *{
   box-sizing: border-box;
 }
-html, body{
-  height: 100%;
-}
 
 #dwv {
   font-family: Arial, Helvetica, sans-serif;
@@ -102,14 +99,14 @@ button.uk-button.disabled {
 
 /* radio buttons */
 .uk-radio {
-  border-color: rgb(56, 53, 53);
+  border-color: #144432;
   background-color: rgb(202, 201, 201);
 }
 
 .uk-radio:checked,
 .uk-radio:checked:focus {
-  border-color: rgb(56, 53, 53);
-  background-color: rgb(31, 31, 31);
+  border-color: #144432;
+  background-color: #144432;
 }
 
 /* span to cover the input radios */
