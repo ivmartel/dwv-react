@@ -139,11 +139,15 @@ class DwvComponent extends React.Component{
             <div onChange={this.onChangeTool} hidden={!this.state.dataLoaded}>
               <label className="uk-label">Select a tool</label>
               <br/>
+              <span className="radios">
                 <input className="uk-radio" type="radio" value="ZoomAndPan" name="tool" checked={this.state.selectedTool === 'ZoomAndPan'}/>Zoom and Pan 
                 <input className="uk-radio" type="radio" value="Scroll" name="tool" checked={this.state.selectedTool === 'Scroll'}/>Scroll 
-              <br/>
+              </span>
+              {/* <br/> */}
+              <span className="radios">
                 <input className="uk-radio" type="radio" value="WindowLevel" name="tool" checked={this.state.selectedTool === 'WindowLevel'}/>WindowLevel 
                 <input className="uk-radio" type="radio" value="Draw" name="tool" checked={this.state.selectedTool === 'Draw'}/>Draw 
+              </span>
             </div>
 
             <div onChange={this.onChangeShape} hidden={this.state.selectedTool !== "Draw"}>

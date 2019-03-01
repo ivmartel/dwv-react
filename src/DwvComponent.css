@@ -95,3 +95,23 @@ button.uk-button.disabled {
   background-color: #ff7575 ;
 }
 
+/* radio buttons */
+.uk-radio {
+  border-color: rgb(56, 53, 53);
+  background-color: rgb(202, 201, 201);
+}
+
+.uk-radio:checked,
+.uk-radio:checked:focus {
+  border-color: rgb(56, 53, 53);
+  background-color: rgb(31, 31, 31);
+}
+
+/* span to cover the input radios */
+span.radios{
+  display: flex;
+  align-items: center;
+}
+span.radios label {
+  text-align: end;
+}
