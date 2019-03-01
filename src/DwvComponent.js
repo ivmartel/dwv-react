@@ -123,8 +123,7 @@ class DwvComponent extends React.Component{
       <div id="dwv" className="uk-grid">
         <div className="uk-width-2-5 sectionsContainer">
           <div className="sectionDiv urlSection">
-            <label className="uk-label">Enter Url</label>
-            <input className="uk-input" value={this.state.url} onChange={this.handleChange}/>
+            <input placeHolder="Enter URL" className="uk-input" value={this.state.url} onChange={this.handleChange}/>
             <br/> 
 
             <div className="uk-button-group">                 
@@ -143,7 +142,6 @@ class DwvComponent extends React.Component{
                 <input className="uk-radio" type="radio" value="ZoomAndPan" name="tool" checked={this.state.selectedTool === 'ZoomAndPan'}/>Zoom and Pan 
                 <input className="uk-radio" type="radio" value="Scroll" name="tool" checked={this.state.selectedTool === 'Scroll'}/>Scroll 
               </span>
-              {/* <br/> */}
               <span className="radios">
                 <input className="uk-radio" type="radio" value="WindowLevel" name="tool" checked={this.state.selectedTool === 'WindowLevel'}/>WindowLevel 
                 <input className="uk-radio" type="radio" value="Draw" name="tool" checked={this.state.selectedTool === 'Draw'}/>Draw 
@@ -161,7 +159,6 @@ class DwvComponent extends React.Component{
                 <input className="uk-radio" type="radio" value="Protractor" name="shape" />Protractor
                 <input className="uk-radio" type="radio" value="Rectangle" name="shape" />Rectangle
               </span>
-              {/* <br/> */}
               <span className="radios">
                 <input className="uk-radio" type="radio" value="Roi" name="shape" />Roi
                 <input className="uk-radio" type="radio" value="Ellipse" name="shape" />Ellipse
