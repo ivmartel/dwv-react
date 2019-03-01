@@ -4,8 +4,7 @@
 
 #dwv {
   font-family: Arial, Helvetica, sans-serif;
-  min-height: 100vh;
-  height: auto; 
+  height: 100%; 
   background-color: #333;
 }
 .button-row {
@@ -28,11 +27,7 @@
 .sectionDiv{
   background-color: black;
   margin-left: 30px;
-  margin-top:20px;
-  margin-right:20px;
-  margin-bottom:20px;
-  padding-left:10px;
-  padding-right:10px;
+  padding:10px;
   color: #111;
 }
 
@@ -66,6 +61,12 @@ label.uk-label{
   color: black;
   font-weight: bold;
   font-size: 20px;
+}
+
+/* Container section */
+.sectionsContainer{
+  overflow: auto;
+  height: 100%;
 }
 
 /* Button groups */

@@ -121,7 +121,7 @@ class DwvComponent extends React.Component{
     
     return (
       <div id="dwv" className="uk-grid">
-        <div className="uk-width-2-5">
+        <div className="uk-width-2-5 sectionsContainer">
           <div className="sectionDiv urlSection">
             <label className="uk-label">Enter Url</label>
             <input className="uk-input" value={this.state.url} onChange={this.handleChange}/>
