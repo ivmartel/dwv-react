@@ -120,7 +120,7 @@ class DwvComponent extends React.Component{
     const { caseTags, suggestions } = this.state;
     
     return (
-      <div id="dwv" className="uk-grid" style={imageLayerStyle}>
+      <div id="dwv" className="uk-grid">
         <div className="uk-width-2-5">
           <div className="sectionDiv urlSection">
             <label className="uk-label">Enter Url</label>
@@ -153,14 +153,20 @@ class DwvComponent extends React.Component{
             <div onChange={this.onChangeShape} hidden={this.state.selectedTool !== "Draw"}>
               <label className="uk-label">Select a shape</label>
               <br/>
-              <input className="uk-radio" type="radio" value="Ruler" name="shape" checked={this.state.selectedShape === 'Ruler'}/>Ruler
-              <input className="uk-radio" type="radio" value="FreeHand" name="shape" />FreeHand 
-              <input className="uk-radio" type="radio" value="Protractor" name="shape" />Protractor
-              <input className="uk-radio" type="radio" value="Rectangle" name="shape" />Rectangle
-              <br/>
-              <input className="uk-radio" type="radio" value="Roi" name="shape" />Roi
-              <input className="uk-radio" type="radio" value="Ellipse" name="shape" />Ellipse
-              <input className="uk-radio" type="radio" value="Arrow" name="shape" />Arrow
+              <span className="radios">
+                <input className="uk-radio" type="radio" value="Ruler" name="shape" checked={this.state.selectedShape === 'Ruler'}/>Ruler
+                <input className="uk-radio" type="radio" value="FreeHand" name="shape" />FreeHand 
+              </span>
+              <span className="radios">
+                <input className="uk-radio" type="radio" value="Protractor" name="shape" />Protractor
+                <input className="uk-radio" type="radio" value="Rectangle" name="shape" />Rectangle
+              </span>
+              {/* <br/> */}
+              <span className="radios">
+                <input className="uk-radio" type="radio" value="Roi" name="shape" />Roi
+                <input className="uk-radio" type="radio" value="Ellipse" name="shape" />Ellipse
+                <input className="uk-radio" type="radio" value="Arrow" name="shape" />Arrow
+              </span>
             </div>
           </div>
           

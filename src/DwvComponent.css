@@ -1,11 +1,16 @@
 *{
   box-sizing: border-box;
 }
+html, body{
+  height: 100%;
+}
 
 #dwv {
   font-family: Arial, Helvetica, sans-serif;
-  height: 90%; }
-
+  min-height: 100vh;
+  height: auto; 
+  background-color: #333;
+}
 .button-row {
   text-align: center;
 }
@@ -114,4 +119,14 @@ span.radios{
 }
 span.radios label {
   text-align: end;
+}
+
+/* save button style */
+.uk-button-primary.download-state{
+  background-color: #195b9d;
+}
+.uk-button-primary.download-state:hover,
+.uk-button-primary.download-state:active,
+.uk-button-primary.download-state:focus{
+  background-color: #164d85;
 }
