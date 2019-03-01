@@ -135,7 +135,7 @@ class DwvComponent extends React.Component{
           </div>           
           
 
-          <div className="sectionDiv toolSection">
+          <div className="sectionDiv toolSection" hidden={!this.state.dataLoaded}>
             <div onChange={this.onChangeTool} hidden={!this.state.dataLoaded}>
               <label className="uk-label">Select a tool</label>
               <br/>
