@@ -35,6 +35,7 @@ dwv.gui.Loadbox = dwv.gui.base.Loadbox;
 dwv.gui.FileLoad = dwv.gui.base.FileLoad;
 // Folder loader
 dwv.gui.FolderLoad = dwv.gui.base.FolderLoad;
+dwv.image = dwv.image || {};
 
 // Image decoders (for web workers)
 dwv.image.decoderScripts = {
@@ -54,6 +55,7 @@ class DwvComponent extends React.Component{
       tags: [],
       caseTags: [],
       suggestions: [],
+      suggestedTags: null,
       url: '', 
       currentPosition: '',
       selectedTool: 'ZoomAndPan',
@@ -71,6 +73,7 @@ class DwvComponent extends React.Component{
     this.handleDelete = this.handleDelete.bind(this);
     this.handleAddition = this.handleAddition.bind(this);
     this.handleDrag = this.handleDrag.bind(this);
+    this.handleSuggestions = this.handleSuggestions.bind(this);
   }
   handleDelete(i) {
     const { caseTags } = this.state;
@@ -94,6 +97,16 @@ class DwvComponent extends React.Component{
       this.setState({ caseTags: newTags });
   }
 
+  handleSuggestions(event){
+    this.handleAddition({id:event.target.id, text:event.target.id});
+    let suggestedTags = this.state.suggestions;
+    this.setState({
+      // suggestedTags: suggestedTags.filter(i => i.id != event.target.id),
+      suggestedTags: suggestedTags.filter(i => i.id != event.target.id).map(i=><p id={i.id} onClick={this.handleSuggestions}>{i.text}</p>)
+    })
+    // this.setState(state => ({ caseTags: [...state.caseTags, {id:event.target.id, text:event.target.id}] }));
+  }
+
   handleChange(event){
     this.setState({
       tools: this.state.tools,
@@ -108,6 +121,7 @@ class DwvComponent extends React.Component{
       showDicomTags: this.state.showDicomTags
     })
   }
+
   render() {
     var background={
       backgroundColor: '#333333'
@@ -118,7 +132,6 @@ class DwvComponent extends React.Component{
       backgroundColor : '#333333'
     }
     const { caseTags, suggestions } = this.state;
-    
     return (
       <div id="dwv" className="uk-grid">
         <div className="uk-width-2-5 sectionsContainer">
@@ -181,6 +194,10 @@ class DwvComponent extends React.Component{
                 handleDrag={this.handleDrag}
                 delimiters={delimiters} />
           </div>
+          
+          <div className="sectionDiv" hidden={!this.state.dataLoaded}>
+            <span>{this.state.suggestedTags}</span>
+          </div>
 
           <Dialog open={this.state.showDicomTags} onClose={this.handleTagsDialogClose}>
             <AppBar >
@@ -198,7 +215,7 @@ class DwvComponent extends React.Component{
 
         </div>
         <div className="loaderlist" hidden></div>
-
+        <div className="imagefolderdiv" hidden></div>
 
         <div className="uk-width-3-5 ">
           <div className="layerContainer">
@@ -222,20 +239,25 @@ class DwvComponent extends React.Component{
     axios.get('http://localhost:4000/suggestions')
       .then(response => {
         this.setState({ suggestions: response.data });
+        this.setState({suggestedTags: this.state.suggestions.map(i=><p id={i.id} onClick={this.handleSuggestions}>{i.text}</p>)})
       })
       .catch(function (error) {
         console.log(error);
       })
     
     var dcmApp = new dwv.App()
-    dcmApp.init({
+    var options = {
         "containerDivId":"dwv",
         "tools": this.state.tools,
-        "loaders": ["File", "Folder", "Url"],
+        "loaders": ["File", "Url"],
         "gui":["undo", "load"],
         "shapes": ["Ruler","FreeHand", "Protractor", "Rectangle", "Roi", "Ellipse", "Arrow"],
         "isMobile": true
-    })
+    }
+    if ( dwv.browser.hasInputDirectory() ) {
+      options.loaders.splice(1, 0, "Folder");
+    }
+    dcmApp.init(options);
     var self = this;
     dcmApp.addEventListener("load-end", function (event) {
       // set data loaded flag
@@ -262,8 +284,6 @@ class DwvComponent extends React.Component{
     dcmApp.addEventListener("slice-change", function () {
       self.setState({currentPosition: dcmApp.getViewController().getCurrentPosition().k + 1});
     });
-    console.log("component mounted")
-    
   }
 
   componentWillMount(){
