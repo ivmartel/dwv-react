@@ -134,7 +134,7 @@ class DwvComponent extends React.Component{
       }
     }
     
-    tagElements = remainingTags.filter(i=>this.state.caseTags.indexOf(i)=== -1).map(i=><p id={i.id} onClick={this.handleSuggestions}>{i.text}</p>)
+    tagElements = remainingTags.filter(i=>this.state.caseTags.indexOf(i)=== -1).map((i,index)=><p id={i.id} key={index} onClick={this.handleSuggestions}>{i.text}</p>)
     
     var background={
       backgroundColor: '#333333'
@@ -157,32 +157,32 @@ class DwvComponent extends React.Component{
               <button className="uk-button uk-button-secondary" onClick={this.loadFromURL}>LoadImage</button>
               <button className="uk-button uk-button-secondary" disabled={!this.state.dataLoaded} onClick={this.handleTagsDialogOpen}>DICOM Tags</button>
             </div>
-            {(this.state.dataLoaded) && <a  className="uk-button uk-button-primary" className="download-state" onClick={this.onStateSave}>Save</a>}
+            {(this.state.dataLoaded) && <a className="download-state" onClick={this.onStateSave}>Save</a>}
           </div>           
           
 
           <div className="sectionDiv">
-            <div onChange={this.onChangeTool} hidden={!this.state.dataLoaded}>
+            <div hidden={!this.state.dataLoaded}>
               <label className="uk-label uk-label-primary">Select a tool:</label>
               <br/>
-              <input className="uk-radio" type="radio" value="ZoomAndPan" name="tool" checked={this.state.selectedTool === 'ZoomAndPan'}/>Zoom and Pan
-              <input className="uk-radio" type="radio" value="Scroll" name="tool" checked={this.state.selectedTool === 'Scroll'}/>Scroll
+              <input className="uk-radio" onChange={this.onChangeTool} type="radio" value="ZoomAndPan" name="tool" checked={this.state.selectedTool === 'ZoomAndPan'}/>Zoom and Pan
+              <input className="uk-radio" onChange={this.onChangeTool} type="radio" value="Scroll" name="tool" checked={this.state.selectedTool === 'Scroll'}/>Scroll
               <br/>
-              <input className="uk-radio" type="radio" value="WindowLevel" name="tool" checked={this.state.selectedTool === 'WindowLevel'}/>WindowLevel
-              <input className="uk-radio" type="radio" value="Draw" name="tool" checked={this.state.selectedTool === 'Draw'}/>Draw
+              <input className="uk-radio" onChange={this.onChangeTool} type="radio" value="WindowLevel" name="tool" checked={this.state.selectedTool === 'WindowLevel'}/>WindowLevel
+              <input className="uk-radio" onChange={this.onChangeTool} type="radio" value="Draw" name="tool" checked={this.state.selectedTool === 'Draw'}/>Draw
             </div>
 
-            <div onChange={this.onChangeShape} hidden={this.state.selectedTool !== "Draw"}>
+            <div hidden={this.state.selectedTool !== "Draw"}>
               <label className="uk-label uk-label-primary">Select a shape:</label>
               <br/>
-              <input className="uk-radio" type="radio" value="Ruler" name="shape" checked={this.state.selectedShape === 'Ruler'}/>Ruler
-              <input className="uk-radio" type="radio" value="FreeHand" name="shape" />FreeHand 
-              <input className="uk-radio" type="radio" value="Protractor" name="shape" />Protractor
-              <input className="uk-radio" type="radio" value="Rectangle" name="shape" />Rectangle
+              <input className="uk-radio" onChange={this.onChangeShape} type="radio" value="Ruler" name="shape" checked={this.state.selectedShape === 'Ruler'}/>Ruler
+              <input className="uk-radio" onChange={this.onChangeShape} type="radio" value="FreeHand" name="shape" checked={this.state.selectedShape === 'FreeHand'}/>FreeHand 
+              <input className="uk-radio" onChange={this.onChangeShape} type="radio" value="Protractor" name="shape" checked={this.state.selectedShape === 'Protractor'}/>Protractor
+              <input className="uk-radio" onChange={this.onChangeShape} type="radio" value="Rectangle" name="shape" checked={this.state.selectedShape === 'Rectangle'}/>Rectangle
               <br/>
-              <input className="uk-radio" type="radio" value="Roi" name="shape" />Roi
-              <input className="uk-radio" type="radio" value="Ellipse" name="shape" />Ellipse
-              <input className="uk-radio" type="radio" value="Arrow" name="shape" />Arrow
+              <input className="uk-radio" onChange={this.onChangeShape} type="radio" value="Roi" name="shape" checked={this.state.selectedShape === 'Roi'}/>Roi
+              <input className="uk-radio" onChange={this.onChangeShape} type="radio" value="Ellipse" name="shape" checked={this.state.selectedShape === 'Ellipse'}/>Ellipse
+              <input className="uk-radio" onChange={this.onChangeShape} type="radio" value="Arrow" name="shape" checked={this.state.selectedShape === 'Arrow'}/>Arrow
             </div>
           </div>
           
