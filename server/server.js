@@ -14,7 +14,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
  
 app.use(bodyParser.json())
 
-app.get("/suggestions",async function(req,res){
+app.get("/suggestions",async (req,res)=>{
     var obj,suggestions;
     try{   
         await fs.readFile('server/tmp/suggestions.json', function (err,data) {
@@ -29,7 +29,7 @@ app.get("/suggestions",async function(req,res){
     }
 })
 
-app.post("/suggestions",async function(req,res){
+app.post("/suggestions",async (req,res)=>{
     var suggestion, suggestions, tagsCounter, caseTags,i,p,result=[],obj={};
     caseTags = req.body.suggestions
     await fs.readFile('server/tmp/suggestions.json', function (err,data) {
@@ -51,7 +51,7 @@ app.post("/suggestions",async function(req,res){
         }
     });
 
-    await fs.readFile('server/tmp/tagsCounter.json', function (err,data) {
+    await fs.readFile('server/tmp/tagsCounter.json', (err,data)=> {
         if (err) throw err;
         tagsCounter = JSON.parse(data);
         for(i=0; i<caseTags.length; i++){

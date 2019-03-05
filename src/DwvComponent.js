@@ -56,6 +56,8 @@ class DwvComponent extends React.Component{
       caseTags: [],
       suggestions: [],
       suggestedTags: null,
+      remainingTags: null,
+      addedTags: [],
       url: '', 
       currentPosition: '',
       selectedTool: 'ZoomAndPan',
@@ -75,6 +77,9 @@ class DwvComponent extends React.Component{
     this.handleDrag = this.handleDrag.bind(this);
     this.handleSuggestions = this.handleSuggestions.bind(this);
   }
+
+  
+
   handleDelete(i) {
     const { caseTags } = this.state;
     this.setState({
@@ -85,7 +90,7 @@ class DwvComponent extends React.Component{
   handleAddition(caseTag) {
       this.setState(state => ({ caseTags: [...state.caseTags, caseTag] }));
   }
-
+  
   handleDrag(caseTag, currPos, newPos) {
       const caseTags = [...this.state.caseTags];
       const newTags = caseTags.slice();
@@ -99,12 +104,6 @@ class DwvComponent extends React.Component{
 
   handleSuggestions(event){
     this.handleAddition({id:event.target.id, text:event.target.id});
-    let suggestedTags = this.state.suggestions;
-    this.setState({
-      // suggestedTags: suggestedTags.filter(i => i.id != event.target.id),
-      suggestedTags: suggestedTags.filter(i => i.id != event.target.id).map(i=><p id={i.id} onClick={this.handleSuggestions}>{i.text}</p>)
-    })
-    // this.setState(state => ({ caseTags: [...state.caseTags, {id:event.target.id, text:event.target.id}] }));
   }
 
   handleChange(event){
@@ -123,6 +122,20 @@ class DwvComponent extends React.Component{
   }
 
   render() {
+    var suggestion = this.state.suggestions;
+    var tagElements, remainingTags=[];
+    
+    for(let i =0;i<suggestion.length;i++){
+      var isThere = this.state.caseTags.find((s)=>{
+        return s.id === suggestion[i].id;       
+      })
+      if(isThere === undefined){
+        remainingTags.push(suggestion[i]);
+      }
+    }
+    
+    tagElements = remainingTags.filter(i=>this.state.caseTags.indexOf(i)=== -1).map(i=><p id={i.id} onClick={this.handleSuggestions}>{i.text}</p>)
+    
     var background={
       backgroundColor: '#333333'
     }
@@ -192,7 +205,7 @@ class DwvComponent extends React.Component{
           </div>
           
           <div className="sectionDiv" hidden={!this.state.dataLoaded}>
-            <span>{this.state.suggestedTags}</span>
+            {tagElements}
           </div>
 
           <Dialog open={this.state.showDicomTags} onClose={this.handleTagsDialogClose}>
@@ -235,7 +248,6 @@ class DwvComponent extends React.Component{
     axios.get('http://localhost:4000/suggestions')
       .then(response => {
         this.setState({ suggestions: response.data });
-        this.setState({suggestedTags: this.state.suggestions.map(i=><p id={i.id} onClick={this.handleSuggestions}>{i.text}</p>)})
       })
       .catch(function (error) {
         console.log(error);
@@ -245,7 +257,7 @@ class DwvComponent extends React.Component{
     var options = {
         "containerDivId":"dwv",
         "tools": this.state.tools,
-        "loaders": ["File", "Url"],
+        "loaders": ["File"],
         "gui":["undo", "load"],
         "shapes": ["Ruler","FreeHand", "Protractor", "Rectangle", "Roi", "Ellipse", "Arrow"],
         "isMobile": true
@@ -319,7 +331,6 @@ class DwvComponent extends React.Component{
       let fname = this.state.tags.filter(i => i.name === 'PatientName');
       this.state.dwvApp.getElement("download-state").download = fname[0].value+".json"
     }
-    // let data = this.state.caseTags;
     axios
       .post('http://localhost:4000/suggestions',{suggestions: this.state.caseTags})
       .then(res=>{
