@@ -137,3 +137,6 @@ span.radios label {
   width:50%;
 }
 
+.suggestionSection > span > p {
+  cursor: pointer;
+}
