@@ -195,7 +195,7 @@ class DwvComponent extends React.Component{
                 delimiters={delimiters} />
           </div>
           
-          <div className="sectionDiv" hidden={!this.state.dataLoaded}>
+          <div className="sectionDiv suggestionSection" hidden={!this.state.dataLoaded}>
             <span>{this.state.suggestedTags}</span>
           </div>
 

@@ -19,7 +19,7 @@
 
 .uk-radio{
   margin-right: 10px;
-  margin-left: 30px;
+  margin-left: 10px;
   margin-bottom: 10px;
   margin-top: 10px;
 }
@@ -95,6 +95,9 @@ button.uk-button.disabled {
 }
 .tagSection {
   background-color: #ff7575 ;
+}
+.suggestionSection{
+  background-color: #fcab52 ;
 }
 
 /* radio buttons */
