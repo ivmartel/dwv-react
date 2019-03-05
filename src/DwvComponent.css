@@ -140,3 +140,18 @@ span.radios label {
 .suggestionSection > span > p {
   cursor: pointer;
 }
+
+/* ReactTags  */
+.ReactTags__tagInput{
+  height: 40px;
+  margin-top: 15px;
+}
+.ReactTags__tagInputField{
+  height: 100%;
+}
+.ReactTags__tag{
+  color: white;
+  padding: 6px;
+  background-color: #532a2a;
+  border-radius: 50%;
+}
