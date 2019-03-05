@@ -116,6 +116,7 @@ button.uk-button.disabled {
 span.radios{
   display: flex;
   align-items: center;
+  justify-content: center;
 }
 span.radios label {
   text-align: end;
@@ -154,4 +155,5 @@ span.radios label {
   padding: 6px;
   background-color: #532a2a;
   border-radius: 50%;
+  margin: 1px;
 }
