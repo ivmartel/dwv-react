@@ -154,20 +154,18 @@ class DwvComponent extends React.Component{
             <br/> 
 
             <div className="uk-button-group">                 
-              <button className="uk-button uk-button-secondary" onClick={this.loadFromURL}>LoadImage</button>
-              <button className="uk-button uk-button-secondary" disabled={!this.state.dataLoaded} onClick={this.handleTagsDialogOpen}>DICOM Tags</button>
+              {(this.state.dataLoaded) && <button className="uk-button uk-button-secondary" disabled={!this.state.dataLoaded} onClick={this.handleTagsDialogOpen}>DICOM Tags</button>}
+              {(this.state.dataLoaded) && <a className="download-state uk-button uk-button-primary" onClick={this.onStateSave}>Save</a>}
             </div>
-            {(this.state.dataLoaded) && <a className="download-state" onClick={this.onStateSave}>Save</a>}
           </div>           
           
 
-          <div className="sectionDiv">
-            <div hidden={!this.state.dataLoaded}>
+          <div className="sectionDiv toolSection" hidden={!this.state.dataLoaded}>
+            <div >
               <label className="uk-label uk-label-primary">Select a tool:</label>
               <br/>
               <input className="uk-radio" onChange={this.onChangeTool} type="radio" value="ZoomAndPan" name="tool" checked={this.state.selectedTool === 'ZoomAndPan'}/>Zoom and Pan
               <input className="uk-radio" onChange={this.onChangeTool} type="radio" value="Scroll" name="tool" checked={this.state.selectedTool === 'Scroll'}/>Scroll
-              <br/>
               <input className="uk-radio" onChange={this.onChangeTool} type="radio" value="WindowLevel" name="tool" checked={this.state.selectedTool === 'WindowLevel'}/>WindowLevel
               <input className="uk-radio" onChange={this.onChangeTool} type="radio" value="Draw" name="tool" checked={this.state.selectedTool === 'Draw'}/>Draw
             </div>
@@ -204,7 +202,9 @@ class DwvComponent extends React.Component{
                 delimiters={delimiters} />
           </div>
           
-          <div className="sectionDiv" hidden={!this.state.dataLoaded}>
+          <div className="sectionDiv suggestionSection" hidden={!this.state.dataLoaded }>
+            <label className="uk-label">Suggestions</label> 
+            <br/>
             {tagElements}
           </div>
 
