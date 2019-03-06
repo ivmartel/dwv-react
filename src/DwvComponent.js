@@ -134,7 +134,7 @@ class DwvComponent extends React.Component{
       }
     }
     
-    tagElements = remainingTags.filter(i=>this.state.caseTags.indexOf(i)=== -1).map((i,index)=><span className="suggestionCard" id={i.id} key={index} onClick={this.handleSuggestions}>{i.text}</span>)
+    tagElements = remainingTags.filter(i=>this.state.caseTags.indexOf(i)=== -1).map((i,index)=><span className="suggestionCard uk-width-auto" id={i.id} key={index} onClick={this.handleSuggestions}>{i.text}</span>)
     
     var background={
       backgroundColor: '#333333'
@@ -205,7 +205,9 @@ class DwvComponent extends React.Component{
           <div className="sectionDiv suggestionSection" hidden={!this.state.dataLoaded }>
             <label className="uk-label">Suggestions</label> 
             <br/>
-            {tagElements}
+            <div className="suggestionsList uk-grid uk-flex-center" >
+              {tagElements}
+            </div>
           </div>
 
           <Dialog open={this.state.showDicomTags} onClose={this.handleTagsDialogClose}>

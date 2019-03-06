@@ -167,4 +167,8 @@ span.radios label {
   margin: 5px;
   padding: 6px;
   border-radius: 5px;
+  overflow-wrap: break-word;
+}
+.suggestionsList{
+  margin: 0;
 }
