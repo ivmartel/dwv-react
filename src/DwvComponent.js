@@ -56,6 +56,8 @@ class DwvComponent extends React.Component{
       caseTags: [],
       suggestions: [],
       suggestedTags: null,
+      remainingTags: null,
+      addedTags: [],
       url: '', 
       currentPosition: '',
       selectedTool: 'ZoomAndPan',
@@ -75,6 +77,9 @@ class DwvComponent extends React.Component{
     this.handleDrag = this.handleDrag.bind(this);
     this.handleSuggestions = this.handleSuggestions.bind(this);
   }
+
+  
+
   handleDelete(i) {
     const { caseTags } = this.state;
     this.setState({
@@ -85,7 +90,7 @@ class DwvComponent extends React.Component{
   handleAddition(caseTag) {
       this.setState(state => ({ caseTags: [...state.caseTags, caseTag] }));
   }
-
+  
   handleDrag(caseTag, currPos, newPos) {
       const caseTags = [...this.state.caseTags];
       const newTags = caseTags.slice();
@@ -99,12 +104,6 @@ class DwvComponent extends React.Component{
 
   handleSuggestions(event){
     this.handleAddition({id:event.target.id, text:event.target.id});
-    let suggestedTags = this.state.suggestions;
-    this.setState({
-      // suggestedTags: suggestedTags.filter(i => i.id != event.target.id),
-      suggestedTags: suggestedTags.filter(i => i.id != event.target.id).map(i=><p id={i.id} onClick={this.handleSuggestions}>{i.text}</p>)
-    })
-    // this.setState(state => ({ caseTags: [...state.caseTags, {id:event.target.id, text:event.target.id}] }));
   }
 
   handleChange(event){
@@ -123,6 +122,20 @@ class DwvComponent extends React.Component{
   }
 
   render() {
+    var suggestion = this.state.suggestions;
+    var tagElements, remainingTags=[];
+    
+    for(let i =0;i<suggestion.length;i++){
+      var isThere = this.state.caseTags.find((s)=>{
+        return s.id === suggestion[i].id;       
+      })
+      if(isThere === undefined){
+        remainingTags.push(suggestion[i]);
+      }
+    }
+    
+    tagElements = remainingTags.filter(i=>this.state.caseTags.indexOf(i)=== -1).map((i,index)=><p id={i.id} key={index} onClick={this.handleSuggestions}>{i.text}</p>)
+    
     var background={
       backgroundColor: '#333333'
     }
@@ -140,40 +153,36 @@ class DwvComponent extends React.Component{
             <button className="uk-button uk-button-secondary" onClick={this.loadFromURL}>Load Image</button>
             <br/> 
 
-            {(this.state.dataLoaded) && <button className="uk-button uk-button-secondary" onClick={this.handleTagsDialogOpen}>Tags</button>}
-            {(this.state.dataLoaded) && <a  className="uk-button uk-button-primary download-state" onClick={this.onStateSave}>Save</a>}
+            <div className="uk-button-group">                 
+              <button className="uk-button uk-button-secondary" onClick={this.loadFromURL}>LoadImage</button>
+              <button className="uk-button uk-button-secondary" disabled={!this.state.dataLoaded} onClick={this.handleTagsDialogOpen}>DICOM Tags</button>
+            </div>
+            {(this.state.dataLoaded) && <a className="download-state" onClick={this.onStateSave}>Save</a>}
           </div>           
           
 
-          <div className="sectionDiv toolSection" hidden={!this.state.dataLoaded}>
-            <div onChange={this.onChangeTool} hidden={!this.state.dataLoaded}>
-              <label className="uk-label">Select a tool</label>
+          <div className="sectionDiv">
+            <div hidden={!this.state.dataLoaded}>
+              <label className="uk-label uk-label-primary">Select a tool:</label>
               <br/>
-
-              <span className="radios">
-                <input className="uk-radio" type="radio" value="ZoomAndPan" name="tool" checked={this.state.selectedTool === 'ZoomAndPan'}/>Zoom and Pan 
-                <input className="uk-radio" type="radio" value="Scroll" name="tool" checked={this.state.selectedTool === 'Scroll'}/>Scroll 
-
-                <input className="uk-radio" type="radio" value="WindowLevel" name="tool" checked={this.state.selectedTool === 'WindowLevel'}/>WindowLevel 
-                <input className="uk-radio" type="radio" value="Draw" name="tool" checked={this.state.selectedTool === 'Draw'}/>Draw 
-              </span>
+              <input className="uk-radio" onChange={this.onChangeTool} type="radio" value="ZoomAndPan" name="tool" checked={this.state.selectedTool === 'ZoomAndPan'}/>Zoom and Pan
+              <input className="uk-radio" onChange={this.onChangeTool} type="radio" value="Scroll" name="tool" checked={this.state.selectedTool === 'Scroll'}/>Scroll
+              <br/>
+              <input className="uk-radio" onChange={this.onChangeTool} type="radio" value="WindowLevel" name="tool" checked={this.state.selectedTool === 'WindowLevel'}/>WindowLevel
+              <input className="uk-radio" onChange={this.onChangeTool} type="radio" value="Draw" name="tool" checked={this.state.selectedTool === 'Draw'}/>Draw
             </div>
 
-            <div onChange={this.onChangeShape} hidden={this.state.selectedTool !== "Draw"}>
-              <label className="uk-label">Select a shape</label>
+            <div hidden={this.state.selectedTool !== "Draw"}>
+              <label className="uk-label uk-label-primary">Select a shape:</label>
               <br/>
-              <span className="radios">
-                <input className="uk-radio" type="radio" value="Ruler" name="shape" checked={this.state.selectedShape === 'Ruler'}/>Ruler
-                <input className="uk-radio" type="radio" value="FreeHand" name="shape" />FreeHand 
-
-                <input className="uk-radio" type="radio" value="Protractor" name="shape" />Protractor
-                <input className="uk-radio" type="radio" value="Rectangle" name="shape" />Rectangle
-              </span>
-              <span className="radios">
-                <input className="uk-radio" type="radio" value="Roi" name="shape" />Roi
-                <input className="uk-radio" type="radio" value="Ellipse" name="shape" />Ellipse
-                <input className="uk-radio" type="radio" value="Arrow" name="shape" />Arrow
-              </span>
+              <input className="uk-radio" onChange={this.onChangeShape} type="radio" value="Ruler" name="shape" checked={this.state.selectedShape === 'Ruler'}/>Ruler
+              <input className="uk-radio" onChange={this.onChangeShape} type="radio" value="FreeHand" name="shape" checked={this.state.selectedShape === 'FreeHand'}/>FreeHand 
+              <input className="uk-radio" onChange={this.onChangeShape} type="radio" value="Protractor" name="shape" checked={this.state.selectedShape === 'Protractor'}/>Protractor
+              <input className="uk-radio" onChange={this.onChangeShape} type="radio" value="Rectangle" name="shape" checked={this.state.selectedShape === 'Rectangle'}/>Rectangle
+              <br/>
+              <input className="uk-radio" onChange={this.onChangeShape} type="radio" value="Roi" name="shape" checked={this.state.selectedShape === 'Roi'}/>Roi
+              <input className="uk-radio" onChange={this.onChangeShape} type="radio" value="Ellipse" name="shape" checked={this.state.selectedShape === 'Ellipse'}/>Ellipse
+              <input className="uk-radio" onChange={this.onChangeShape} type="radio" value="Arrow" name="shape" checked={this.state.selectedShape === 'Arrow'}/>Arrow
             </div>
           </div>
           
@@ -195,8 +204,8 @@ class DwvComponent extends React.Component{
                 delimiters={delimiters} />
           </div>
           
-          <div className="sectionDiv suggestionSection" hidden={!this.state.dataLoaded}>
-            <span>{this.state.suggestedTags}</span>
+          <div className="sectionDiv" hidden={!this.state.dataLoaded}>
+            {tagElements}
           </div>
 
           <Dialog open={this.state.showDicomTags} onClose={this.handleTagsDialogClose}>
@@ -239,7 +248,6 @@ class DwvComponent extends React.Component{
     axios.get('http://localhost:4000/suggestions')
       .then(response => {
         this.setState({ suggestions: response.data });
-        this.setState({suggestedTags: this.state.suggestions.map(i=><p id={i.id} onClick={this.handleSuggestions}>{i.text}</p>)})
       })
       .catch(function (error) {
         console.log(error);
@@ -249,7 +257,7 @@ class DwvComponent extends React.Component{
     var options = {
         "containerDivId":"dwv",
         "tools": this.state.tools,
-        "loaders": ["File", "Url"],
+        "loaders": ["File"],
         "gui":["undo", "load"],
         "shapes": ["Ruler","FreeHand", "Protractor", "Rectangle", "Roi", "Ellipse", "Arrow"],
         "isMobile": true
@@ -323,7 +331,6 @@ class DwvComponent extends React.Component{
       let fname = this.state.tags.filter(i => i.name === 'PatientName');
       this.state.dwvApp.getElement("download-state").download = fname[0].value+".json"
     }
-    // let data = this.state.caseTags;
     axios
       .post('http://localhost:4000/suggestions',{suggestions: this.state.caseTags})
       .then(res=>{
