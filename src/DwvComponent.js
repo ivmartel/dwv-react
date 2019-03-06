@@ -134,7 +134,7 @@ class DwvComponent extends React.Component{
       }
     }
     
-    tagElements = remainingTags.filter(i=>this.state.caseTags.indexOf(i)=== -1).map((i,index)=><p id={i.id} key={index} onClick={this.handleSuggestions}>{i.text}</p>)
+    tagElements = remainingTags.filter(i=>this.state.caseTags.indexOf(i)=== -1).map((i,index)=><span className="suggestionCard" id={i.id} key={index} onClick={this.handleSuggestions}>{i.text}</span>)
     
     var background={
       backgroundColor: '#333333'
@@ -226,16 +226,15 @@ class DwvComponent extends React.Component{
         <div className="loaderlist" hidden></div>
         <div className="imagefolderdiv" hidden></div>
 
-        <div className="uk-width-3-5 ">
+        <div className="uk-width-3-5 uk-position-relative uk-light">
           <div className="layerContainer">
               <div className="dropBox" style={background}>Drag and drop dcm file here.</div>
               <canvas className="imageLayer" >Only for HTML5 compatible browsers...</canvas>
               <div className="drawDiv" ></div>
-          </div>
-          
-          <div className="uk-section">
-            {this.state.currentPosition && this.state.currentPosition > 1 && <button className="uk-button" onClick={this.getPreviousImage}>Previous</button>}
-            {this.state.currentPosition && this.state.currentPosition < this.state.url.split(",").length && <button className="uk-button" onClick={this.getNextImage}>Next</button>}
+              
+            {this.state.currentPosition && this.state.currentPosition > 1 && <a uk-slidenav-previous="" className="uk-slidenav-previous uk-icon uk-slidenav-large uk-position-center-left" onClick={this.getPreviousImage}></a>}
+            {this.state.currentPosition && this.state.currentPosition < this.state.url.split(",").length && <a uk-slidenav-next="" className="uk-slidenav-next uk-icon uk-slidenav-large uk-position-center-right" onClick={this.getNextImage}></a>}
+            
           </div>
         </div>
                         
@@ -252,8 +251,8 @@ class DwvComponent extends React.Component{
       .catch(function (error) {
         console.log(error);
       })
-    
-    var dcmApp = new dwv.App()
+
+      var dcmApp = new dwv.App()
     var options = {
         "containerDivId":"dwv",
         "tools": this.state.tools,
