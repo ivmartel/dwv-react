@@ -216,7 +216,6 @@ class DwvComponent extends React.Component{
           </div>
 
           <Dialog open={this.state.showDicomTags} onClose={this.handleTagsDialogClose}>
-            <AppBar >
               <Toolbar>
                 <IconButton color="inherit" onClick={this.handleTagsDialogClose} aria-label="Close">
                   <CloseIcon />
@@ -225,7 +224,6 @@ class DwvComponent extends React.Component{
                   DICOM Tags
                 </Typography>
               </Toolbar>
-            </AppBar>
             <TagsTable data={this.state.tags} ></TagsTable>
           </Dialog>
 
