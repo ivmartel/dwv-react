@@ -181,13 +181,7 @@ a:hover.ReactTags__remove{
   border: 1px solid lightgrey;
   overflow-wrap: break-word;
 }
-.ReactTags__suggestions > ul > li:active,
-.ReactTags__suggestions > ul > li:hover,
-.ReactTags__suggestions > ul > li:focus{
-  border: 1px solid black;
-}
 .ReactTags__suggestions > ul > li.ReactTags__activeSuggestion{
-  border: 1px solid lightgrey;
   background-color: #ffb7b8;
 }
 /* Suggestion Section  */
