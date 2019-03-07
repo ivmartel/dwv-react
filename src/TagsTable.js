@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import './TagsTable.css'
 import { withStyles } from '@material-ui/core/styles';
 
 import InputAdornment from '@material-ui/core/InputAdornment';
@@ -88,22 +89,11 @@ class TagsTable extends React.Component {
     const { displayData, searchfor, rowsPerPage, page } = this.state;
 
     return (
-      <div className={classes.container}>
-        <TextField
-          id="search"
-          type="search"
-          value={searchfor}
-          className={classes.searchField}
-          onChange={this.filterList}
-          margin="normal"
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <Search />
-              </InputAdornment>
-            )
-          }}
-        />
+      <div className="tags_Table">
+        <form className="uk-search uk-search-default">
+          <span className="uk-search-icon-flip uk-search-icon uk-icon" uk-search-icon="" ></span>
+          <input className="uk-search-input" id="search" type="search" onChange={this.filterList} value={searchfor} />
+        </form>
 
         <Table className={classes.table}>
           <TableHead>

@@ -1,0 +1,5 @@
+/* Style for the whole tagstable section */
+
+.tagsTable > form {
+  margin-left: 20px;
+}
