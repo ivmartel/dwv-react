@@ -89,7 +89,7 @@ class TagsTable extends React.Component {
     const { displayData, searchfor, rowsPerPage, page } = this.state;
 
     return (
-      <div className="tags_Table">
+      <div className="tagsTable">
         <form className="uk-search uk-search-default">
           <span className="uk-search-icon-flip uk-search-icon uk-icon" uk-search-icon="" ></span>
           <input className="uk-search-input" id="search" type="search" onChange={this.filterList} value={searchfor} />

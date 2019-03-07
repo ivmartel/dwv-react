@@ -1,5 +1,6 @@
 /* Style for the whole tagstable section */
 
-.tagsTable > form {
-  margin-left: 20px;
+.tagsTable > form.uk-search.uk-search-default {
+  margin: auto;
+  display: flex;
 }
