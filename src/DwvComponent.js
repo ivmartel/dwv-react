@@ -195,6 +195,11 @@ class DwvComponent extends React.Component{
           <div className="sectionDiv tagSection" hidden={!this.state.dataLoaded}>
             <label className="uk-label">Additional Tags</label>
             <ReactTags tags={caseTags}
+                classNames={{
+                  tags:'uk-grid uk-flex-center',
+                  tag:'ReactTags__tag uk-width-auto',
+                  selected:'ReactTags__selected uk-width-auto',
+                }}
                 suggestions={suggestions}
                 handleDelete={this.handleDelete}
                 handleAddition={this.handleAddition}

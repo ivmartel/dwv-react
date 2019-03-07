@@ -156,6 +156,8 @@ span.radios label {
   background-color: #532a2a;
   border-radius: 5px;
   margin: 1px;
+  overflow-wrap: break-word;
+  display: inline-block;
 }
 .ReactTags__remove{
   margin-left: 4px;
@@ -163,7 +165,7 @@ span.radios label {
 
 /* Suggestion Section  */
 .suggestionCard{
-  background-color: #92e1de;
+  background-color: #fdd2a5;
   margin: 5px;
   padding: 6px;
   border-radius: 5px;
