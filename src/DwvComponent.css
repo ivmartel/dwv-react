@@ -187,7 +187,8 @@ a:hover.ReactTags__remove{
   border: 1px solid black;
 }
 .ReactTags__suggestions > ul > li.ReactTags__activeSuggestion{
-  border: 1px solid black;
+  border: 1px solid lightgrey;
+  background-color: #ffb7b8;
 }
 /* Suggestion Section  */
 .suggestionCard{
