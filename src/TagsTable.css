@@ -4,3 +4,16 @@
   margin: auto;
   display: flex;
 }
+
+.tableHeadRow > th {
+  text-align: center;
+}
+
+.tableBodyRow > td {
+  font-size: 14px;
+}
+
+table.dataTable {
+  margin-left: 20px;
+  margin-right: 20px;
+}

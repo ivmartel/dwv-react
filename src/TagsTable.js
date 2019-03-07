@@ -95,25 +95,25 @@ class TagsTable extends React.Component {
           <input className="uk-search-input" id="search" type="search" onChange={this.filterList} value={searchfor} />
         </form>
 
-        <Table className={classes.table}>
-          <TableHead>
-            <TableRow>
-              <TableCell>Tag</TableCell>
-              <TableCell>Value</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-          {displayData.slice(page * rowsPerPage,
-                page * rowsPerPage + rowsPerPage).map( item => {
-            return (
-              <TableRow className={classes.row} key={item.group+item.element}>
-                <TableCell>{item.name}</TableCell>
-                <TableCell numeric>{item.value}</TableCell>
-              </TableRow>
-            );
-          })}
-          </TableBody>
-        </Table>
+        <table className="dataTable uk-table uk-table-small">
+          <thead>
+              <tr className="tableHeadRow">
+                  <th>Tag</th>
+                  <th>Value</th>
+              </tr>
+          </thead>
+          <tbody>
+            {displayData.slice(page * rowsPerPage,
+                  page * rowsPerPage + rowsPerPage).map( item => {
+              return (
+                <tr className="tableBodyRow" key={item.group+item.element}>
+                  <td>{item.name}</td>
+                  <td>{item.value}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
 
         <TablePagination
           component="div"
