@@ -8,15 +8,15 @@ self.__precacheManifest = [
     "url": "/dwv-react/demo/trunk/static/js/main.2ece7909.chunk.js"
   },
   {
-    "revision": "6396743ee6654f92f6d2",
-    "url": "/dwv-react/demo/trunk/static/js/2.53933ffa.chunk.js"
+    "revision": "e3dd3415dd4b625f842a",
+    "url": "/dwv-react/demo/trunk/static/js/2.bdc72d46.chunk.js"
   },
   {
     "revision": "a20b6dfee4ee48cc119b",
     "url": "/dwv-react/demo/trunk/static/css/main.f28b2b4c.chunk.css"
   },
   {
-    "revision": "ac6d8d23a0b8ed934be4225f1b13638f",
+    "revision": "04e978405af33db947269074510bdc14",
     "url": "/dwv-react/demo/trunk/index.html"
   }
 ];
