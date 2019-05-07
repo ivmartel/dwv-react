@@ -1,15 +1,8 @@
 #dwv {
-  font-family: Arial, Helvetica, sans-serif;
   height: 90%; }
 
 .button-row {
   text-align: center;
-}
-
-.legend {
-  text-align: center;
-  font-size: 8pt;
-  margin: 1em;
 }
 
 /* Layers */
@@ -24,8 +17,8 @@
 
 /* drag&drop */
 .dropBox {
-    border: 5px dashed #ccc;
+    border: 5px dashed #e8eaf6; /*indigo:light*/
     margin: auto;
-    text-align: center; vertical-align: middle;
-    background: white; color: grey; }
-.dropBox.hover { border: 5px dashed #cc0; }
+    text-align: center; vertical-align: middle; }
+.dropBox.hover {
+    border: 5px dashed #3f51b5; /*indigo*/ }

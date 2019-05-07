@@ -8,6 +8,7 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 
+import Link from '@material-ui/core/Link';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
@@ -56,7 +57,7 @@ const styles = theme => ({
   },
   iconSmall: {
     fontSize: 20,
-  },
+  }
 });
 
 function TransitionUp(props) {
@@ -144,15 +145,19 @@ class DwvComponent extends React.Component {
         </div>
 
         <div className="layerContainer">
-          <div className="dropBox">Drag and drop data here.</div>
+          <div className="dropBox"><Typography>Drag and drop data here.</Typography></div>
           <canvas className="imageLayer">Only for HTML5 compatible browsers...</canvas>
           <div className="drawDiv"></div>
         </div>
-        <div className="legend"><p>Powered by <a
-          href="https://github.com/ivmartel/dwv"
-          title="dwv on github">dwv
-        </a> {versions.dwv} and React {versions.react}
+
+        <div><p>
+          <Typography variant="caption">Powered by <Link
+              href="https://github.com/ivmartel/dwv"
+              title="dwv on github">dwv
+            </Link> {versions.dwv} and React {versions.react}
+          </Typography>
         </p></div>
+
       </div>
     );
   }
