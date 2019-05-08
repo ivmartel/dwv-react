@@ -9,11 +9,14 @@ import './App.css';
 import DwvComponent from './DwvComponent';
 
 const theme = createMuiTheme({
+  typography: {
+    useNextVariants: true,
+  },
   palette: {
     primary: indigo,
     secondary: pink,
     type: 'light'
-  },
+  }
 });
 
 class App extends Component {
