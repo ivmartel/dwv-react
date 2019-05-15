@@ -38,7 +38,8 @@ dwv.gui.refreshElement = dwv.gui.base.refreshElement;
 dwv.image.decoderScripts = {
     "jpeg2000": "assets/dwv/decoders/pdfjs/decode-jpeg2000.js",
     "jpeg-lossless": "assets/dwv/decoders/rii-mango/decode-jpegloss.js",
-    "jpeg-baseline": "assets/dwv/decoders/pdfjs/decode-jpegbaseline.js"
+    "jpeg-baseline": "assets/dwv/decoders/pdfjs/decode-jpegbaseline.js",
+    "rle": "assets/dwv/decoders/dwv/decode-rle.js"
 };
 
 const styles = theme => ({
