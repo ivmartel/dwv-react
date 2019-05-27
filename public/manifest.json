@@ -3,7 +3,7 @@
   "name": "dwv-react",
   "display": "standalone",
   "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "background_color": "#ffffff",
   "start_url": "/dwv-react/demo/trunk/index.html",
   "scope": "/dwv-react/demo/trunk",
   "icons": [
