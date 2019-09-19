@@ -16,7 +16,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/dwv-react/demo/trunk/static/js/main.40a668e2.chunk.js"
   },
   {
-    "revision": "b4721dffc75563d7164a",
-    "url": "/dwv-react/demo/trunk/static/js/runtime~main.ca9d98f7.js"
+    "revision": "09a93715bb6c4c6c42ce",
+    "url": "/dwv-react/demo/trunk/static/js/runtime-main.ca9d98f7.js"
   }
 ]);
