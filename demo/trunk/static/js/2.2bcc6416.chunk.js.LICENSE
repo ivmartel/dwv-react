@@ -1,0 +1,114 @@
+/*!
+  Copyright (c) 2017 Jed Watson.
+  Licensed under the MIT License (MIT), see
+  http://jedwatson.github.io/classnames
+*/
+
+/*! dwv 0.26.0 2019-05-09 23:26:16 */
+
+/*!
+ * The buffer module from node.js, for the browser.
+ *
+ * @author   Feross Aboukhadijeh <feross@feross.org> <http://feross.org>
+ * @license  MIT
+ */
+
+/*
+object-assign
+(c) Sindre Sorhus
+@license MIT
+*/
+
+/** @license React v16.9.0
+ * react.production.min.js
+ *
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+/** @license React v16.9.0
+ * react-dom.production.min.js
+ *
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+/** @license React v0.15.0
+ * scheduler.production.min.js
+ *
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+/** @license React v16.7.0
+ * react-is.production.min.js
+ *
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+/** @license React v16.6.0
+ * react-is.production.min.js
+ *
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+/**
+ * CSS Vendor prefix detection and property feature testing.
+ *
+ * @copyright Oleg Slobodskoi 2015
+ * @website https://github.com/jsstyles/css-vendor
+ * @license MIT
+ */
+
+/*!
+ * is-plain-object <https://github.com/jonschlinkert/is-plain-object>
+ *
+ * Copyright (c) 2014-2017, Jon Schlinkert.
+ * Released under the MIT License.
+ */
+
+/*!
+ * isobject <https://github.com/jonschlinkert/isobject>
+ *
+ * Copyright (c) 2014-2017, Jon Schlinkert.
+ * Released under the MIT License.
+ */
+
+/*
+ * Konva JavaScript Framework v2.6.0
+ * http://konvajs.github.io/
+ * Licensed under the MIT
+ * Date: Fri Dec 14 2018
+ *
+ * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
+ * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
+ *
+ * @license
+ */
+
+/**
+   * Sepia Filter
+   * Based on: Pixastic Lib - Sepia filter - v0.1.0
+   * Copyright (c) 2008 Jacob Seidelin, jseidelin@nihilogic.dk, http://blog.nihilogic.dk/
+   * @function
+   * @name Sepia
+   * @memberof Konva.Filters
+   * @param {Object} imageData
+   * @author Jacob Seidelin <jseidelin@nihilogic.dk>
+   * @license MPL v1.1 [http://www.pixastic.com/lib/license.txt]
+   * @example
+   * node.cache();
+   * node.filters([Konva.Filters.Sepia]);
+   */
