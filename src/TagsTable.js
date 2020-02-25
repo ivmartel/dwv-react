@@ -118,7 +118,7 @@ class TagsTable extends React.Component {
             return (
               <TableRow className={classes.row} key={item.group+item.element}>
                 <TableCell>{item.name}</TableCell>
-                <TableCell>{item.value}</TableCell>
+                <TableCell>{item.value.toString()}</TableCell>
               </TableRow>
             );
           })}
