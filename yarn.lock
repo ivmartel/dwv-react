@@ -4695,10 +4695,10 @@ duplexify@^3.4.2, duplexify@^3.6.0:
     readable-stream "^2.0.0"
     stream-shift "^1.0.0"
 
-dwv@0.26.0:
-  version "0.26.0"
-  resolved "https://registry.yarnpkg.com/dwv/-/dwv-0.26.0.tgz#62657d163abfd7d7e6c9ce8f06bf71e370ec5bb5"
-  integrity sha512-Nh/7bq5uYVWLoTyVvSnWqrgtbccnvJ9XLNmJpFaR+J6i9KMtHxSTX7otpVUAZxS6PGc2TDxHw9Xa2y0UISsgsA==
+dwv@0.27.0:
+  version "0.27.0"
+  resolved "https://registry.yarnpkg.com/dwv/-/dwv-0.27.0.tgz#d8a654c0595adb3d83487ae68973ca50bacaec59"
+  integrity sha512-Yns0ab6VzMRKJQ64aw5H3cjXpnv0C/J2e1r0Ccc1okI8jnQBVyWufh4XdwRh030pV+JCEiceoKb93cYiDQW3lg==
   dependencies:
     i18next "~12.1.0"
     i18next-browser-languagedetector "~3.0.0"

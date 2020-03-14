@@ -25,14 +25,8 @@ import dwv from 'dwv';
 
 // gui overrides
 
-// decode query
-dwv.utils.decodeQuery = dwv.utils.base.decodeQuery;
-// progress
-dwv.gui.displayProgress = function () {};
 // get element
 dwv.gui.getElement = dwv.gui.base.getElement;
-// refresh element
-dwv.gui.refreshElement = dwv.gui.base.refreshElement;
 
 // Image decoders (for web workers)
 dwv.image.decoderScripts = {
@@ -74,22 +68,34 @@ class DwvComponent extends React.Component {
         dwv: dwv.getVersion(),
         react: React.version
       },
-      tools: ['Scroll', 'ZoomAndPan', 'WindowLevel', 'Draw'],
+      tools: {
+        Scroll: {},
+        ZoomAndPan: {},
+        WindowLevel: {},
+        Draw: {
+          options: ['Ruler'],
+          type: 'factory',
+          events: ['draw-create', 'draw-change', 'draw-move', 'draw-delete']
+        }
+      },
       selectedTool: 'Select Tool',
       loadProgress: 0,
       dataLoaded: false,
       dwvApp: null,
-      tags: [],
+      metaData: [],
       showDicomTags: false,
-      toolMenuAnchorEl: null
+      toolMenuAnchorEl: null,
+      dropboxClassName: 'dropBox',
+      borderClassName: 'dropBoxBorder',
+      hoverClassName: 'hover'
     };
   }
 
   render() {
     const { classes } = this.props;
-    const { versions, tools, loadProgress, dataLoaded, tags, toolMenuAnchorEl } = this.state;
+    const { versions, tools, loadProgress, dataLoaded, metaData, toolMenuAnchorEl } = this.state;
 
-    const toolsMenuItems = tools.map( (tool) =>
+    const toolsMenuItems = Object.keys(tools).map( (tool) =>
       <MenuItem onClick={this.handleMenuItemClick.bind(this, tool)} key={tool} value={tool}>{tool}</MenuItem>
     );
 
@@ -141,12 +147,14 @@ class DwvComponent extends React.Component {
                   </Typography>
                 </Toolbar>
               </AppBar>
-              <TagsTable data={tags} />
+              <TagsTable data={metaData} />
           </Dialog>
         </div>
 
         <div className="layerContainer">
-          <div className="dropBox"><Typography>Drag and drop data here.</Typography></div>
+          <div className="dropBox dropBoxBorder">
+            <Typography>Drag and drop data here.</Typography>
+          </div>
           <canvas className="imageLayer">Only for HTML5 compatible browsers...</canvas>
           <div className="drawDiv"></div>
         </div>
@@ -169,66 +177,219 @@ class DwvComponent extends React.Component {
     // initialise app
     app.init({
       "containerDivId": "dwv",
-      "tools": this.state.tools,
-      "shapes": ["Ruler"],
-      "isMobile": true
+      "tools": this.state.tools
     });
-    // progress
-    var self = this;
-    app.addEventListener("load-progress", function (event) {
-      self.setState({loadProgress: event.loaded});
+
+    // load events
+    let nReceivedError = null;
+    let nReceivedAbort = null;
+    app.addEventListener('load-start', (/*event*/) => {
+      nReceivedError = 0;
+      nReceivedAbort = 0;
     });
-    app.addEventListener("load-end", function (event) {
-      // set data loaded flag
-      self.setState({dataLoaded: true});
+    app.addEventListener("load-progress", (event) => {
+      this.setState({loadProgress: event.loaded});
+    });
+    app.addEventListener("load", (/*event*/) => {
       // set dicom tags
-      self.setState({tags: app.getTags()});
+      this.setState({metaData: dwv.utils.objectToArray(app.getMetaData())});
       // set the selected tool
+      let selectedTool = 'Scroll'
       if (app.isMonoSliceData() && app.getImage().getNumberOfFrames() === 1) {
-        self.setState({selectedTool: 'ZoomAndPan'});
-      } else {
-        self.setState({selectedTool: 'Scroll'});
+        selectedTool = 'ZoomAndPan';
+      }
+      this.onChangeTool(selectedTool);
+      // hide dropBox
+      this.hideDropbox();
+      // set data loaded flag
+      this.setState({dataLoaded: true});
+    });
+    app.addEventListener('load-end', (/*event*/) => {
+      if (nReceivedError) {
+        this.setState({loadProgress: 0});
+        alert('Received errors during load. Check log for details.');
+      }
+      if (nReceivedAbort) {
+        this.setState({loadProgress: 0});
+        alert('Load was aborted.');
       }
     });
+    app.addEventListener('error', (event) => {
+      console.error(event.error);
+      ++nReceivedError;
+    });
+    app.addEventListener('abort', (/*event*/) => {
+      ++nReceivedAbort;
+    });
+
+    // handle key events
+    app.addEventListener('keydown', (event) => {
+        app.defaultOnKeydown(event);
+    });
+    // handle window resize
+    window.addEventListener('resize', app.onResize);
+
     // store
     this.setState({dwvApp: app});
+
+    // setup drop box
+    this.setupDropbox(app);
+
+    // possible load from location
+    dwv.utils.loadFromUri(window.location.href, app);
   }
 
-  onChangeTool = tool => {
-    if ( this.state.dwvApp ) {
+  /**
+   * Handle a change tool event.
+   * @param tool The new tool name.
+   */
+  onChangeTool = (tool: string) => {
+    if (this.state.dwvApp) {
       this.setState({selectedTool: tool});
-      this.state.dwvApp.onChangeTool({currentTarget: { value: tool } });
+      this.state.dwvApp.setTool(tool);
+      if (tool === 'Draw') {
+        this.onChangeShape(this.state.tools.Draw.options[0]);
+      }
     }
   }
 
+  /**
+   * Handle a change draw shape event.
+   * @param shape The new shape name.
+   */
+  onChangeShape = (shape: string) => {
+    if (this.state.dwvApp) {
+      this.state.dwvApp.setDrawShape(shape);
+    }
+  }
+
+  /**
+   * Handle a reset event.
+   */
   onReset = tool => {
-    if ( this.state.dwvApp ) {
-      this.state.dwvApp.onDisplayReset();
+    if (this.state.dwvApp) {
+      this.state.dwvApp.resetDisplay();
     }
   }
 
+  /**
+   * Open the DICOM tags dialog.
+   */
   handleTagsDialogOpen = () => {
     this.setState({ showDicomTags: true });
-  };
+  }
 
+  /**
+   * Close the DICOM tags dialog.
+   */
   handleTagsDialogClose = () => {
     this.setState({ showDicomTags: false });
   };
 
+  /**
+   * Menu button click.
+   */
   handleMenuButtonClick = event => {
     this.setState({ toolMenuAnchorEl: event.currentTarget });
   };
 
+  /**
+   * Menu cloase.
+   */
   handleMenuClose = event => {
     this.setState({ toolMenuAnchorEl: null });
   };
 
+  /**
+   * Menu item click.
+   */
   handleMenuItemClick = tool => {
     this.setState({ toolMenuAnchorEl: null });
     this.onChangeTool(tool);
   };
 
-}
+  // drag and drop [begin] -----------------------------------------------------
+
+  /**
+   * Setup the data load drop box: add event listeners and set initial size.
+   */
+  setupDropbox = (app) => {
+      // start listening to drag events on the layer container
+      const layerContainer = app.getElement('layerContainer');
+      if (layerContainer) {
+        layerContainer.addEventListener('dragover', this.onDragOver);
+        layerContainer.addEventListener('dragleave', this.onDragLeave);
+        layerContainer.addEventListener('drop', this.onDrop);
+      }
+      // set the initial drop box size
+      const box = app.getElement(this.state.dropboxClassName);
+      if (box) {
+        const size = app.getLayerContainerSize();
+        const dropBoxSize = 2 * size.height / 3;
+        box.setAttribute(
+          'style',
+          'width:' + dropBoxSize + 'px;height:' + dropBoxSize + 'px');
+      }
+  }
+
+  /**
+   * Handle a drag over.
+   * @param event The event to handle.
+   */
+  onDragOver = (event: DragEvent) => {
+    // prevent default handling
+    event.stopPropagation();
+    event.preventDefault();
+    // update box border
+    const box = this.state.dwvApp.getElement(this.state.borderClassName);
+    if (box && box.className.indexOf(this.state.hoverClassName) === -1) {
+        box.className += ' ' + this.state.hoverClassName;
+    }
+  }
+
+  /**
+   * Handle a drag leave.
+   * @param event The event to handle.
+   */
+  onDragLeave = (event: DragEvent) => {
+    // prevent default handling
+    event.stopPropagation();
+    event.preventDefault();
+    // update box class
+    const box = this.state.dwvApp.getElement(this.borderClassName + ' hover');
+    if (box && box.className.indexOf(this.state.hoverClassName) !== -1) {
+        box.className = box.className.replace(' ' + this.state.hoverClassName, '');
+    }
+  }
+
+  /**
+   * Hide the data load drop box.
+   */
+  hideDropbox = () => {
+    // remove box
+    const box = this.state.dwvApp.getElement(this.state.dropboxClassName);
+    if (box) {
+      box.parentNode.removeChild(box);
+    }
+  }
+
+  /**
+   * Handle a drop event.
+   * @param event The event to handle.
+   */
+  onDrop = (event: DragEvent) => {
+    // prevent default handling
+    event.stopPropagation();
+    event.preventDefault();
+    // load files
+    this.state.dwvApp.loadFiles(event.dataTransfer.files);
+    // hide drop box
+    this.hideDropbox();
+  }
+
+  // drag and drop [end] -------------------------------------------------------
+
+} // DwvComponent
 
 DwvComponent.propTypes = {
   classes: PropTypes.object.isRequired,
