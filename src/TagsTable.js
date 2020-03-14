@@ -62,7 +62,7 @@ class TagsTable extends React.Component {
       for ( var key in item ) {
         if( item.hasOwnProperty(key) ) {
           var value = item[key];
-          if ( typeof value === "number" ) {
+          if ( typeof value !== "string" ) {
             value = value.toString();
           }
           if ( value.toLowerCase().indexOf(searchLo) !== -1 ) {
