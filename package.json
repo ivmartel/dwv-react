@@ -10,8 +10,8 @@
     "@material-ui/core": "^3.9.3",
     "@material-ui/icons": "^3.0.2",
     "dwv": "0.27.0",
-    "react": "^16.9.0",
-    "react-dom": "^16.9.0",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
     "react-scripts": "3.4.0"
   },
   "scripts": {
