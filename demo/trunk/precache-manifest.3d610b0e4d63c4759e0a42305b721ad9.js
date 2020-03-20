@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "f33d9f5a89169192d54a9a56074e1b22",
+    "revision": "dcdf4781b48c4291527c156fe96deee0",
     "url": "/dwv-react/demo/trunk/index.html"
   },
   {
@@ -8,12 +8,12 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/dwv-react/demo/trunk/static/css/main.68c023de.chunk.css"
   },
   {
-    "revision": "aab7347b6f98239e82fa",
-    "url": "/dwv-react/demo/trunk/static/js/2.4c3b01b4.chunk.js"
+    "revision": "da824a24bd7a5dddcd2d",
+    "url": "/dwv-react/demo/trunk/static/js/2.21b15293.chunk.js"
   },
   {
-    "revision": "749ce8a52fa1141400a9ab450500c9be",
-    "url": "/dwv-react/demo/trunk/static/js/2.4c3b01b4.chunk.js.LICENSE.txt"
+    "revision": "c99ce4bb68ceed0b6d9cbb4e7cbdcc53",
+    "url": "/dwv-react/demo/trunk/static/js/2.21b15293.chunk.js.LICENSE.txt"
   },
   {
     "revision": "c0b9b89fd06a2ff3ee1f",
