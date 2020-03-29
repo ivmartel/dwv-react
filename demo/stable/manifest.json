@@ -4,8 +4,8 @@
   "display": "standalone",
   "theme_color": "#000000",
   "background_color": "#ffffff",
-  "start_url": "/dwv-react/demo/stable/index.html",
-  "scope": "/dwv-react/demo/stable",
+  "scope": ".",
+  "start_url": "index.html",
   "icons": [
     {
       "src": "assets/icons/icon-16.png",

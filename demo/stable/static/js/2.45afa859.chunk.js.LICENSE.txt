@@ -1,0 +1,114 @@
+/*
+ * Konva JavaScript Framework v2.6.0
+ * http://konvajs.github.io/
+ * Licensed under the MIT
+ * Date: Fri Dec 14 2018
+ *
+ * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
+ * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
+ *
+ * @license
+ */
+
+/*
+object-assign
+(c) Sindre Sorhus
+@license MIT
+*/
+
+/*!
+  Copyright (c) 2017 Jed Watson.
+  Licensed under the MIT License (MIT), see
+  http://jedwatson.github.io/classnames
+*/
+
+/*!
+ * The buffer module from node.js, for the browser.
+ *
+ * @author   Feross Aboukhadijeh <feross@feross.org> <http://feross.org>
+ * @license  MIT
+ */
+
+/*!
+ * is-plain-object <https://github.com/jonschlinkert/is-plain-object>
+ *
+ * Copyright (c) 2014-2017, Jon Schlinkert.
+ * Released under the MIT License.
+ */
+
+/*!
+ * isobject <https://github.com/jonschlinkert/isobject>
+ *
+ * Copyright (c) 2014-2017, Jon Schlinkert.
+ * Released under the MIT License.
+ */
+
+/*! dwv 0.27.0 2020-03-11 00:16:31 */
+
+/**
+   * Sepia Filter
+   * Based on: Pixastic Lib - Sepia filter - v0.1.0
+   * Copyright (c) 2008 Jacob Seidelin, jseidelin@nihilogic.dk, http://blog.nihilogic.dk/
+   * @function
+   * @name Sepia
+   * @memberof Konva.Filters
+   * @param {Object} imageData
+   * @author Jacob Seidelin <jseidelin@nihilogic.dk>
+   * @license MPL v1.1 [http://www.pixastic.com/lib/license.txt]
+   * @example
+   * node.cache();
+   * node.filters([Konva.Filters.Sepia]);
+   */
+
+/**
+ * CSS Vendor prefix detection and property feature testing.
+ *
+ * @copyright Oleg Slobodskoi 2015
+ * @website https://github.com/jsstyles/css-vendor
+ * @license MIT
+ */
+
+/** @license React v0.19.1
+ * scheduler.production.min.js
+ *
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+/** @license React v16.13.1
+ * react-dom.production.min.js
+ *
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+/** @license React v16.13.1
+ * react.production.min.js
+ *
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+/** @license React v16.6.0
+ * react-is.production.min.js
+ *
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+/** @license React v16.7.0
+ * react-is.production.min.js
+ *
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
