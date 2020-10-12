@@ -43,7 +43,7 @@ object-assign
  * Released under the MIT License.
  */
 
-/*! dwv 0.27.0 2020-03-11 00:16:31 */
+/*! dwv 0.27.1 2020-09-24 00:08:40 */
 
 /**
    * Sepia Filter
