@@ -5,17 +5,17 @@
     "main.js.map": "/dwv-react/demo/trunk/static/js/main.be5600b7.chunk.js.map",
     "runtime-main.js": "/dwv-react/demo/trunk/static/js/runtime-main.15010210.js",
     "runtime-main.js.map": "/dwv-react/demo/trunk/static/js/runtime-main.15010210.js.map",
-    "static/js/2.3774c3a5.chunk.js": "/dwv-react/demo/trunk/static/js/2.3774c3a5.chunk.js",
-    "static/js/2.3774c3a5.chunk.js.map": "/dwv-react/demo/trunk/static/js/2.3774c3a5.chunk.js.map",
+    "static/js/2.f6141553.chunk.js": "/dwv-react/demo/trunk/static/js/2.f6141553.chunk.js",
+    "static/js/2.f6141553.chunk.js.map": "/dwv-react/demo/trunk/static/js/2.f6141553.chunk.js.map",
     "index.html": "/dwv-react/demo/trunk/index.html",
-    "precache-manifest.a0719439310a7e313fefe6f37de14709.js": "/dwv-react/demo/trunk/precache-manifest.a0719439310a7e313fefe6f37de14709.js",
+    "precache-manifest.59f922016812c79dde3969ade364b00c.js": "/dwv-react/demo/trunk/precache-manifest.59f922016812c79dde3969ade364b00c.js",
     "service-worker.js": "/dwv-react/demo/trunk/service-worker.js",
     "static/css/main.68c023de.chunk.css.map": "/dwv-react/demo/trunk/static/css/main.68c023de.chunk.css.map",
-    "static/js/2.3774c3a5.chunk.js.LICENSE.txt": "/dwv-react/demo/trunk/static/js/2.3774c3a5.chunk.js.LICENSE.txt"
+    "static/js/2.f6141553.chunk.js.LICENSE.txt": "/dwv-react/demo/trunk/static/js/2.f6141553.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.15010210.js",
-    "static/js/2.3774c3a5.chunk.js",
+    "static/js/2.f6141553.chunk.js",
     "static/css/main.68c023de.chunk.css",
     "static/js/main.be5600b7.chunk.js"
   ]
