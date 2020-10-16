@@ -1,23 +1,23 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "8d41fc38725015df937cd73e7478af79",
+    "revision": "528e1f0d7e00fba4700f4d69c7d6c459",
     "url": "/dwv-react/demo/trunk/index.html"
   },
   {
-    "revision": "32725dfc5ef7b4ca293a",
+    "revision": "b1b5c4793382c24fb669",
     "url": "/dwv-react/demo/trunk/static/css/main.68c023de.chunk.css"
   },
   {
-    "revision": "4a53311d06fdef9939d7",
-    "url": "/dwv-react/demo/trunk/static/js/2.f6141553.chunk.js"
+    "revision": "59ac55d09ae6b4c8248a",
+    "url": "/dwv-react/demo/trunk/static/js/2.21e5f252.chunk.js"
   },
   {
     "revision": "8d8f1b1399178773e32c33295022c5de",
-    "url": "/dwv-react/demo/trunk/static/js/2.f6141553.chunk.js.LICENSE.txt"
+    "url": "/dwv-react/demo/trunk/static/js/2.21e5f252.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "32725dfc5ef7b4ca293a",
-    "url": "/dwv-react/demo/trunk/static/js/main.be5600b7.chunk.js"
+    "revision": "b1b5c4793382c24fb669",
+    "url": "/dwv-react/demo/trunk/static/js/main.9363bce9.chunk.js"
   },
   {
     "revision": "3934d5b722677a5286c0",
