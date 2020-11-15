@@ -17,8 +17,9 @@
 
 /* drag&drop */
 .dropBox {
-    border: 5px dashed #e8eaf6; /*indigo:light*/
     margin: auto;
     text-align: center; vertical-align: middle; }
-.dropBox.hover {
-    border: 5px dashed #3f51b5; /*indigo*/ }
+.dropBoxBorder {
+  border: 5px dashed #e8eaf6; /*indigo:light*/ }
+.dropBoxBorder.hover {
+  border: 5px dashed #3f51b5; /*indigo*/  }
