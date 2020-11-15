@@ -152,9 +152,7 @@ class DwvComponent extends React.Component {
         </div>
 
         <div className="layerContainer">
-          <div className="dropBox dropBoxBorder">
-            <Typography>Drag and drop data here.</Typography>
-          </div>
+          <div className="dropBox"></div>
           <canvas className="imageLayer">Only for HTML5 compatible browsers...</canvas>
           <div className="drawDiv"></div>
         </div>
@@ -181,11 +179,16 @@ class DwvComponent extends React.Component {
     });
 
     // load events
+    let nLoadItem = null;
     let nReceivedError = null;
     let nReceivedAbort = null;
     app.addEventListener('load-start', (/*event*/) => {
+      // reset flags
+      nLoadItem = 0;
       nReceivedError = 0;
       nReceivedAbort = 0;
+      // hide drop box
+      this.showDropbox(app, false);
     });
     app.addEventListener("load-progress", (event) => {
       this.setState({loadProgress: event.loaded});
@@ -199,8 +202,6 @@ class DwvComponent extends React.Component {
         selectedTool = 'ZoomAndPan';
       }
       this.onChangeTool(selectedTool);
-      // hide dropBox
-      this.hideDropbox();
       // set data loaded flag
       this.setState({dataLoaded: true});
     });
@@ -208,11 +209,19 @@ class DwvComponent extends React.Component {
       if (nReceivedError) {
         this.setState({loadProgress: 0});
         alert('Received errors during load. Check log for details.');
+        // show drop box if nothing has been loaded
+        if (!nLoadItem) {
+          this.showDropbox(app, true);
+        }
       }
       if (nReceivedAbort) {
         this.setState({loadProgress: 0});
         alert('Load was aborted.');
+        this.showDropbox(app, true);
       }
+    });
+    app.addEventListener('load-item', (/*event*/) => {
+      ++nLoadItem;
     });
     app.addEventListener('error', (event) => {
       console.error(event.error);
@@ -224,7 +233,7 @@ class DwvComponent extends React.Component {
 
     // handle key events
     app.addEventListener('keydown', (event) => {
-        app.defaultOnKeydown(event);
+      app.defaultOnKeydown(event);
     });
     // handle window resize
     window.addEventListener('resize', app.onResize);
@@ -317,18 +326,12 @@ class DwvComponent extends React.Component {
       // start listening to drag events on the layer container
       const layerContainer = app.getElement('layerContainer');
       if (layerContainer) {
+        // show drop box
+        this.showDropbox(app, true);
+        // start listening to drag events on the layer container
         layerContainer.addEventListener('dragover', this.onDragOver);
         layerContainer.addEventListener('dragleave', this.onDragLeave);
         layerContainer.addEventListener('drop', this.onDrop);
-      }
-      // set the initial drop box size
-      const box = app.getElement(this.state.dropboxClassName);
-      if (box) {
-        const size = app.getLayerContainerSize();
-        const dropBoxSize = 2 * size.height / 3;
-        box.setAttribute(
-          'style',
-          'width:' + dropBoxSize + 'px;height:' + dropBoxSize + 'px');
       }
   }
 
@@ -363,13 +366,35 @@ class DwvComponent extends React.Component {
   }
 
   /**
-   * Hide the data load drop box.
+   * Show/hide the data load drop box.
+   * @param show True to show the drop box.
    */
-  hideDropbox = () => {
-    // remove box
-    const box = this.state.dwvApp.getElement(this.state.dropboxClassName);
+  showDropbox = (app, show) => {
+    const box = app.getElement(this.state.dropboxClassName);
     if (box) {
-      box.parentNode.removeChild(box);
+      if (show) {
+        // reset css class
+        box.className = this.state.dropboxClassName + ' ' + this.state.borderClassName;
+        // check content
+        if (box.innerHTML === '') {
+          box.innerHTML = 'Drag and drop data here.';
+        }
+        const size = app.getLayerContainerSize();
+        // set the initial drop box size
+        const dropBoxSize = 2 * size.height / 3;
+        box.setAttribute(
+          'style',
+          'width:' + dropBoxSize + 'px;height:' + dropBoxSize + 'px');
+      } else {
+        // remove border css class
+        box.className = this.state.dropboxClassName;
+        // remove content
+        box.innerHTML = '';
+        // make not visible
+        box.setAttribute(
+          'style',
+          'visible:false;');
+      }
     }
   }
 
@@ -383,8 +408,6 @@ class DwvComponent extends React.Component {
     event.preventDefault();
     // load files
     this.state.dwvApp.loadFiles(event.dataTransfer.files);
-    // hide drop box
-    this.hideDropbox();
   }
 
   // drag and drop [end] -------------------------------------------------------
