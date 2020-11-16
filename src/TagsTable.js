@@ -48,13 +48,6 @@ class TagsTable extends React.Component {
     this.filterList = this.filterList.bind(this);
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.setState({
-      data: nextProps.data,
-      displayData: nextProps.data
-    });
-  }
-
   filterList(event) {
     var search = event.target.value
     var searchLo = search.toLowerCase();
@@ -80,7 +73,7 @@ class TagsTable extends React.Component {
   }
 
   handleChangeRowsPerPage = event => {
-    this.setState({ rowsPerPage: event.target.value });
+    this.setState({ page: 0, rowsPerPage: event.target.value });
   }
 
   render() {

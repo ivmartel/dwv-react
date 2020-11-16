@@ -38,7 +38,7 @@ dwv.image.decoderScripts = {
 
 const styles = theme => ({
   button: {
-    margin: theme.spacing.unit,
+    margin: theme.spacing(1),
   },
   appBar: {
     position: 'relative',
@@ -55,9 +55,9 @@ const styles = theme => ({
   }
 });
 
-function TransitionUp(props) {
-  return <Slide direction="up" {...props} />;
-}
+export const TransitionUp = React.forwardRef((props, ref) => (
+  <Slide direction="up" {...props} ref={ref} />
+))
 
 class DwvComponent extends React.Component {
 
