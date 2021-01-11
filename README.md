@@ -6,7 +6,7 @@ All coding/implementation contributions and comments are welcome. Releases shoul
 
 dwv-react is not certified for diagnostic use. Released under GNU GPL-3.0 license (see [license.txt](license.txt)).
 
-[![Build Status](https://travis-ci.org/ivmartel/dwv-react.svg?branch=master)](https://travis-ci.org/ivmartel/dwv-react)
+[![Build Status](https://travis-ci.com/ivmartel/dwv-react.svg?branch=master)](https://travis-ci.com/ivmartel/dwv-react)
 
 ## Steps to run the viewer from scratch
 
