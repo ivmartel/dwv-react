@@ -161,7 +161,10 @@ class DwvComponent extends React.Component {
           <Typography variant="caption">Powered by <Link
               href="https://github.com/ivmartel/dwv"
               title="dwv on github">dwv
-            </Link> {versions.dwv} and React {versions.react}
+            </Link> {versions.dwv} and <Link
+              href="https://github.com/facebook/react"
+              title="react on github">React
+            </Link> {versions.react}
           </Typography>
         </p></div>
 
