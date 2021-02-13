@@ -11,6 +11,8 @@ ls -l
 # setup git
 git config --global user.email github-actions@github.com
 git config --global user.name github-actions
+# forget local changes
+git stash
 # checkout gh-pages branch
 git checkout gh-pages
 # clean up demo
@@ -19,7 +21,7 @@ rm -Rf ./demo/trunk/*
 cp -Rf ./build/* ./demo/trunk
 # add, commit and push files
 git add ./demo/trunk/*
-echo "Github actions build ${github.run_id} pushed to gh-pages"
+echo "Github actions build ${{ github.run_id }} pushed to gh-pages"
 
 #git commit -m "Github actions build ${github.run_id} pushed to gh-pages"
 #git push -fq origin gh-pages
