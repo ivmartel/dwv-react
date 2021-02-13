@@ -28,5 +28,12 @@ jobs:
     - name: Push to gh-pages
       if: github.ref == 'refs/heads/master'
       run: |
-         chmod +x ./resources/scripts/update-gh-pages_github.sh
-         ./resources/scripts/update-gh-pages_github.sh
+        git config user.email github-actions@github.com
+        git config user.name github-actions
+        git stash
+        git checkout gh-pages
+        rm -Rf ./demo/trunk/*
+        cp -Rf ./build/* ./demo/trunk
+        git add ./demo/trunk/*
+        git commit -m "Github actions build ${github.run_id} pushed to gh-pages"
+        git push -fq origin gh-pages
