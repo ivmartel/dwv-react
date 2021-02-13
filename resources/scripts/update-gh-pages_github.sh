@@ -12,7 +12,6 @@ ls -l
 git config --global user.email github-actions@github.com
 git config --global user.name github-actions
 # checkout gh-pages branch
-git branch -f gh-pages origin/gh-pages
 git checkout gh-pages
 # clean up demo
 rm -Rf ./demo/trunk/*
