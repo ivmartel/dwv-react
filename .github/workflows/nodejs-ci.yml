@@ -35,5 +35,5 @@ jobs:
         rm -Rf ./demo/trunk/*
         cp -Rf ./build/* ./demo/trunk
         git add ./demo/trunk/*
-        git commit -m "Github actions build ${github.run_id} pushed to gh-pages"
+        git commit -m "Github actions build ${{ github.run_id }} pushed to gh-pages"
         git push -fq origin gh-pages
