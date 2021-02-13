@@ -25,15 +25,14 @@ jobs:
       run: yarn run test
     - name: Build
       run: yarn run build
-    - name: Push to gh-pages
+    - name: Push to gh-pages (if master branch)
       if: github.ref == 'refs/heads/master'
       run: |
         git config user.email github-actions@github.com
         git config user.name github-actions
-        git stash
         git checkout gh-pages
         rm -Rf ./demo/trunk/*
         cp -Rf ./build/* ./demo/trunk
         git add ./demo/trunk/*
-        git commit -m "Github actions build ${{ github.run_id }} pushed to gh-pages"
+        git commit -m "Github actions build ${{ github.run_number }} pushed to gh-pages"
         git push -fq origin gh-pages
