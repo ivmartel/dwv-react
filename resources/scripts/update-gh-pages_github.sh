@@ -14,11 +14,11 @@ git config --global user.name github-actions
 # using token, clone gh-pages branch
 git checkout gh-pages
 # clean up demo
-rm -Rf demo/trunk/*
+rm -Rf ./demo/trunk/*
 # copy new build in demo/trunk
-cp -Rf build/* demo/trunk
+cp -Rf ./build/* ./demo/trunk
 # add, commit and push files
-git add demo/trunk/*
+git add ./demo/trunk/*
 echo "Github actions build ${github.run_id} pushed to gh-pages"
 
 #git commit -m "Github actions build ${github.run_id} pushed to gh-pages"
