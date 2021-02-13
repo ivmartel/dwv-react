@@ -11,7 +11,8 @@ ls -l
 # setup git
 git config --global user.email github-actions@github.com
 git config --global user.name github-actions
-# using token, clone gh-pages branch
+# checkout gh-pages branch
+git branch -f gh-pages upstream/gh-pages
 git checkout gh-pages
 # clean up demo
 rm -Rf ./demo/trunk/*
