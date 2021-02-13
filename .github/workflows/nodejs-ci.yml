@@ -26,12 +26,8 @@ jobs:
     # base href is set in package.json at homepage
     - name: Build
       run: yarn run build
-
-  publish:
-    if: github.ref == 'refs/heads/master'
-    runs-on: ubuntu-latest
-    steps:
     - name: Push to gh-pages
+      if: github.ref == 'refs/heads/master'
       run: |
          ls -l ./resources/scripts
          chmod +x ./resources/scripts/update-gh-pages_github.sh
