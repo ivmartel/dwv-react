@@ -32,7 +32,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Push to gh-pages
-       run: |
+      run: |
          ls -l ./resources/scripts
          chmod +x ./resources/scripts/update-gh-pages_github.sh
          ./resources/scripts/update-gh-pages_github.sh
