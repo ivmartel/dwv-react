@@ -1,0 +1,38 @@
+# Node.js CI workflow
+
+# react runs unique tests if the CI environment variable is set
+# build: base href is set in package.json at homepage
+
+name: Node.js CI
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    - name: Use Node.js
+      uses: actions/setup-node@v1
+      with:
+        node-version: '14.x'
+    - name: Install dependencies
+      run: yarn install --frozen-lockfile
+    - name: Run tests
+      run: yarn run test
+    - name: Build
+      run: yarn run build
+    - name: Push to gh-pages (if master branch)
+      if: github.ref == 'refs/heads/master'
+      run: |
+        git config user.email github-actions@github.com
+        git config user.name github-actions
+        git checkout gh-pages
+        rm -Rf ./demo/trunk/*
+        cp -Rf ./build/* ./demo/trunk
+        git add ./demo/trunk/*
+        git diff-index --quiet HEAD || git commit -m "github-actions run ${{ github.run_number }} pushed to gh-pages"
+        git push -fq origin gh-pages
