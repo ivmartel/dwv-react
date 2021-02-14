@@ -75,7 +75,7 @@ class DwvComponent extends React.Component {
         Draw: {
           options: ['Ruler'],
           type: 'factory',
-          events: ['draw-create', 'draw-change', 'draw-move', 'draw-delete']
+          events: ['drawcreate', 'drawchange', 'drawmove', 'drawdelete']
         }
       },
       selectedTool: 'Select Tool',
@@ -185,7 +185,7 @@ class DwvComponent extends React.Component {
     let nLoadItem = null;
     let nReceivedError = null;
     let nReceivedAbort = null;
-    app.addEventListener('load-start', (/*event*/) => {
+    app.addEventListener('loadstart', (/*event*/) => {
       // reset flags
       nLoadItem = 0;
       nReceivedError = 0;
@@ -193,7 +193,7 @@ class DwvComponent extends React.Component {
       // hide drop box
       this.showDropbox(app, false);
     });
-    app.addEventListener("load-progress", (event) => {
+    app.addEventListener("loadprogress", (event) => {
       this.setState({loadProgress: event.loaded});
     });
     app.addEventListener("load", (/*event*/) => {
@@ -208,7 +208,7 @@ class DwvComponent extends React.Component {
       // set data loaded flag
       this.setState({dataLoaded: true});
     });
-    app.addEventListener('load-end', (/*event*/) => {
+    app.addEventListener('loadend', (/*event*/) => {
       if (nReceivedError) {
         this.setState({loadProgress: 0});
         alert('Received errors during load. Check log for details.');
@@ -223,7 +223,7 @@ class DwvComponent extends React.Component {
         this.showDropbox(app, true);
       }
     });
-    app.addEventListener('load-item', (/*event*/) => {
+    app.addEventListener('loaditem', (/*event*/) => {
       ++nLoadItem;
     });
     app.addEventListener('error', (event) => {
