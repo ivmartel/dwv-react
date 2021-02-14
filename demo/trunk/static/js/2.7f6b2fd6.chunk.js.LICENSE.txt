@@ -1,14 +1,13 @@
 /*
- * Konva JavaScript Framework v2.6.0
- * http://konvajs.github.io/
- * Licensed under the MIT
- * Date: Fri Dec 14 2018
- *
- * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
- * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
- *
- * @license
- */
+ Magic wand tool (fuzzy selection) by color
+
+ @package magic-wand-tool
+ @author Ryasnoy Paul <ryasnoypaul@gmail.com>
+ @version 1.1.7
+ @license MIT
+ @copyright (c) 2014-2020, Ryasnoy Paul <ryasnoypaul@gmail.com>
+
+*/
 
 /*
 object-assign
@@ -23,22 +22,7 @@ object-assign
  * @license  MIT
  */
 
-/*! dwv 0.27.1 2020-09-24 00:08:40 */
-
-/**
-   * Sepia Filter
-   * Based on: Pixastic Lib - Sepia filter - v0.1.0
-   * Copyright (c) 2008 Jacob Seidelin, jseidelin@nihilogic.dk, http://blog.nihilogic.dk/
-   * @function
-   * @name Sepia
-   * @memberof Konva.Filters
-   * @param {Object} imageData
-   * @author Jacob Seidelin <jseidelin@nihilogic.dk>
-   * @license MPL v1.1 [http://www.pixastic.com/lib/license.txt]
-   * @example
-   * node.cache();
-   * node.filters([Konva.Filters.Sepia]);
-   */
+/*! dwv 0.28.1 2021-02-02 23:57:15 */
 
 /**
  * A better abstraction over CSS.
