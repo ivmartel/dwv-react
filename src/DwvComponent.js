@@ -78,6 +78,7 @@ class DwvComponent extends React.Component {
           events: ['drawcreate', 'drawchange', 'drawmove', 'drawdelete']
         }
       },
+      toolNames: [],
       selectedTool: 'Select Tool',
       loadProgress: 0,
       dataLoaded: false,
@@ -93,9 +94,9 @@ class DwvComponent extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const { versions, tools, loadProgress, dataLoaded, metaData, toolMenuAnchorEl } = this.state;
+    const { versions, tools, toolNames, loadProgress, dataLoaded, metaData, toolMenuAnchorEl } = this.state;
 
-    const toolsMenuItems = Object.keys(tools).map( (tool) =>
+    const toolsMenuItems = toolNames.map( (tool) =>
       <MenuItem onClick={this.handleMenuItemClick.bind(this, tool)} key={tool} value={tool}>{tool}</MenuItem>
     );
 
@@ -199,6 +200,17 @@ class DwvComponent extends React.Component {
     app.addEventListener("load", (/*event*/) => {
       // set dicom tags
       this.setState({metaData: dwv.utils.objectToArray(app.getMetaData())});
+      // available tools
+      let names = [];
+      for (const key in this.state.tools) {
+        if ((key === 'Scroll' && app.canScroll()) ||
+          (key === 'WindowLevel' && app.canWindowLevel()) ||
+          (key !== 'Scroll' && key !== 'WindowLevel')) {
+          names.push(key);
+        }
+      }
+      this.setState({toolNames: names});
+      this.onChangeTool(names[0]);
       // set the selected tool
       let selectedTool = 'Scroll'
       if (app.isMonoSliceData() && app.getImage().getNumberOfFrames() === 1) {
