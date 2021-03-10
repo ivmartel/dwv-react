@@ -30,10 +30,10 @@ dwv.gui.getElement = dwv.gui.base.getElement;
 
 // Image decoders (for web workers)
 dwv.image.decoderScripts = {
-    "jpeg2000": "assets/dwv/decoders/pdfjs/decode-jpeg2000.js",
-    "jpeg-lossless": "assets/dwv/decoders/rii-mango/decode-jpegloss.js",
-    "jpeg-baseline": "assets/dwv/decoders/pdfjs/decode-jpegbaseline.js",
-    "rle": "assets/dwv/decoders/dwv/decode-rle.js"
+  "jpeg2000": `${process.env.PUBLIC_URL}/assets/dwv/decoders/pdfjs/decode-jpeg2000.js`,
+  "jpeg-lossless": `${process.env.PUBLIC_URL}/assets/dwv/decoders/rii-mango/decode-jpegloss.js`,
+  "jpeg-baseline": `${process.env.PUBLIC_URL}/assets/dwv/decoders/pdfjs/decode-jpegbaseline.js`,
+  "rle": `${process.env.PUBLIC_URL}/assets/dwv/decoders/dwv/decode-rle.js`
 };
 
 const styles = theme => ({
