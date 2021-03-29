@@ -1,6 +1,6 @@
 {
   "name": "dwv-react",
-  "version": "0.5.0",
+  "version": "0.6.0-beta",
   "description": "Medical viewer using DWV (DICOM Web Viewer) and React.",
   "author": "ivmartel",
   "license": "GPL-3.0",
