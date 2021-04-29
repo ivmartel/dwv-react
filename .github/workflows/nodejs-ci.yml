@@ -28,6 +28,7 @@ jobs:
       run: yarn run test
     - name: Build
       run: |
+        rm -Rf ./build/*
         BUILD_SCRIPT=build-trunk
         if ${{ env.IS_PUSH_TAG }}; then
           BUILD_SCRIPT=build-stable
