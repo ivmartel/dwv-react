@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/dwv-react/demo/trunk/static/css/main.f4486906.chunk.css",
-    "main.js": "/dwv-react/demo/trunk/static/js/main.3f935fc1.chunk.js",
-    "main.js.map": "/dwv-react/demo/trunk/static/js/main.3f935fc1.chunk.js.map",
+    "main.js": "/dwv-react/demo/trunk/static/js/main.34993340.chunk.js",
+    "main.js.map": "/dwv-react/demo/trunk/static/js/main.34993340.chunk.js.map",
     "runtime-main.js": "/dwv-react/demo/trunk/static/js/runtime-main.85c045e8.js",
     "runtime-main.js.map": "/dwv-react/demo/trunk/static/js/runtime-main.85c045e8.js.map",
     "static/js/2.963c164e.chunk.js": "/dwv-react/demo/trunk/static/js/2.963c164e.chunk.js",
@@ -15,6 +15,6 @@
     "static/js/runtime-main.85c045e8.js",
     "static/js/2.963c164e.chunk.js",
     "static/css/main.f4486906.chunk.css",
-    "static/js/main.3f935fc1.chunk.js"
+    "static/js/main.34993340.chunk.js"
   ]
 }
