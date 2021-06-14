@@ -5237,12 +5237,12 @@ duplexify@^3.4.2, duplexify@^3.6.0:
     readable-stream "^2.0.0"
     stream-shift "^1.0.0"
 
-dwv@0.28.2:
-  version "0.28.2"
-  resolved "https://registry.yarnpkg.com/dwv/-/dwv-0.28.2.tgz#2cdeac94022068c97c07499576a175acba4c1122"
-  integrity sha512-8CPJvKMNuHEA2w+3Gq8tE3A2e2yUBR49sDyDqqikZ9SG5eSzHV2XK/EDKcTWUaqwuUijSKQ3g9v+1ALO1ZzyhQ==
+dwv@0.29.1:
+  version "0.29.1"
+  resolved "https://registry.yarnpkg.com/dwv/-/dwv-0.29.1.tgz#5ff4328326a84ad022febbed43609df4a8dbe1fc"
+  integrity sha512-wwPX75zmCVnc/4jEO/kyc9vweYSe+LogkZSTu4G0qyoPYf+hT+3tdpWrzp3C56PW6kOwOzS3+vV3LdFvoNkoug==
   dependencies:
-    i18next "~19.8.3"
+    i18next "~20.1.0"
     i18next-browser-languagedetector "~6.0.1"
     i18next-xhr-backend "~3.2.2"
     jszip "~3.5.0"
@@ -6825,10 +6825,10 @@ i18next-xhr-backend@~3.2.2:
   dependencies:
     "@babel/runtime" "^7.5.5"
 
-i18next@~19.8.3:
-  version "19.8.7"
-  resolved "https://registry.yarnpkg.com/i18next/-/i18next-19.8.7.tgz#ef023e353974d1b1453e8b6331bd9fb7cba427df"
-  integrity sha512-ezo1gb7QO4OQ5gQCdZMUxopwQSoqpRp6whdEjm1grxMSmkGj1NJ+kYS0UQd4NnpPIVqsgqTQ2L2eqSQYQ+U3Fw==
+i18next@~20.1.0:
+  version "20.1.0"
+  resolved "https://registry.yarnpkg.com/i18next/-/i18next-20.1.0.tgz#397dce9ad230ea822f487dc62d6128df5b678456"
+  integrity sha512-sV+ZwTM4Ik4d6wKdwNS/ocKmvXi6DFA/YHMgdQX3i4L5993jnbo1/j1pK/c4+zBOjexer4dt+c5JHsFj4CUoXQ==
   dependencies:
     "@babel/runtime" "^7.12.0"
 
