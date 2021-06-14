@@ -363,7 +363,7 @@ class DwvComponent extends React.Component {
   onBoxDragOver = (event: DragEvent) => {
     this.defaultHandleDragEvent(event);
     // update box border
-    const box = this.state.dwvApp.getElement(this.state.borderClassName);
+    const box = document.getElementById(this.state.dropboxDivId);
     if (box && box.className.indexOf(this.state.hoverClassName) === -1) {
         box.className += ' ' + this.state.hoverClassName;
     }
@@ -376,7 +376,7 @@ class DwvComponent extends React.Component {
   onBoxDragLeave = (event: DragEvent) => {
     this.defaultHandleDragEvent(event);
     // update box class
-    const box = this.state.dwvApp.getElement(this.state.borderClassName + ' hover');
+    const box = document.getElementById(this.state.dropboxDivId);
     if (box && box.className.indexOf(this.state.hoverClassName) !== -1) {
         box.className = box.className.replace(' ' + this.state.hoverClassName, '');
     }
