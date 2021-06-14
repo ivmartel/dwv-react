@@ -7,18 +7,19 @@
 
 /* Layers */
 .layerContainer {
-    position: relative; padding: 0;
-    margin: auto; text-align: center; }
-.imageLayer {
-    position: absolute;
-    left: 0px; }
+  position: relative; padding: 0;
+  margin: auto; text-align: center; }
+.layer {
+  position: absolute;
+  pointer-events: none; }
 .drawDiv {
-    position: absolute; pointer-events: none; }
+  position: absolute; pointer-events: none; }
 
 /* drag&drop */
 .dropBox {
-    margin: auto;
-    text-align: center; vertical-align: middle; }
+  margin: auto;
+  text-align: center; vertical-align: middle;
+  width: 50%; height: 75%; }
 .dropBoxBorder {
   border: 5px dashed #e8eaf6; /*indigo:light*/ }
 .dropBoxBorder.hover {
