@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 
 import CssBaseline from '@material-ui/core/CssBaseline';
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import { MuiThemeProvider, createTheme } from '@material-ui/core/styles';
 import indigo from '@material-ui/core/colors/indigo';
 import pink from '@material-ui/core/colors/pink';
 
 import './App.css';
 import DwvComponent from './DwvComponent';
 
-const theme = createMuiTheme({
+const theme = createTheme({
   typography: {
     useNextVariants: true,
   },
