@@ -23,17 +23,6 @@ import TagsTable from './TagsTable';
 import './DwvComponent.css';
 import dwv from 'dwv';
 
-// gui overrides
-
-// get element
-dwv.gui.getElement = dwv.gui.base.getElement;
-// prompt
-// (no direct assign to avoid Illegal invocation error
-// see: https://stackoverflow.com/questions/9677985/uncaught-typeerror-illegal-invocation-in-chrome)
-dwv.gui.prompt = function(message, def) {
-  return prompt(message, def);
-}
-
 // Image decoders (for web workers)
 dwv.image.decoderScripts = {
   "jpeg2000": `${process.env.PUBLIC_URL}/assets/dwv/decoders/pdfjs/decode-jpeg2000.js`,
@@ -161,7 +150,7 @@ class DwvComponent extends React.Component {
 
         <div id="dropBox"></div>
 
-        <div className="layerContainer"></div>
+        <div id="layerGroup0" className="layerGroup"></div>
 
         <div><p className="legend">
           <Typography variant="caption">Powered by <Link
@@ -183,7 +172,7 @@ class DwvComponent extends React.Component {
     var app = new dwv.App();
     // initialise app
     app.init({
-      "containerDivId": "dwv",
+      "dataViewConfigs": {'*': [{divId: 'layerGroup0'}]},
       "tools": this.state.tools
     });
 
@@ -191,37 +180,38 @@ class DwvComponent extends React.Component {
     let nLoadItem = null;
     let nReceivedError = null;
     let nReceivedAbort = null;
+    let isFirstRender = null;
     app.addEventListener('loadstart', (/*event*/) => {
       // reset flags
       nLoadItem = 0;
       nReceivedError = 0;
       nReceivedAbort = 0;
+      isFirstRender = true;
       // hide drop box
       this.showDropbox(app, false);
     });
     app.addEventListener("loadprogress", (event) => {
       this.setState({loadProgress: event.loaded});
     });
+    app.addEventListener('renderend', (/*event*/) => {
+      if (isFirstRender) {
+        isFirstRender = false;
+        // available tools
+        let names = [];
+        for (const key in this.state.tools) {
+          if ((key === 'Scroll' && app.canScroll()) ||
+            (key === 'WindowLevel' && app.canWindowLevel()) ||
+            (key !== 'Scroll' && key !== 'WindowLevel')) {
+            names.push(key);
+          }
+        }
+        this.setState({toolNames: names});
+        this.onChangeTool(names[0]);
+      }
+    });
     app.addEventListener("load", (/*event*/) => {
       // set dicom tags
-      this.setState({metaData: dwv.utils.objectToArray(app.getMetaData())});
-      // available tools
-      let names = [];
-      for (const key in this.state.tools) {
-        if ((key === 'Scroll' && app.canScroll()) ||
-          (key === 'WindowLevel' && app.canWindowLevel()) ||
-          (key !== 'Scroll' && key !== 'WindowLevel')) {
-          names.push(key);
-        }
-      }
-      this.setState({toolNames: names});
-      this.onChangeTool(names[0]);
-      // set the selected tool
-      let selectedTool = 'Scroll'
-      if (app.isMonoSliceData() && app.getImage().getNumberOfFrames() === 1) {
-        selectedTool = 'ZoomAndPan';
-      }
-      this.onChangeTool(selectedTool);
+      this.setState({metaData: dwv.utils.objectToArray(app.getMetaData(0))});
       // set data loaded flag
       this.setState({dataLoaded: true});
     });
@@ -381,7 +371,7 @@ class DwvComponent extends React.Component {
         box.className = box.className.replace(' ' + this.state.hoverClassName, '');
     }
   }
-  
+
   /**
    * Handle a drop event.
    * @param event The event to handle.
@@ -391,7 +381,7 @@ class DwvComponent extends React.Component {
     // load files
     this.state.dwvApp.loadFiles(event.dataTransfer.files);
   }
-  
+
   /**
    * Show/hide the data load drop box.
    * @param show True to show the drop box.
@@ -400,7 +390,7 @@ class DwvComponent extends React.Component {
     const box = document.getElementById(this.state.dropboxDivId);
     const isBoxShown = box && box.offsetHeight !== 0;
     const layerDiv = this.state.dwvApp?.getElement('layerContainer');
-    
+
     if (box) {
       if (show && !isBoxShown) {
         // reset css class
