@@ -1,20 +1,21 @@
 {
   "files": {
     "main.css": "/dwv-react/demo/trunk/static/css/main.2db2ce4c.chunk.css",
-    "main.js": "/dwv-react/demo/trunk/static/js/main.cbf1998c.chunk.js",
-    "main.js.map": "/dwv-react/demo/trunk/static/js/main.cbf1998c.chunk.js.map",
+    "main.js": "/dwv-react/demo/trunk/static/js/main.bb72cc12.chunk.js",
+    "main.js.map": "/dwv-react/demo/trunk/static/js/main.bb72cc12.chunk.js.map",
     "runtime-main.js": "/dwv-react/demo/trunk/static/js/runtime-main.85c045e8.js",
     "runtime-main.js.map": "/dwv-react/demo/trunk/static/js/runtime-main.85c045e8.js.map",
-    "static/js/2.b3b3d542.chunk.js": "/dwv-react/demo/trunk/static/js/2.b3b3d542.chunk.js",
-    "static/js/2.b3b3d542.chunk.js.map": "/dwv-react/demo/trunk/static/js/2.b3b3d542.chunk.js.map",
+    "static/js/2.eba5a719.chunk.js": "/dwv-react/demo/trunk/static/js/2.eba5a719.chunk.js",
+    "static/js/2.eba5a719.chunk.js.map": "/dwv-react/demo/trunk/static/js/2.eba5a719.chunk.js.map",
     "index.html": "/dwv-react/demo/trunk/index.html",
     "static/css/main.2db2ce4c.chunk.css.map": "/dwv-react/demo/trunk/static/css/main.2db2ce4c.chunk.css.map",
-    "static/js/2.b3b3d542.chunk.js.LICENSE.txt": "/dwv-react/demo/trunk/static/js/2.b3b3d542.chunk.js.LICENSE.txt"
+    "static/js/2.eba5a719.chunk.js.LICENSE.txt": "/dwv-react/demo/trunk/static/js/2.eba5a719.chunk.js.LICENSE.txt",
+    "static/media/getFetch.cjs": "/dwv-react/demo/trunk/static/media/getFetch.582d29c4.cjs"
   },
   "entrypoints": [
     "static/js/runtime-main.85c045e8.js",
-    "static/js/2.b3b3d542.chunk.js",
+    "static/js/2.eba5a719.chunk.js",
     "static/css/main.2db2ce4c.chunk.css",
-    "static/js/main.cbf1998c.chunk.js"
+    "static/js/main.bb72cc12.chunk.js"
   ]
 }
