@@ -148,9 +148,9 @@ class DwvComponent extends React.Component {
           </Dialog>
         </div>
 
-        <div id="dropBox"></div>
-
-        <div id="layerGroup0" className="layerGroup"></div>
+        <div id="layerGroup0" className="layerGroup">
+          <div id="dropBox"></div>
+        </div>
 
         <div><p className="legend">
           <Typography variant="caption">Powered by <Link
@@ -388,48 +388,48 @@ class DwvComponent extends React.Component {
    */
   showDropbox = (app, show) => {
     const box = document.getElementById(this.state.dropboxDivId);
-    const isBoxShown = box && box.offsetHeight !== 0;
-    const layerDiv = this.state.dwvApp?.getElement('layerContainer');
+    if (!box) {
+      return;
+    }
+    const layerDiv = document.getElementById('layerGroup0');
 
-    if (box) {
-      if (show && !isBoxShown) {
-        // reset css class
-        box.className = this.state.dropboxClassName + ' ' + this.state.borderClassName;
-        // check content
-        if (box.innerHTML === '') {
-          const p = document.createElement('p');
-          p.appendChild(document.createTextNode('Drag and drop data here'));
-          box.appendChild(p);
-        }
-        // show box
-        box.setAttribute('style', 'visible:true;width:50%;height:75%');
-        // stop layer listening
-        if (layerDiv) {
-          layerDiv.removeEventListener('dragover', this.defaultHandleDragEvent);
-          layerDiv.removeEventListener('dragleave', this.defaultHandleDragEvent);
-          layerDiv.removeEventListener('drop', this.onDrop);
-        }
-        // listen to box events
-        box.addEventListener('dragover', this.onBoxDragOver);
-        box.addEventListener('dragleave', this.onBoxDragLeave);
-        box.addEventListener('drop', this.onDrop);
-      } else {
-        // remove border css class
-        box.className = this.state.dropboxClassName;
-        // remove content
-        box.innerHTML = '';
-        // hide box
-        box.setAttribute('style', 'visible:false;width:0;height:0');
-        // stop box listening
-        box.removeEventListener('dragover', this.onBoxDragOver);
-        box.removeEventListener('dragleave', this.onBoxDragLeave);
-        box.removeEventListener('drop', this.onDrop);
-        // listen to layer events
-        if (layerDiv) {
-          layerDiv.addEventListener('dragover', this.defaultHandleDragEvent);
-          layerDiv.addEventListener('dragleave', this.defaultHandleDragEvent);
-          layerDiv.addEventListener('drop', this.onDrop);
-        }
+    if (show) {
+      // reset css class
+      box.className = this.state.dropboxClassName + ' ' + this.state.borderClassName;
+      // check content
+      if (box.innerHTML === '') {
+        const p = document.createElement('p');
+        p.appendChild(document.createTextNode('Drag and drop data here'));
+        box.appendChild(p);
+      }
+      // show box
+      box.setAttribute('style', 'display:initial');
+      // stop layer listening
+      if (layerDiv) {
+        layerDiv.removeEventListener('dragover', this.defaultHandleDragEvent);
+        layerDiv.removeEventListener('dragleave', this.defaultHandleDragEvent);
+        layerDiv.removeEventListener('drop', this.onDrop);
+      }
+      // listen to box events
+      box.addEventListener('dragover', this.onBoxDragOver);
+      box.addEventListener('dragleave', this.onBoxDragLeave);
+      box.addEventListener('drop', this.onDrop);
+    } else {
+      // remove border css class
+      box.className = this.state.dropboxClassName;
+      // remove content
+      box.innerHTML = '';
+      // hide box
+      box.setAttribute('style', 'display:none');
+      // stop box listening
+      box.removeEventListener('dragover', this.onBoxDragOver);
+      box.removeEventListener('dragleave', this.onBoxDragLeave);
+      box.removeEventListener('drop', this.onDrop);
+      // listen to layer events
+      if (layerDiv) {
+        layerDiv.addEventListener('dragover', this.defaultHandleDragEvent);
+        layerDiv.addEventListener('dragleave', this.defaultHandleDragEvent);
+        layerDiv.addEventListener('drop', this.onDrop);
       }
     }
   }
