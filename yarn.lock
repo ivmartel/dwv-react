@@ -5312,10 +5312,10 @@ duplexify@^3.4.2, duplexify@^3.6.0:
     readable-stream "^2.0.0"
     stream-shift "^1.0.0"
 
-dwv@0.30.6:
-  version "0.30.6"
-  resolved "https://registry.yarnpkg.com/dwv/-/dwv-0.30.6.tgz#6f76a1b9713caaab26ee7abf364a2c91de54fb48"
-  integrity sha512-7ercFCyfwiAeY7lKzr1HEHLTW1njjTXxe3ypksGGC2zq3ejaL96YjO+cQyaWLUTeGtU3DT/kHJTvhxuK6xO9hA==
+dwv@0.30.7:
+  version "0.30.7"
+  resolved "https://registry.yarnpkg.com/dwv/-/dwv-0.30.7.tgz#426d1c109792e65c84e1a24aa5a9a3b04833564a"
+  integrity sha512-jXppPjFCkKKBCxm+cozll3nuhod3uodRE0a5gXhwCInMBgsGFtzuSvo+gLvEP+V7mtml+dmRiKaTjfbRVqsomw==
   dependencies:
     i18next "~20.6.0"
     i18next-browser-languagedetector "~6.1.2"
