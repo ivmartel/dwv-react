@@ -22,7 +22,7 @@ object-assign
  * @license  MIT
  */
 
-/*! dwv 0.30.6 2021-12-21 11:22:44 */
+/*! dwv 0.30.7 2021-12-30 11:37:54 */
 
 /**
  * A better abstraction over CSS.
