@@ -5,18 +5,18 @@
     "main.js.map": "/dwv-react/demo/stable/static/js/main.036b4712.chunk.js.map",
     "runtime-main.js": "/dwv-react/demo/stable/static/js/runtime-main.0187b327.js",
     "runtime-main.js.map": "/dwv-react/demo/stable/static/js/runtime-main.0187b327.js.map",
-    "static/js/2.465754ac.chunk.js": "/dwv-react/demo/stable/static/js/2.465754ac.chunk.js",
-    "static/js/2.465754ac.chunk.js.map": "/dwv-react/demo/stable/static/js/2.465754ac.chunk.js.map",
+    "static/js/2.1d0b84d4.chunk.js": "/dwv-react/demo/stable/static/js/2.1d0b84d4.chunk.js",
+    "static/js/2.1d0b84d4.chunk.js.map": "/dwv-react/demo/stable/static/js/2.1d0b84d4.chunk.js.map",
     "index.html": "/dwv-react/demo/stable/index.html",
     "service-worker.js": "/dwv-react/demo/stable/service-worker.js",
     "service-worker.js.map": "/dwv-react/demo/stable/service-worker.js.map",
     "static/css/main.2db2ce4c.chunk.css.map": "/dwv-react/demo/stable/static/css/main.2db2ce4c.chunk.css.map",
-    "static/js/2.465754ac.chunk.js.LICENSE.txt": "/dwv-react/demo/stable/static/js/2.465754ac.chunk.js.LICENSE.txt",
+    "static/js/2.1d0b84d4.chunk.js.LICENSE.txt": "/dwv-react/demo/stable/static/js/2.1d0b84d4.chunk.js.LICENSE.txt",
     "static/media/getFetch.cjs": "/dwv-react/demo/stable/static/media/getFetch.582d29c4.cjs"
   },
   "entrypoints": [
     "static/js/runtime-main.0187b327.js",
-    "static/js/2.465754ac.chunk.js",
+    "static/js/2.1d0b84d4.chunk.js",
     "static/css/main.2db2ce4c.chunk.css",
     "static/js/main.036b4712.chunk.js"
   ]
