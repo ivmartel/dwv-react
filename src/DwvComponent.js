@@ -260,9 +260,9 @@ class DwvComponent extends React.Component {
 
   /**
    * Handle a change tool event.
-   * @param tool The new tool name.
+   * @param {string} tool The new tool name.
    */
-  onChangeTool = (tool: string) => {
+  onChangeTool = (tool) => {
     if (this.state.dwvApp) {
       this.setState({selectedTool: tool});
       this.state.dwvApp.setTool(tool);
@@ -274,9 +274,9 @@ class DwvComponent extends React.Component {
 
   /**
    * Handle a change draw shape event.
-   * @param shape The new shape name.
+   * @param {string} shape The new shape name.
    */
-  onChangeShape = (shape: string) => {
+  onChangeShape = (shape) => {
     if (this.state.dwvApp) {
       this.state.dwvApp.setDrawShape(shape);
     }
@@ -338,9 +338,9 @@ class DwvComponent extends React.Component {
 
   /**
    * Default drag event handling.
-   * @param event The event to handle.
+   * @param {DragEvent} event The event to handle.
    */
-  defaultHandleDragEvent = (event: DragEvent) => {
+  defaultHandleDragEvent = (event) => {
     // prevent default handling
     event.stopPropagation();
     event.preventDefault();
@@ -348,9 +348,9 @@ class DwvComponent extends React.Component {
 
   /**
    * Handle a drag over.
-   * @param event The event to handle.
+   * @param {DragEvent} event The event to handle.
    */
-  onBoxDragOver = (event: DragEvent) => {
+  onBoxDragOver = (event) => {
     this.defaultHandleDragEvent(event);
     // update box border
     const box = document.getElementById(this.state.dropboxDivId);
@@ -361,9 +361,9 @@ class DwvComponent extends React.Component {
 
   /**
    * Handle a drag leave.
-   * @param event The event to handle.
+   * @param {DragEvent} event The event to handle.
    */
-  onBoxDragLeave = (event: DragEvent) => {
+  onBoxDragLeave = (event) => {
     this.defaultHandleDragEvent(event);
     // update box class
     const box = document.getElementById(this.state.dropboxDivId);
@@ -374,9 +374,9 @@ class DwvComponent extends React.Component {
 
   /**
    * Handle a drop event.
-   * @param event The event to handle.
+   * @param {DragEvent} event The event to handle.
    */
-  onDrop = (event: DragEvent) => {
+  onDrop = (event) => {
     this.defaultHandleDragEvent(event);
     // load files
     this.state.dwvApp.loadFiles(event.dataTransfer.files);
