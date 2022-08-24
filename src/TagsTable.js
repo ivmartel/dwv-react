@@ -1,18 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles } from '@mui/styles';
 
-import InputAdornment from '@material-ui/core/InputAdornment';
-import TextField from '@material-ui/core/TextField';
+import InputAdornment from '@mui/material/InputAdornment';
+import TextField from '@mui/material/TextField';
 
-import Search from '@material-ui/icons/Search';
+import Search from '@mui/icons-material/Search';
 
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import TablePagination from '@material-ui/core/TablePagination';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import TablePagination from '@mui/material/TablePagination';
 
 const styles = theme => ({
   flex: {
@@ -29,6 +29,10 @@ const styles = theme => ({
   searchField: {
     backgroundColor: 'white',
     marginLeft: 20
+  },
+  container: {
+    paddingLeft: 10,
+    paddingTop: 20
   }
 });
 
@@ -89,6 +93,7 @@ class TagsTable extends React.Component {
           className={classes.searchField}
           onChange={this.filterList}
           margin="normal"
+          size="small"
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
@@ -107,9 +112,9 @@ class TagsTable extends React.Component {
           </TableHead>
           <TableBody>
           {displayData.slice(page * rowsPerPage,
-                page * rowsPerPage + rowsPerPage).map( item => {
+                page * rowsPerPage + rowsPerPage).map((item, index) => {
             return (
-              <TableRow className={classes.row} key={item.group+item.element}>
+              <TableRow className={classes.row} key={index}>
                 <TableCell>{item.name}</TableCell>
                 <TableCell>{item.value.toString()}</TableCell>
               </TableRow>
@@ -129,8 +134,8 @@ class TagsTable extends React.Component {
           nextIconButtonProps={{
             'aria-label': 'Next Page',
           }}
-          onChangePage={this.handleChangePage}
-          onChangeRowsPerPage={this.handleChangeRowsPerPage}
+          onPageChange={this.handleChangePage}
+          onRowsPerPageChange={this.handleChangeRowsPerPage}
         />
 
       </div>

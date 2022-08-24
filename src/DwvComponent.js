@@ -1,22 +1,23 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
+import { withStyles, useTheme } from '@mui/styles';
+import Typography from '@mui/material/Typography';
 
-import Button from '@material-ui/core/Button';
-import LinearProgress from '@material-ui/core/LinearProgress';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
+import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
+import LinearProgress from '@mui/material/LinearProgress';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 
-import Link from '@material-ui/core/Link';
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
+import Link from '@mui/material/Link';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
 
-import Dialog from '@material-ui/core/Dialog';
-import AppBar from '@material-ui/core/AppBar';
-import Slide from '@material-ui/core/Slide';
-import Toolbar from '@material-ui/core/Toolbar';
+import Dialog from '@mui/material/Dialog';
+import AppBar from '@mui/material/AppBar';
+import Slide from '@mui/material/Slide';
+import Toolbar from '@mui/material/Toolbar';
 
 import TagsTable from './TagsTable';
 
@@ -32,9 +33,6 @@ dwv.image.decoderScripts = {
 };
 
 const styles = theme => ({
-  button: {
-    margin: theme.spacing(1),
-  },
   appBar: {
     position: 'relative',
   },
@@ -99,13 +97,12 @@ class DwvComponent extends React.Component {
     return (
       <div id="dwv">
         <LinearProgress variant="determinate" value={loadProgress} />
-        <div className="button-row">
+        <Stack direction="row" spacing={1} padding={1} justifyContent="center">
           <Button variant="contained" color="primary"
             aria-owns={toolMenuAnchorEl ? 'simple-menu' : null}
             aria-haspopup="true"
             onClick={this.handleMenuButtonClick}
             disabled={!dataLoaded}
-            className={classes.button}
             size="medium"
           >{ this.state.selectedTool }
           <ArrowDropDownIcon className={classes.iconSmall}/></Button>
@@ -126,7 +123,6 @@ class DwvComponent extends React.Component {
           <Button variant="contained" color="primary"
             onClick={this.handleTagsDialogOpen}
             disabled={!dataLoaded}
-            className={classes.button}
             size="medium">Tags</Button>
           <Dialog
             open={this.state.showDicomTags}
@@ -146,7 +142,7 @@ class DwvComponent extends React.Component {
               </AppBar>
               <TagsTable data={metaData} />
           </Dialog>
-        </div>
+        </Stack>
 
         <div id="layerGroup0" className="layerGroup">
           <div id="dropBox"></div>

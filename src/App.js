@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 
-import CssBaseline from '@material-ui/core/CssBaseline';
-import { MuiThemeProvider, createTheme } from '@material-ui/core/styles';
-import indigo from '@material-ui/core/colors/indigo';
-import pink from '@material-ui/core/colors/pink';
+import CssBaseline from '@mui/material/CssBaseline';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { indigo, pink } from '@mui/material/colors';
 
 import './App.css';
 import DwvComponent from './DwvComponent';
@@ -22,12 +21,12 @@ const theme = createTheme({
 class App extends Component {
   render() {
     return (
-      <MuiThemeProvider theme={theme}>
+      <ThemeProvider theme={theme}>
         <CssBaseline />
         <div className="App">
           <DwvComponent />
         </div>
-      </MuiThemeProvider>
+      </ThemeProvider>
     );
   }
 }
