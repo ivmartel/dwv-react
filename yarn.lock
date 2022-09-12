@@ -3117,10 +3117,10 @@ caniuse-lite@^1.0.0, caniuse-lite@^1.0.30001370, caniuse-lite@^1.0.30001373:
   resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001382.tgz#4d37f0d0b6fffb826c8e5e1c0f4bf8ce592db949"
   integrity sha512-2rtJwDmSZ716Pxm1wCtbPvHtbDWAreTPxXbkc5RkKglow3Ig/4GNGazDI9/BVnXbG/wnv6r3B5FEbkfg9OcTGg==
 
-canvas@^2.9.3:
-  version "2.9.3"
-  resolved "https://registry.yarnpkg.com/canvas/-/canvas-2.9.3.tgz#8723c4f970442d4cdcedba5221579f9660a58bdb"
-  integrity sha512-WOUM7ghii5TV2rbhaZkh1youv/vW1/Canev6Yx6BG2W+1S07w8jKZqKkPnbiPpQEDsnJdN8ouDd7OvQEGXDcUw==
+canvas@^2.10.1:
+  version "2.10.1"
+  resolved "https://registry.yarnpkg.com/canvas/-/canvas-2.10.1.tgz#fbfd4b1b3b106c3454481d79d363ebadf8811c08"
+  integrity sha512-29pIjn9uwTUsIgJUNd7GXxKk8sg4iyJwLm1wIilNIqX1mVzXSc2nUij9exW1LqNpis1d2ebMYfMqTWcokZ4pdA==
   dependencies:
     "@mapbox/node-pre-gyp" "^1.0.0"
     nan "^2.15.0"
