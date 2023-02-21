@@ -74,17 +74,19 @@ https://github.com/nodeca/pako/blob/master/LICENSE
  */
 
 /**
+ * @mui/styled-engine v5.11.9
+ *
+ * @license MIT
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+/**
  * A better abstraction over CSS.
  *
  * @copyright Oleg Isonen (Slobodskoi) / Isonen 2014-present
  * @website https://github.com/cssinjs/jss
  * @license MIT
- */
-
-/** @license MUI v5.11.0
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
  */
 
 /** @license React v16.13.1
