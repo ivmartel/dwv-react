@@ -66,9 +66,7 @@ class DwvComponent extends React.Component {
         ZoomAndPan: {},
         WindowLevel: {},
         Draw: {
-          options: ['Ruler'],
-          type: 'factory',
-          events: ['drawcreate', 'drawchange', 'drawmove', 'drawdelete']
+          options: ['Ruler']
         }
       },
       toolNames: [],
@@ -174,14 +172,14 @@ class DwvComponent extends React.Component {
 
     // load events
     let nLoadItem = null;
-    let nReceivedError = null;
-    let nReceivedAbort = null;
+    let nReceivedLoadError = null;
+    let nReceivedLoadAbort = null;
     let isFirstRender = null;
     app.addEventListener('loadstart', (/*event*/) => {
       // reset flags
       nLoadItem = 0;
-      nReceivedError = 0;
-      nReceivedAbort = 0;
+      nReceivedLoadError = 0;
+      nReceivedLoadAbort = 0;
       isFirstRender = true;
       // hide drop box
       this.showDropbox(app, false);
@@ -212,7 +210,7 @@ class DwvComponent extends React.Component {
       this.setState({dataLoaded: true});
     });
     app.addEventListener('loadend', (/*event*/) => {
-      if (nReceivedError) {
+      if (nReceivedLoadError) {
         this.setState({loadProgress: 0});
         alert('Received errors during load. Check log for details.');
         // show drop box if nothing has been loaded
@@ -220,7 +218,7 @@ class DwvComponent extends React.Component {
           this.showDropbox(app, true);
         }
       }
-      if (nReceivedAbort) {
+      if (nReceivedLoadAbort) {
         this.setState({loadProgress: 0});
         alert('Load was aborted.');
         this.showDropbox(app, true);
@@ -229,12 +227,12 @@ class DwvComponent extends React.Component {
     app.addEventListener('loaditem', (/*event*/) => {
       ++nLoadItem;
     });
-    app.addEventListener('error', (event) => {
+    app.addEventListener('loaderror', (event) => {
       console.error(event.error);
-      ++nReceivedError;
+      ++nReceivedLoadError;
     });
-    app.addEventListener('abort', (/*event*/) => {
-      ++nReceivedAbort;
+    app.addEventListener('loadabort', (/*event*/) => {
+      ++nReceivedLoadAbort;
     });
 
     // handle key events
@@ -274,7 +272,7 @@ class DwvComponent extends React.Component {
    */
   onChangeShape = (shape) => {
     if (this.state.dwvApp) {
-      this.state.dwvApp.setDrawShape(shape);
+      this.state.dwvApp.setToolFeatures({shapeName: shape});
     }
   }
 
