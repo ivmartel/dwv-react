@@ -75,14 +75,12 @@ class DwvComponent extends React.Component {
           options: ['Ruler']
         }
       },
-      toolNames: [],
       selectedTool: 'Select Tool',
       loadProgress: 0,
       dataLoaded: false,
       dwvApp: null,
       metaData: [],
       showDicomTags: false,
-      toolMenuAnchorEl: null,
       dropboxDivId: 'dropBox',
       dropboxClassName: 'dropBox',
       borderClassName: 'dropBoxBorder',
@@ -92,13 +90,32 @@ class DwvComponent extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const { versions, tools, toolNames, loadProgress, dataLoaded, metaData, toolMenuAnchorEl } = this.state;
+    const { versions, tools, loadProgress, dataLoaded, metaData } = this.state;
 
     const handleToolChange = (event, newTool) => {
       if (newTool) {
         this.onChangeTool(newTool);
       }
     };
+    const getToolIcon = (tool) => {
+      if (tool === 'Scroll') {
+        return (<MenuIcon />)
+      } else if (tool === 'ZoomAndPan') {
+        return (<SearchIcon />)
+      } else if (tool === 'WindowLevel') {
+        return (<ContrastIcon />)
+      } else if (tool === 'Draw') {
+        return (<StraightenIcon />)
+      }
+    }
+    const toolsButtons = Object.keys(tools).map( (tool) => {
+      return (
+        <ToggleButton value={tool} key={tool}
+          disabled={!dataLoaded || !this.canRunTool(tool)}>
+          { getToolIcon(tool) }
+        </ToggleButton>
+      );
+    });
 
     return (
       <div id="dwv">
@@ -110,22 +127,7 @@ class DwvComponent extends React.Component {
             exclusive
             onChange={handleToolChange}
           >
-            <ToggleButton value="Scroll"
-              disabled={!dataLoaded}>
-              <MenuIcon />
-            </ToggleButton>
-            <ToggleButton value="ZoomAndPan"
-              disabled={!dataLoaded}>
-              <SearchIcon />
-            </ToggleButton>
-            <ToggleButton value="WindowLevel"
-              disabled={!dataLoaded}>
-              <ContrastIcon />
-            </ToggleButton>
-            <ToggleButton value="Draw"
-              disabled={!dataLoaded}>
-              <StraightenIcon />
-            </ToggleButton>
+            {toolsButtons}
           </ToggleButtonGroup>
 
           <ToggleButton size="small"
@@ -211,16 +213,11 @@ class DwvComponent extends React.Component {
       if (isFirstRender) {
         isFirstRender = false;
         // available tools
-        let names = [];
-        for (const key in this.state.tools) {
-          if ((key === 'Scroll' && app.canScroll()) ||
-            (key === 'WindowLevel' && app.canWindowLevel()) ||
-            (key !== 'Scroll' && key !== 'WindowLevel')) {
-            names.push(key);
-          }
+        var selectedTool = 'ZoomAndPan';
+        if (app.canScroll()) {
+          selectedTool = 'Scroll';
         }
-        this.setState({toolNames: names});
-        this.onChangeTool(names[0]);
+        this.onChangeTool(selectedTool);
       }
     });
     app.addEventListener("load", (/*event*/) => {
@@ -284,6 +281,24 @@ class DwvComponent extends React.Component {
         this.onChangeShape(this.state.tools.Draw.options[0]);
       }
     }
+  }
+
+  /**
+   * Check if a tool can be run.
+   *
+   * @param {string} tool The tool name.
+   * @returns {boolean} True if the tool can be run.
+   */
+  canRunTool = (tool) => {
+    let res;
+    if (tool === 'Scroll') {
+      res = this.state.dwvApp.canScroll();
+    } else if (tool === 'WindowLevel') {
+      res = this.state.dwvApp.canWindowLevel();
+    } else {
+      res = true;
+    }
+    return res;
   }
 
   /**
