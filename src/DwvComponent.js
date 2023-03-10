@@ -4,15 +4,21 @@ import { withStyles, useTheme } from '@mui/styles';
 import Typography from '@mui/material/Typography';
 
 import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
 import LinearProgress from '@mui/material/LinearProgress';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
 
 import Link from '@mui/material/Link';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import IconButton from '@mui/material/IconButton';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+
+// https://mui.com/material-ui/material-icons/
 import CloseIcon from '@mui/icons-material/Close';
+import RefreshIcon from '@mui/icons-material/Refresh';
+import MenuIcon from '@mui/icons-material/Menu';
+import ContrastIcon from '@mui/icons-material/Contrast';
+import SearchIcon from '@mui/icons-material/Search';
+import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
+import StraightenIcon from '@mui/icons-material/Straighten';
 
 import Dialog from '@mui/material/Dialog';
 import AppBar from '@mui/material/AppBar';
@@ -88,40 +94,52 @@ class DwvComponent extends React.Component {
     const { classes } = this.props;
     const { versions, tools, toolNames, loadProgress, dataLoaded, metaData, toolMenuAnchorEl } = this.state;
 
-    const toolsMenuItems = toolNames.map( (tool) =>
-      <MenuItem onClick={this.handleMenuItemClick.bind(this, tool)} key={tool} value={tool}>{tool}</MenuItem>
-    );
+    const handleToolChange = (event, newTool) => {
+      if (newTool) {
+        this.onChangeTool(newTool);
+      }
+    };
 
     return (
       <div id="dwv">
         <LinearProgress variant="determinate" value={loadProgress} />
         <Stack direction="row" spacing={1} padding={1} justifyContent="center">
-          <Button variant="contained" color="primary"
-            aria-owns={toolMenuAnchorEl ? 'simple-menu' : null}
-            aria-haspopup="true"
-            onClick={this.handleMenuButtonClick}
-            disabled={!dataLoaded}
-            size="medium"
-          >{ this.state.selectedTool }
-          <ArrowDropDownIcon className={classes.iconSmall}/></Button>
-          <Menu
-            id="simple-menu"
-            anchorEl={toolMenuAnchorEl}
-            open={Boolean(toolMenuAnchorEl)}
-            onClose={this.handleMenuClose}
+          <ToggleButtonGroup size="small"
+            color="primary"
+            value={ this.state.selectedTool }
+            exclusive
+            onChange={handleToolChange}
           >
-            {toolsMenuItems}
-          </Menu>
+            <ToggleButton value="Scroll"
+              disabled={!dataLoaded}>
+              <MenuIcon />
+            </ToggleButton>
+            <ToggleButton value="ZoomAndPan"
+              disabled={!dataLoaded}>
+              <SearchIcon />
+            </ToggleButton>
+            <ToggleButton value="WindowLevel"
+              disabled={!dataLoaded}>
+              <ContrastIcon />
+            </ToggleButton>
+            <ToggleButton value="Draw"
+              disabled={!dataLoaded}>
+              <StraightenIcon />
+            </ToggleButton>
+          </ToggleButtonGroup>
 
-          <Button variant="contained" color="primary"
+          <ToggleButton size="small"
+            value="reset"
             disabled={!dataLoaded}
-            onClick={this.onReset}
-          >Reset</Button>
+            onChange={this.onReset}
+          ><RefreshIcon /></ToggleButton>
 
-          <Button variant="contained" color="primary"
+          <ToggleButton size="small"
+            value="tags"
+            disabled={!dataLoaded}
             onClick={this.handleTagsDialogOpen}
-            disabled={!dataLoaded}
-            size="medium">Tags</Button>
+          ><LibraryBooksIcon /></ToggleButton>
+
           <Dialog
             open={this.state.showDicomTags}
             onClose={this.handleTagsDialogClose}
@@ -297,28 +315,6 @@ class DwvComponent extends React.Component {
    */
   handleTagsDialogClose = () => {
     this.setState({ showDicomTags: false });
-  };
-
-  /**
-   * Menu button click.
-   */
-  handleMenuButtonClick = event => {
-    this.setState({ toolMenuAnchorEl: event.currentTarget });
-  };
-
-  /**
-   * Menu cloase.
-   */
-  handleMenuClose = event => {
-    this.setState({ toolMenuAnchorEl: null });
-  };
-
-  /**
-   * Menu item click.
-   */
-  handleMenuItemClick = tool => {
-    this.setState({ toolMenuAnchorEl: null });
-    this.onChangeTool(tool);
   };
 
   // drag and drop [begin] -----------------------------------------------------
