@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-
+import React from 'react';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { indigo, pink } from '@mui/material/colors';
@@ -7,19 +7,23 @@ import { indigo, pink } from '@mui/material/colors';
 import './App.css';
 import DwvComponent from './DwvComponent';
 
-const theme = createTheme({
-  typography: {
-    useNextVariants: true,
-  },
-  palette: {
-    primary: indigo,
-    secondary: pink,
-    type: 'light'
-  }
-});
+export default function App() {
+    const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+    const theme = createTheme({
+      typography: {
+        useNextVariants: true,
+      },
+      palette: {
+        primary: {
+          main: indigo[500]
+        },
+        secondary: {
+          main: pink[500]
+        },
+        mode: prefersDarkMode ? 'dark' : 'light',
+      }
+    });
 
-class App extends Component {
-  render() {
     return (
       <ThemeProvider theme={theme}>
         <CssBaseline />
@@ -28,7 +32,4 @@ class App extends Component {
         </div>
       </ThemeProvider>
     );
-  }
 }
-
-export default App;
