@@ -297,7 +297,7 @@ class DwvComponent extends React.Component {
   /**
    * Handle a reset event.
    */
-  onReset = tool => {
+  onReset = () => {
     if (this.state.dwvApp) {
       this.state.dwvApp.resetDisplay();
     }
