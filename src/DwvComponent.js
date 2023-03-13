@@ -101,7 +101,7 @@ class DwvComponent extends React.Component {
     };
     const toolsButtons = Object.keys(tools).map( (tool) => {
       return (
-        <ToggleButton value={tool} key={tool}
+        <ToggleButton value={tool} key={tool} title={tool}
           disabled={!dataLoaded || !this.canRunTool(tool)}>
           { this.getToolIcon(tool) }
         </ToggleButton>
@@ -123,18 +123,21 @@ class DwvComponent extends React.Component {
 
           <ToggleButton size="small"
             value="reset"
+            title="Reset"
             disabled={!dataLoaded}
             onChange={this.onReset}
           ><RefreshIcon /></ToggleButton>
 
           <ToggleButton size="small"
-            value="tags"
+            value="toggleOrientation"
+            title="Toggle Orientation"
             disabled={!dataLoaded}
             onClick={this.toggleOrientation}
           ><CameraswitchIcon /></ToggleButton>
 
           <ToggleButton size="small"
             value="tags"
+            title="Tags"
             disabled={!dataLoaded}
             onClick={this.handleTagsDialogOpen}
           ><LibraryBooksIcon /></ToggleButton>
