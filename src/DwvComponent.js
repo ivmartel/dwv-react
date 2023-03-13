@@ -182,7 +182,7 @@ class DwvComponent extends React.Component {
 
   componentDidMount() {
     // create app
-    var app = new dwv.App();
+    const app = new dwv.App();
     // initialise app
     app.init({
       "dataViewConfigs": {'*': [{divId: 'layerGroup0'}]},
@@ -210,7 +210,7 @@ class DwvComponent extends React.Component {
       if (isFirstRender) {
         isFirstRender = false;
         // available tools
-        var selectedTool = 'ZoomAndPan';
+        let selectedTool = 'ZoomAndPan';
         if (app.canScroll()) {
           selectedTool = 'Scroll';
         }
