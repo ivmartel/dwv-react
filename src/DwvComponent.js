@@ -97,22 +97,11 @@ class DwvComponent extends React.Component {
         this.onChangeTool(newTool);
       }
     };
-    const getToolIcon = (tool) => {
-      if (tool === 'Scroll') {
-        return (<MenuIcon />)
-      } else if (tool === 'ZoomAndPan') {
-        return (<SearchIcon />)
-      } else if (tool === 'WindowLevel') {
-        return (<ContrastIcon />)
-      } else if (tool === 'Draw') {
-        return (<StraightenIcon />)
-      }
-    }
     const toolsButtons = Object.keys(tools).map( (tool) => {
       return (
         <ToggleButton value={tool} key={tool}
           disabled={!dataLoaded || !this.canRunTool(tool)}>
-          { getToolIcon(tool) }
+          { this.getToolIcon(tool) }
         </ToggleButton>
       );
     });
@@ -267,6 +256,26 @@ class DwvComponent extends React.Component {
 
     // possible load from location
     dwv.utils.loadFromUri(window.location.href, app);
+  }
+
+  /**
+   * Get the icon of a tool.
+   *
+   * @param {string} tool The tool name.
+   * @returns {Icon} The associated icon.
+   */
+  getToolIcon = (tool) => {
+    let res;
+    if (tool === 'Scroll') {
+      res = (<MenuIcon />);
+    } else if (tool === 'ZoomAndPan') {
+      res = (<SearchIcon />);
+    } else if (tool === 'WindowLevel') {
+      res = (<ContrastIcon />);
+    } else if (tool === 'Draw') {
+      res = (<StraightenIcon />);
+    }
+    return res;
   }
 
   /**
