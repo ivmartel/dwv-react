@@ -19,6 +19,7 @@ import ContrastIcon from '@mui/icons-material/Contrast';
 import SearchIcon from '@mui/icons-material/Search';
 import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
 import StraightenIcon from '@mui/icons-material/Straighten';
+import CameraswitchIcon from '@mui/icons-material/Cameraswitch';
 
 import Dialog from '@mui/material/Dialog';
 import AppBar from '@mui/material/AppBar';
@@ -80,6 +81,7 @@ class DwvComponent extends React.Component {
       dataLoaded: false,
       dwvApp: null,
       metaData: [],
+      orientation: undefined,
       showDicomTags: false,
       dropboxDivId: 'dropBox',
       dropboxClassName: 'dropBox',
@@ -124,6 +126,12 @@ class DwvComponent extends React.Component {
             disabled={!dataLoaded}
             onChange={this.onReset}
           ><RefreshIcon /></ToggleButton>
+
+          <ToggleButton size="small"
+            value="tags"
+            disabled={!dataLoaded}
+            onClick={this.toggleOrientation}
+          ><CameraswitchIcon /></ToggleButton>
 
           <ToggleButton size="small"
             value="tags"
@@ -308,6 +316,38 @@ class DwvComponent extends React.Component {
       res = true;
     }
     return res;
+  }
+
+  /**
+   * Toogle the viewer orientation.
+   */
+  toggleOrientation = () => {
+    if (typeof this.state.orientation !== 'undefined') {
+      if (this.state.orientation === 'axial') {
+        this.state.orientation = 'coronal';
+      } else if (this.state.orientation === 'coronal') {
+        this.state.orientation = 'sagittal';
+      } else if (this.state.orientation === 'sagittal') {
+        this.state.orientation = 'axial';
+      }
+    } else {
+      // default is most probably axial
+      this.state.orientation = 'coronal';
+    }
+    // update data view config
+    const config = {
+      '*': [
+        {
+          divId: 'layerGroup0',
+          orientation: this.state.orientation
+        }
+      ]
+    };
+    this.state.dwvApp.setDataViewConfig(config);
+    // render data
+    for (let i = 0; i < this.state.dwvApp.getNumberOfLoadedData(); ++i) {
+      this.state.dwvApp.render(i);
+    }
   }
 
   /**
