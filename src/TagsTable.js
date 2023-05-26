@@ -53,9 +53,6 @@ class TagsTable extends React.Component {
     // convert string to numbers
     const numbers = instanceNumbers.map(Number);
     numbers.sort((a, b) => a - b);
-    // store
-    // this.min = numbers[0];
-    // this.max = numbers[numbers.length - 1];
 
     this.state = {
       fullMetaData: fullMetaData,
@@ -72,9 +69,9 @@ class TagsTable extends React.Component {
     this.filterList = this.filterList.bind(this);
   }
 
-  filterList(search) {
+  filterList(search, instanceNumber) {
     var searchLo = search.toLowerCase();
-    var metaArray = this.getMetaArray(this.state.instanceNumber);
+    var metaArray = this.getMetaArray(instanceNumber);
     var updatedList = metaArray.filter( function (item) {
       for ( var key in item ) {
         if( item.hasOwnProperty(key) ) {
@@ -146,12 +143,12 @@ class TagsTable extends React.Component {
       instanceNumber: sliderValue,
       displayData: metaArray
     });
-    this.filterList(this.state.searchfor);
+    this.filterList(this.state.searchfor, sliderValue);
   }
 
   onSearch = (event) => {
     var search = event.target.value;
-    this.filterList(search);
+    this.filterList(search, this.state.instanceNumber);
   }
 
   handleChangePage = (event, page) => {
