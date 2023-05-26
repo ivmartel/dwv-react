@@ -80,7 +80,7 @@ class DwvComponent extends React.Component {
       loadProgress: 0,
       dataLoaded: false,
       dwvApp: null,
-      metaData: [],
+      metaData: {},
       orientation: undefined,
       showDicomTags: false,
       dropboxDivId: 'dropBox',
@@ -222,7 +222,7 @@ class DwvComponent extends React.Component {
     });
     app.addEventListener("load", (/*event*/) => {
       // set dicom tags
-      this.setState({metaData: dwv.utils.objectToArray(app.getMetaData(0))});
+      this.setState({metaData: app.getMetaData(0)});
       // set data loaded flag
       this.setState({dataLoaded: true});
     });
