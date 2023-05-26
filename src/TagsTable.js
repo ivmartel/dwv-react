@@ -21,13 +21,7 @@ const styles = theme => ({
   spacer: {
     flex: '1 1 100%',
   },
-  row: {
-    '&:nth-of-type(odd)': {
-      backgroundColor: theme.palette.background.default,
-    },
-  },
   searchField: {
-    backgroundColor: 'white',
     marginLeft: 20
   },
   container: {
@@ -114,7 +108,7 @@ class TagsTable extends React.Component {
           {displayData.slice(page * rowsPerPage,
                 page * rowsPerPage + rowsPerPage).map((item, index) => {
             return (
-              <TableRow className={classes.row} key={index}>
+              <TableRow key={index}>
                 <TableCell>{item.name}</TableCell>
                 <TableCell>{item.value.toString()}</TableCell>
               </TableRow>
