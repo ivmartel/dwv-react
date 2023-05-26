@@ -148,7 +148,7 @@ class DwvComponent extends React.Component {
             TransitionComponent={TransitionUp}
             classes={{ paper: classes.tagsDialog }}
             >
-              <AppBar className={classes.appBar}>
+              <AppBar className={classes.appBar} position="sticky">
                 <Toolbar>
                   <IconButton color="inherit" onClick={this.handleTagsDialogClose} aria-label="Close">
                     <CloseIcon />
