@@ -7,12 +7,13 @@ import TextField from '@mui/material/TextField';
 
 import Search from '@mui/icons-material/Search';
 
+import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
+import TableContainer from '@mui/material/TableContainer';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import TablePagination from '@mui/material/TablePagination';
 import Slider from '@mui/material/Slider';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
@@ -31,8 +32,8 @@ const styles = theme => ({
     margin: 20
   },
   container: {
-    paddingLeft: 10,
-    paddingTop: 20
+    padding: 10,
+    overflow: "hidden"
   }
 });
 
@@ -57,8 +58,6 @@ class TagsTable extends React.Component {
     this.state = {
       fullMetaData: fullMetaData,
       searchfor: "",
-      page: 0,
-      rowsPerPage: 10,
       sliderMin: numbers[0],
       sliderMax: numbers[numbers.length - 1],
       instanceNumber: numbers[0]
@@ -152,17 +151,9 @@ class TagsTable extends React.Component {
     this.filterList(search, this.state.instanceNumber);
   }
 
-  handleChangePage = (event, page) => {
-    this.setState({ page });
-  }
-
-  handleChangeRowsPerPage = event => {
-    this.setState({ page: 0, rowsPerPage: event.target.value });
-  }
-
   render() {
     const { classes } = this.props;
-    const { displayData, searchfor, rowsPerPage, page, sliderMin, sliderMax } = this.state;
+    const { displayData, searchfor, sliderMin, sliderMax } = this.state;
 
     return (
       <div className={classes.container}>
@@ -196,41 +187,28 @@ class TagsTable extends React.Component {
           </Box>
         </Stack>
 
-        <Table className={classes.table}>
-          <TableHead>
-            <TableRow>
-              <TableCell>Tag</TableCell>
-              <TableCell>Value</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-          {displayData.slice(page * rowsPerPage,
-                page * rowsPerPage + rowsPerPage).map((item, index) => {
-            return (
-              <TableRow key={index}>
-                <TableCell>{item.name}</TableCell>
-                <TableCell>{item.value}</TableCell>
-              </TableRow>
-            );
-          })}
-          </TableBody>
-        </Table>
-
-        <TablePagination
-          component="div"
-          count={displayData.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          backIconButtonProps={{
-            'aria-label': 'Previous Page',
-          }}
-          nextIconButtonProps={{
-            'aria-label': 'Next Page',
-          }}
-          onPageChange={this.handleChangePage}
-          onRowsPerPageChange={this.handleChangeRowsPerPage}
-        />
-
+        <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+          <TableContainer sx={{ maxHeight: 400 }}>
+            <Table stickyHeader className={classes.table}>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Tag</TableCell>
+                  <TableCell>Value</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+              {displayData.map((item, index) => {
+                return (
+                  <TableRow key={index}>
+                    <TableCell>{item.name}</TableCell>
+                    <TableCell>{item.value}</TableCell>
+                  </TableRow>
+                );
+              })}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Paper>
       </div>
     );
   }

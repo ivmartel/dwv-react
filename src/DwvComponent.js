@@ -46,10 +46,6 @@ const styles = theme => ({
   title: {
     flex: '0 0 auto',
   },
-  tagsDialog: {
-    minHeight: '90vh', maxHeight: '90vh',
-    minWidth: '90vw', maxWidth: '90vw',
-  },
   iconSmall: {
     fontSize: 20,
   }
@@ -146,7 +142,6 @@ class DwvComponent extends React.Component {
             open={this.state.showDicomTags}
             onClose={this.handleTagsDialogClose}
             TransitionComponent={TransitionUp}
-            classes={{ paper: classes.tagsDialog }}
             >
               <AppBar className={classes.appBar} position="sticky">
                 <Toolbar>
