@@ -103,7 +103,8 @@ class TagsTable extends React.Component {
       const element = tagData[currentValue];
       let value = element.value;
       // possible 'merged' object
-      if (typeof value[instanceNumber] !== 'undefined') {
+      if (typeof value.slice === 'undefined' &&
+        typeof value[instanceNumber] !== 'undefined') {
         value = value[instanceNumber].value;
       }
       // force instance number (otherwise takes value in non indexed array)
@@ -129,7 +130,7 @@ class TagsTable extends React.Component {
       } else {
         accumulator.push({
           name: (prefix ? prefix + ' ' : '') + name,
-          value: value
+          value: value.toString()
         });
       }
       return accumulator;
