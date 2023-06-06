@@ -18,6 +18,8 @@ import Slider from '@mui/material/Slider';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 
+import {getTagFromKey} from 'dwv';
+
 const styles = theme => ({
   flex: {
     flex: 1,
@@ -47,7 +49,7 @@ class TagsTable extends React.Component {
     // store keys (to not recreate them)
     //this.keys = Object.keys(this.props.data);
     // set slider with instance numbers ('00200013')
-    let instanceNumbers = fullMetaData['InstanceNumber'].value;
+    let instanceNumbers = fullMetaData['00200013'].value;
     if (typeof instanceNumbers === 'string') {
       instanceNumbers = [instanceNumbers];
     }
@@ -60,7 +62,8 @@ class TagsTable extends React.Component {
       searchfor: "",
       sliderMin: numbers[0],
       sliderMax: numbers[numbers.length - 1],
-      instanceNumber: numbers[0]
+      instanceNumber: numbers[0],
+      instanceNumbers: numbers
     };
     this.state.displayData = this.getMetaArray(numbers[0]);
 
@@ -91,6 +94,10 @@ class TagsTable extends React.Component {
   }
 
   getMetaArray(instanceNumber) {
+    if (!this.state.instanceNumbers.includes(instanceNumber)) {
+      console.warn('Invalid instance number: ', instanceNumber);
+      return [];
+    }
     const reducer = this.getTagReducer(this.state.fullMetaData, instanceNumber, '');
     const keys = Object.keys(this.state.fullMetaData);
     return keys.reduce(reducer, []);
@@ -98,13 +105,19 @@ class TagsTable extends React.Component {
 
   getTagReducer(tagData, instanceNumber, prefix) {
     return (accumulator, currentValue) => {
-      let name = currentValue;
+      const tag = getTagFromKey(currentValue);
+      let key = tag.getNameFromDictionary();
+      if (typeof key === 'undefined') {
+        // add 'x' to help sorting
+        key = 'x' + tag.getKey();
+      }
+      const name = key;
       const element = tagData[currentValue];
       let value = element.value;
       // possible 'merged' object
       if (typeof value.slice === 'undefined' &&
         typeof value[instanceNumber] !== 'undefined') {
-        value = value[instanceNumber].value;
+        value = value[instanceNumber];
       }
       // force instance number (otherwise takes value in non indexed array)
       if (name === 'InstanceNumber') {
@@ -127,6 +140,12 @@ class TagsTable extends React.Component {
           accumulator = accumulator.concat(res);
         }
       } else {
+        // 'O'ther vr
+        if (element.vr[0] === 'O') {
+          if (value.length > 10) {
+            value = value.slice(0, 10) + '... (len:' + value.length + ')';
+          }
+        }
         accumulator.push({
           name: (prefix ? prefix + ' ' : '') + name,
           value: value.toString()
