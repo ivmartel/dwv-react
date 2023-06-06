@@ -115,6 +115,7 @@ class TagsTable extends React.Component {
       const element = tagData[currentValue];
       let value = element.value;
       // possible 'merged' object
+      // (use slice method as test for array and typed array)
       if (typeof value.slice === 'undefined' &&
         typeof value[instanceNumber] !== 'undefined') {
         value = value[instanceNumber];
@@ -140,11 +141,9 @@ class TagsTable extends React.Component {
           accumulator = accumulator.concat(res);
         }
       } else {
-        // 'O'ther vr
-        if (element.vr[0] === 'O') {
-          if (value.length > 10) {
-            value = value.slice(0, 10) + '... (len:' + value.length + ')';
-          }
+        // shorten long 'o'ther data
+        if (element.vr[0] === 'O' && value.length > 10) {
+          value = value.slice(0, 10) + '... (len:' + value.length + ')';
         }
         accumulator.push({
           name: (prefix ? prefix + ' ' : '') + name,
