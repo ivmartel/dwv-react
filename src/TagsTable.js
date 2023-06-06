@@ -143,7 +143,7 @@ class TagsTable extends React.Component {
       } else {
         // shorten long 'o'ther data
         if (element.vr[0] === 'O' && value.length > 10) {
-          value = value.slice(0, 10) + '... (len:' + value.length + ')';
+          value = value.slice(0, 10).toString() + '... (len:' + value.length + ')';
         }
         accumulator.push({
           name: (prefix ? prefix + ' ' : '') + name,
