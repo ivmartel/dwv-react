@@ -29,15 +29,17 @@ import Toolbar from '@mui/material/Toolbar';
 import TagsTable from './TagsTable';
 
 import './DwvComponent.css';
-import dwv from 'dwv';
+import {
+  App,
+  getDwvVersion,
+  decoderScripts
+} from 'dwv';
 
 // Image decoders (for web workers)
-dwv.image.decoderScripts = {
-  "jpeg2000": `${process.env.PUBLIC_URL}/assets/dwv/decoders/pdfjs/decode-jpeg2000.js`,
-  "jpeg-lossless": `${process.env.PUBLIC_URL}/assets/dwv/decoders/rii-mango/decode-jpegloss.js`,
-  "jpeg-baseline": `${process.env.PUBLIC_URL}/assets/dwv/decoders/pdfjs/decode-jpegbaseline.js`,
-  "rle": `${process.env.PUBLIC_URL}/assets/dwv/decoders/dwv/decode-rle.js`
-};
+decoderScripts.jpeg2000 = `${process.env.PUBLIC_URL}/assets/dwv/decoders/pdfjs/decode-jpeg2000.js`;
+decoderScripts["jpeg-lossless"] = `${process.env.PUBLIC_URL}/assets/dwv/decoders/rii-mango/decode-jpegloss.js`;
+decoderScripts["jpeg-baseline"] = `${process.env.PUBLIC_URL}/assets/dwv/decoders/pdfjs/decode-jpegbaseline.js`;
+decoderScripts.rle = `${process.env.PUBLIC_URL}/assets/dwv/decoders/dwv/decode-rle.js`;
 
 const styles = theme => ({
   appBar: {
@@ -61,7 +63,7 @@ class DwvComponent extends React.Component {
     super(props);
     this.state = {
       versions: {
-        dwv: dwv.getVersion(),
+        dwv: getDwvVersion(),
         react: React.version
       },
       tools: {
@@ -180,7 +182,7 @@ class DwvComponent extends React.Component {
 
   componentDidMount() {
     // create app
-    const app = new dwv.App();
+    const app = new App();
     // initialise app
     app.init({
       "dataViewConfigs": {'*': [{divId: 'layerGroup0'}]},
@@ -261,7 +263,7 @@ class DwvComponent extends React.Component {
     this.setupDropbox(app);
 
     // possible load from location
-    dwv.utils.loadFromUri(window.location.href, app);
+    app.loadFromUri(window.location.href);
   }
 
   /**
