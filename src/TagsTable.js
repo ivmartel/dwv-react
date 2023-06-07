@@ -46,26 +46,28 @@ class TagsTable extends React.Component {
 
     const fullMetaData = this.props.data;
 
-    // store keys (to not recreate them)
-    //this.keys = Object.keys(this.props.data);
-    // set slider with instance numbers ('00200013')
-    let instanceNumbers = fullMetaData['00200013'].value;
-    if (typeof instanceNumbers === 'string') {
-      instanceNumbers = [instanceNumbers];
-    }
-    // convert string to numbers
-    const numbers = instanceNumbers.map(Number);
-    numbers.sort((a, b) => a - b);
-
     this.state = {
       fullMetaData: fullMetaData,
-      searchfor: "",
-      sliderMin: numbers[0],
-      sliderMax: numbers[numbers.length - 1],
-      instanceNumber: numbers[0],
-      instanceNumbers: numbers
+      searchfor: ""
     };
-    this.state.displayData = this.getMetaArray(numbers[0]);
+
+    // set slider with instance numbers ('00200013')
+    const instanceElement = fullMetaData['00200013'];
+    if (typeof instanceElement !== 'undefined') {
+      let instanceNumbers = instanceElement.value;
+      if (typeof instanceNumbers === 'string') {
+        instanceNumbers = [instanceNumbers];
+      }
+      // convert string to numbers
+      const numbers = instanceNumbers.map(Number);
+      numbers.sort((a, b) => a - b);
+      this.state.sliderMin = numbers[0];
+      this.state.sliderMax = numbers[numbers.length - 1];
+      this.state.instanceNumber = numbers[0];
+      this.state.instanceNumbers = numbers;
+    }
+
+    this.state.displayData = this.getMetaArray(this.state.sliderMin);
 
     // bind listener
     this.filterList = this.filterList.bind(this);
@@ -94,16 +96,36 @@ class TagsTable extends React.Component {
   }
 
   getMetaArray(instanceNumber) {
-    if (!this.state.instanceNumbers.includes(instanceNumber)) {
+    if (typeof this.state.instanceNumbers !== 'undefined' &&
+      !this.state.instanceNumbers.includes(instanceNumber)) {
       console.warn('Invalid instance number: ', instanceNumber);
       return [];
     }
-    const reducer = this.getTagReducer(this.state.fullMetaData, instanceNumber, '');
+    let reducer;
+    if (this.isDicomMeta(this.state.fullMetaData)) {
+      reducer = this.getDicomTagReducer(this.state.fullMetaData, instanceNumber, '');
+    } else {
+      reducer = this.getTagReducer(this.state.fullMetaData);
+    }
     const keys = Object.keys(this.state.fullMetaData);
     return keys.reduce(reducer, []);
   }
 
-  getTagReducer(tagData, instanceNumber, prefix) {
+  isDicomMeta(meta) {
+    return typeof meta['00020010'] !== 'undefined';
+  }
+
+  getTagReducer(tagData) {
+    return function (accumulator, currentValue) {
+      accumulator.push({
+        name: currentValue,
+        value: tagData[currentValue].value
+      });
+      return accumulator;
+    };
+  }
+
+  getDicomTagReducer(tagData, instanceNumber, prefix) {
     return (accumulator, currentValue) => {
       const tag = getTagFromKey(currentValue);
       let key = tag.getNameFromDictionary();
@@ -136,7 +158,7 @@ class TagsTable extends React.Component {
           const sqItems = value[i];
           const keys = Object.keys(sqItems);
           const res = keys.reduce(
-            this.getTagReducer(sqItems, instanceNumber, prefix + '[' + i + ']'), []
+            this.getDicomTagReducer(sqItems, instanceNumber, prefix + '[' + i + ']'), []
           );
           accumulator = accumulator.concat(res);
         }
