@@ -444,7 +444,7 @@ class DwvComponent extends React.Component {
    */
   onInputFile = (event) => {
     if (event.target && event.target.files) {
-      this.dwvApp.loadFiles(event.target.files);
+      this.state.dwvApp.loadFiles(event.target.files);
     }
   }
 
