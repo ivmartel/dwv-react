@@ -343,7 +343,7 @@ class DwvComponent extends React.Component {
         }
       ]
     };
-    this.state.dwvApp.setDataViewConfig(config);
+    this.state.dwvApp.setDataViewConfigs(config);
     // render data
     for (let i = 0; i < this.state.dwvApp.getNumberOfLoadedData(); ++i) {
       this.state.dwvApp.render(i);
