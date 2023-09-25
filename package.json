@@ -11,7 +11,7 @@
     "@mui/icons-material": "^5.14.9",
     "@mui/material": "^5.14.10",
     "@mui/styles": "^5.14.10",
-    "dwv": "0.32.2",
+    "dwv": "0.32.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "^5.0.1"
