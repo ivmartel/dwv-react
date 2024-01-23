@@ -1099,7 +1099,7 @@
     core-js-pure "^3.20.2"
     regenerator-runtime "^0.13.4"
 
-"@babel/runtime@^7.10.2", "@babel/runtime@^7.11.2", "@babel/runtime@^7.12.5", "@babel/runtime@^7.16.3", "@babel/runtime@^7.18.3", "@babel/runtime@^7.18.9", "@babel/runtime@^7.23.7", "@babel/runtime@^7.23.8", "@babel/runtime@^7.3.1", "@babel/runtime@^7.5.5", "@babel/runtime@^7.8.3", "@babel/runtime@^7.8.4", "@babel/runtime@^7.8.7":
+"@babel/runtime@^7.10.2", "@babel/runtime@^7.11.2", "@babel/runtime@^7.12.5", "@babel/runtime@^7.16.3", "@babel/runtime@^7.18.3", "@babel/runtime@^7.18.9", "@babel/runtime@^7.23.8", "@babel/runtime@^7.3.1", "@babel/runtime@^7.5.5", "@babel/runtime@^7.8.3", "@babel/runtime@^7.8.4", "@babel/runtime@^7.8.7":
   version "7.23.8"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.23.8.tgz#8ee6fe1ac47add7122902f257b8ddf55c898f650"
   integrity sha512-Y7KbAP984rn1VGMbGqKmBLio9V7y5Je9GvU4rQPCPinCyNfUcToxIXl06d59URp/F3LwinvODxab5N/G6qggkw==
@@ -1797,15 +1797,6 @@
     react-is "^18.2.0"
     react-transition-group "^4.4.5"
 
-"@mui/private-theming@^5.15.4":
-  version "5.15.4"
-  resolved "https://registry.yarnpkg.com/@mui/private-theming/-/private-theming-5.15.4.tgz#5d7b187e8e31995289b63ec4e0331d1e29859d6c"
-  integrity sha512-9N5myIMEEQTM5WYWPGvvYADzjFo12LgJ7S+2iTZkBNOcJpUxQYM1tvYjkHCDV+t1ocMOEgjR2EfJ9Dus30dBlg==
-  dependencies:
-    "@babel/runtime" "^7.23.7"
-    "@mui/utils" "^5.15.4"
-    prop-types "^15.8.1"
-
 "@mui/private-theming@^5.15.6":
   version "5.15.6"
   resolved "https://registry.yarnpkg.com/@mui/private-theming/-/private-theming-5.15.6.tgz#224819694ed76df041b1257256152a45d1fd733d"
@@ -1825,16 +1816,16 @@
     csstype "^3.1.2"
     prop-types "^15.8.1"
 
-"@mui/styles@^5.15.4":
-  version "5.15.4"
-  resolved "https://registry.yarnpkg.com/@mui/styles/-/styles-5.15.4.tgz#044ced5ad0c174c5ba11ea08cc012d9e2539ff46"
-  integrity sha512-cbeopHIq559GHQe4EusyI0GOYZq6aj8IAum8d8SKA5AoerLXTpYNabREFdP0melLiX6l0e6AHuTnTv8Fg2lTgQ==
+"@mui/styles@^5.15.6":
+  version "5.15.6"
+  resolved "https://registry.yarnpkg.com/@mui/styles/-/styles-5.15.6.tgz#128529bf50e7055974e48e51e9bf67fc8e143fcf"
+  integrity sha512-5WYJ4KjJ4eMEgWcqY8lPr1hbte5mw7/zVgB7IjonoyIEnG9JPKbT/ma4QW5Rm3q/dUxmpngrRdh60fZPIhQpfw==
   dependencies:
-    "@babel/runtime" "^7.23.7"
+    "@babel/runtime" "^7.23.8"
     "@emotion/hash" "^0.9.1"
-    "@mui/private-theming" "^5.15.4"
+    "@mui/private-theming" "^5.15.6"
     "@mui/types" "^7.2.13"
-    "@mui/utils" "^5.15.4"
+    "@mui/utils" "^5.15.6"
     clsx "^2.1.0"
     csstype "^3.1.2"
     hoist-non-react-statics "^3.3.2"
@@ -1867,7 +1858,7 @@
   resolved "https://registry.yarnpkg.com/@mui/types/-/types-7.2.13.tgz#d1584912942f9dc042441ecc2d1452be39c666b8"
   integrity sha512-qP9OgacN62s+l8rdDhSFRe05HWtLLJ5TGclC9I1+tQngbssu0m2dmFZs+Px53AcOs9fD7TbYd4gc9AXzVqO/+g==
 
-"@mui/utils@^5.15.4", "@mui/utils@^5.15.6":
+"@mui/utils@^5.15.6":
   version "5.15.6"
   resolved "https://registry.yarnpkg.com/@mui/utils/-/utils-5.15.6.tgz#bbcc302b8e83e360a87230afe3ed8fc99e29fae9"
   integrity sha512-qfEhf+zfU9aQdbzo1qrSWlbPQhH1nCgeYgwhOVnj9Bn39shJQitEnXpSQpSNag8+uty5Od6PxmlNKPTnPySRKA==
