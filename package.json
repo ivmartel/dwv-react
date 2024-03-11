@@ -8,7 +8,7 @@
   "dependencies": {
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.0",
-    "@mui/icons-material": "^5.15.11",
+    "@mui/icons-material": "^5.15.12",
     "@mui/material": "^5.15.11",
     "@mui/styles": "^5.15.11",
     "dwv": "0.32.3",
