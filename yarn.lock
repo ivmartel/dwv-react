@@ -1797,15 +1797,6 @@
     react-is "^18.2.0"
     react-transition-group "^4.4.5"
 
-"@mui/private-theming@^5.15.11", "@mui/private-theming@^5.15.12":
-  version "5.15.12"
-  resolved "https://registry.yarnpkg.com/@mui/private-theming/-/private-theming-5.15.12.tgz#e3ac99b3dbfa6ecc6e914009df33a2d400432f6e"
-  integrity sha512-cqoSo9sgA5HE+8vZClbLrq9EkyOnYysooepi5eKaKvJ41lReT2c5wOZAeDDM1+xknrMDos+0mT2zr3sZmUiRRA==
-  dependencies:
-    "@babel/runtime" "^7.23.9"
-    "@mui/utils" "^5.15.12"
-    prop-types "^15.8.1"
-
 "@mui/private-theming@^5.15.12":
   version "5.15.12"
   resolved "https://registry.yarnpkg.com/@mui/private-theming/-/private-theming-5.15.12.tgz#e3ac99b3dbfa6ecc6e914009df33a2d400432f6e"
@@ -1867,7 +1858,7 @@
   resolved "https://registry.yarnpkg.com/@mui/types/-/types-7.2.13.tgz#d1584912942f9dc042441ecc2d1452be39c666b8"
   integrity sha512-qP9OgacN62s+l8rdDhSFRe05HWtLLJ5TGclC9I1+tQngbssu0m2dmFZs+Px53AcOs9fD7TbYd4gc9AXzVqO/+g==
 
-"@mui/utils@^5.15.11", "@mui/utils@^5.15.12":
+"@mui/utils@^5.15.12":
   version "5.15.12"
   resolved "https://registry.yarnpkg.com/@mui/utils/-/utils-5.15.12.tgz#bd00b678c16b98c543d4c6c560f9c90e6792b2a7"
   integrity sha512-8SDGCnO2DY9Yy+5bGzu00NZowSDtuyHP4H8gunhHGQoIlhlY2Z3w64wBzAOLpYw/ZhJNzksDTnS/i8qdJvxuow==
@@ -4723,9 +4714,9 @@ flatted@^3.1.0:
   integrity sha512-5nqDSxl8nn5BSNxyR3n4I6eDmbolI6WT+QqR547RwxQapgjQBmtktdP+HTBb/a/zLsbzERTONyUB5pefh5TtjQ==
 
 follow-redirects@^1.0.0:
-  version "1.15.4"
-  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.15.4.tgz#cdc7d308bf6493126b17ea2191ea0ccf3e535adf"
-  integrity sha512-Cr4D/5wlrb0z9dgERpUL3LrmPKVDsETIJhaCMeDfuFYcqa5bldGV6wBsAN6X/vxlXQtFBMrXdXxdL8CbDTGniw==
+  version "1.15.6"
+  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.15.6.tgz#7f815c0cda4249c74ff09e95ef97c23b5fd0399b"
+  integrity sha512-wWN62YITEaOpSK584EZXJafH1AGpO8RVgElfkuXbTOrPX4fIfOyEpW/CsiNd8JdYrAoOvafRTOEnvsO++qCqFA==
 
 fork-ts-checker-webpack-plugin@^6.5.0:
   version "6.5.2"
