@@ -10,7 +10,7 @@
     "@emotion/styled": "^11.11.5",
     "@mui/icons-material": "^5.15.15",
     "@mui/material": "^5.15.14",
-    "@mui/styles": "^5.15.14",
+    "@mui/styles": "^5.15.15",
     "dwv": "0.32.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
