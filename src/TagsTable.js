@@ -48,26 +48,28 @@ class TagsTable extends React.Component {
 
     this.state = {
       fullMetaData: fullMetaData,
-      searchfor: ""
+      searchfor: "",
+      instanceNumber: 0
     };
 
     // set slider with instance numbers ('00200013')
     const instanceElement = fullMetaData['00200013'];
     if (typeof instanceElement !== 'undefined') {
-      let instanceNumbers = instanceElement.value;
-      if (typeof instanceNumbers === 'string') {
-        instanceNumbers = [instanceNumbers];
+      let instanceNumberValue = instanceElement.value;
+      if (typeof instanceNumberValue === 'string') {
+        instanceNumberValue = [instanceNumberValue];
       }
       // convert string to numbers
-      const numbers = instanceNumbers.map(Number);
-      numbers.sort((a, b) => a - b);
-      this.state.sliderMin = numbers[0];
-      this.state.sliderMax = numbers[numbers.length - 1];
-      this.state.instanceNumber = numbers[0];
-      this.state.instanceNumbers = numbers;
+      this.state.instanceNumbers = instanceNumberValue.map(Number);
+      this.state.instanceNumbers.sort((a, b) => a - b);
+      this.state.sliderMin = 0;
+      this.state.sliderMax = this.state.instanceNumbers.length - 1;
+      this.state.instanceNumber = this.state.instanceNumbers[
+        this.state.sliderMin
+      ];
     }
 
-    this.state.displayData = this.getMetaArray(this.state.sliderMin);
+    this.state.displayData = this.getMetaArray(this.state.instanceNumber);
 
     // bind listener
     this.filterList = this.filterList.bind(this);
@@ -96,11 +98,6 @@ class TagsTable extends React.Component {
   }
 
   getMetaArray(instanceNumber) {
-    if (typeof this.state.instanceNumbers !== 'undefined' &&
-      !this.state.instanceNumbers.includes(instanceNumber)) {
-      console.warn('Invalid instance number: ', instanceNumber);
-      return [];
-    }
     let reducer;
     if (this.isDicomMeta(this.state.fullMetaData)) {
       reducer = this.getDicomTagReducer(this.state.fullMetaData, instanceNumber, '');
@@ -178,12 +175,13 @@ class TagsTable extends React.Component {
 
   onSliderChange = (event) => {
     const sliderValue = parseInt(event.target.value, 10);
-    const metaArray = this.getMetaArray(sliderValue);
+    const instanceNumber = this.state.instanceNumbers[sliderValue];
+    const metaArray = this.getMetaArray(instanceNumber);
     this.setState({
-      instanceNumber: sliderValue,
+      instanceNumber: instanceNumber,
       displayData: metaArray
     });
-    this.filterList(this.state.searchfor, sliderValue);
+    this.filterList(this.state.searchfor, instanceNumber);
   }
 
   onSearch = (event) => {
