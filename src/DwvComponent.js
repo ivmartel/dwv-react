@@ -109,7 +109,8 @@ class DwvComponent extends React.Component {
     return (
       <div id="dwv">
         <LinearProgress variant="determinate" value={loadProgress} />
-        <Stack direction="row" spacing={1} padding={1} justifyContent="center">
+        <Stack direction="row" spacing={1} padding={1}
+          justifyContent="center" flexWrap="wrap">
           <ToggleButtonGroup size="small"
             color="primary"
             value={ this.state.selectedTool }
