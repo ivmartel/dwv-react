@@ -4060,10 +4060,10 @@ duplexer@^0.1.2:
   resolved "https://registry.yarnpkg.com/duplexer/-/duplexer-0.1.2.tgz#3abe43aef3835f8ae077d136ddce0f276b0400e6"
   integrity sha512-jtD6YG370ZCIi/9GTaJKQxWTZD045+4R4hTk/x1UyoqadyJ9x9CgSi1RlVDQF8U2sxLLSnFkCaMihqljHIWgMg==
 
-dwv@0.32.4:
-  version "0.32.4"
-  resolved "https://registry.yarnpkg.com/dwv/-/dwv-0.32.4.tgz#b2d331f3d4fba1c3743bdaff5ebdb1af66a60046"
-  integrity sha512-RdJPoIq/9u20ZyW8gLifYd7cvsnnqKZIVlDrNu0CNYxIDRCvnHojlhl5V6sS1KAQbZQGugsshpT09Lr9EfqQbA==
+dwv@0.32.6:
+  version "0.32.6"
+  resolved "https://registry.yarnpkg.com/dwv/-/dwv-0.32.6.tgz#0d9bba6ce143adb6173771ed6d0b6750b9a0f4ab"
+  integrity sha512-PRjuBMJruhK1ZeEWhnLZa1uP1By1Kyf8GWJPv0f5/VqyTF60CHwDvsa2OilP5YFBKnPh5dd9hgQ3FR0nWnAvGA==
   dependencies:
     jszip "~3.10.1"
     konva "~8.4.2"
