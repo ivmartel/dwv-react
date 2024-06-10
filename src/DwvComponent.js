@@ -218,9 +218,9 @@ class DwvComponent extends React.Component {
         this.onChangeTool(selectedTool);
       }
     });
-    app.addEventListener("load", (/*event*/) => {
+    app.addEventListener("load", (event) => {
       // set dicom tags
-      this.setState({metaData: app.getMetaData(0)});
+      this.setState({metaData: app.getMetaData(event.dataid)});
       // set data loaded flag
       this.setState({dataLoaded: true});
     });
@@ -346,8 +346,9 @@ class DwvComponent extends React.Component {
     };
     this.state.dwvApp.setDataViewConfigs(config);
     // render data
-    for (let i = 0; i < this.state.dwvApp.getNumberOfLoadedData(); ++i) {
-      this.state.dwvApp.render(i);
+    const dataIds = this.state.dwvApp.getDataIds();
+    for (const dataId of dataIds) {
+      this.state.dwvApp.render(dataId);
     }
   }
 
