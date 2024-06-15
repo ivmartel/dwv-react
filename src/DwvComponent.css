@@ -26,7 +26,7 @@
   width: 50%; height: 75%; }
 .dropBoxBorder {
   border: 5px dashed #e8eaf6; /*indigo:light*/ }
-.dropBoxBorder.hover {
+.dropBoxBorder:hover {
   border: 5px dashed #3f51b5; /*indigo*/  }
 #input-file-link {
   text-decoration-line: underline;
