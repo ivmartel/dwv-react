@@ -1797,15 +1797,6 @@
     react-is "^18.2.0"
     react-transition-group "^4.4.5"
 
-"@mui/private-theming@^5.15.20":
-  version "5.15.20"
-  resolved "https://registry.yarnpkg.com/@mui/private-theming/-/private-theming-5.15.20.tgz#028c4e3c717a13691ac2c8c98e29aa819d89001a"
-  integrity sha512-BK8F94AIqSrnaPYXf2KAOjGZJgWfvqAVQ2gVR3EryvQFtuBnG6RwodxrCvd3B48VuMy6Wsk897+lQMUxJyk+6g==
-  dependencies:
-    "@babel/runtime" "^7.23.9"
-    "@mui/utils" "^5.15.20"
-    prop-types "^15.8.1"
-
 "@mui/private-theming@^5.16.0":
   version "5.16.0"
   resolved "https://registry.yarnpkg.com/@mui/private-theming/-/private-theming-5.16.0.tgz#c1abfd3e0d9c95459048240ef4209dc7f25dc949"
@@ -1825,16 +1816,16 @@
     csstype "^3.1.3"
     prop-types "^15.8.1"
 
-"@mui/styles@^5.15.21":
-  version "5.15.21"
-  resolved "https://registry.yarnpkg.com/@mui/styles/-/styles-5.15.21.tgz#f118a6ef76ce3e362d8d9e6951f5bbf8c7f2e2bd"
-  integrity sha512-XYGRd25kE31GCapoftHrWrhr3zCNZypraBO+UAWNaguSRZ24HAHEOxEkAOTXt71BzFgW7S0qoE4jmyx8DfgZIg==
+"@mui/styles@^5.16.0":
+  version "5.16.0"
+  resolved "https://registry.yarnpkg.com/@mui/styles/-/styles-5.16.0.tgz#6733d029206acc1a9e3d01e1f6b85f9534007606"
+  integrity sha512-d/Hd1FJuIzAmX89sNazRcnFBGZLb8klPG9E+AshhVpWZcoV/9Ar29On2XS0IxRh7Y5GoA0oTDkU0jivKWjzkiw==
   dependencies:
     "@babel/runtime" "^7.23.9"
     "@emotion/hash" "^0.9.1"
-    "@mui/private-theming" "^5.15.20"
+    "@mui/private-theming" "^5.16.0"
     "@mui/types" "^7.2.14"
-    "@mui/utils" "^5.15.20"
+    "@mui/utils" "^5.16.0"
     clsx "^2.1.0"
     csstype "^3.1.3"
     hoist-non-react-statics "^3.3.2"
@@ -1867,7 +1858,7 @@
   resolved "https://registry.yarnpkg.com/@mui/types/-/types-7.2.14.tgz#8a02ac129b70f3d82f2f9b76ded2c8d48e3fc8c9"
   integrity sha512-MZsBZ4q4HfzBsywtXgM1Ksj6HDThtiwmOKUXH1pKYISI9gAVXCNHNpo7TlGoGrBaYWZTdNoirIN7JsQcQUjmQQ==
 
-"@mui/utils@^5.15.14", "@mui/utils@^5.15.20", "@mui/utils@^5.16.0":
+"@mui/utils@^5.15.14", "@mui/utils@^5.16.0":
   version "5.16.0"
   resolved "https://registry.yarnpkg.com/@mui/utils/-/utils-5.16.0.tgz#3963127d9a619c251e5be1aef9adab0e89d3e7df"
   integrity sha512-kLLi5J1xY+mwtUlMb8Ubdxf4qFAA1+U7WPBvjM/qQ4CIwLCohNb0sHo1oYPufjSIH/Z9+dhVxD7dJlfGjd1AVA==
