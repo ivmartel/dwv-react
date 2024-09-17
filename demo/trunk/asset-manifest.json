@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/dwv-react/demo/trunk/static/css/main.bf969dd1.css",
-    "main.js": "/dwv-react/demo/trunk/static/js/main.d05757df.js",
+    "main.js": "/dwv-react/demo/trunk/static/js/main.58c72cbd.js",
     "service-worker.js": "/dwv-react/demo/trunk/service-worker.js",
     "index.html": "/dwv-react/demo/trunk/index.html",
     "main.bf969dd1.css.map": "/dwv-react/demo/trunk/static/css/main.bf969dd1.css.map",
-    "main.d05757df.js.map": "/dwv-react/demo/trunk/static/js/main.d05757df.js.map"
+    "main.58c72cbd.js.map": "/dwv-react/demo/trunk/static/js/main.58c72cbd.js.map"
   },
   "entrypoints": [
     "static/css/main.bf969dd1.css",
-    "static/js/main.d05757df.js"
+    "static/js/main.58c72cbd.js"
   ]
 }
