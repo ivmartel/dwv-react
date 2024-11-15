@@ -4148,13 +4148,13 @@ duplexer@^0.1.2:
   resolved "https://registry.yarnpkg.com/duplexer/-/duplexer-0.1.2.tgz#3abe43aef3835f8ae077d136ddce0f276b0400e6"
   integrity sha512-jtD6YG370ZCIi/9GTaJKQxWTZD045+4R4hTk/x1UyoqadyJ9x9CgSi1RlVDQF8U2sxLLSnFkCaMihqljHIWgMg==
 
-dwv@0.33.1:
-  version "0.33.1"
-  resolved "https://registry.yarnpkg.com/dwv/-/dwv-0.33.1.tgz#4285fe43f85c10c29c6d6f187ed6575e76082bf0"
-  integrity sha512-o8yT1sFlQOO5joNf7EvKDTyx57GjwgbLKrTZ1Eh79PEQlJd4DdOvzFnyKHT1ZYouHltnP/Fivp77TabYY+lA6g==
+dwv@0.34.0:
+  version "0.34.0"
+  resolved "https://registry.yarnpkg.com/dwv/-/dwv-0.34.0.tgz#d4b5a137fa72bfb2c4d30ae1bb0bcb5f7778e1b7"
+  integrity sha512-58ta1yJuWvD7lYPHnP1qqYhI33zdM5UxrJvhG2EbWa/+Nf1XvKY//T0NfY5zT5J/OEIltMPKG0YwOwx+iR7jOw==
   dependencies:
     jszip "^3.10.1"
-    konva "~8.4.2"
+    konva "~9.3.16"
     magic-wand-tool "~1.1.7"
 
 ee-first@1.1.1:
@@ -6399,10 +6399,10 @@ klona@^2.0.4, klona@^2.0.5:
   resolved "https://registry.yarnpkg.com/klona/-/klona-2.0.5.tgz#d166574d90076395d9963aa7a928fabb8d76afbc"
   integrity sha512-pJiBpiXMbt7dkzXe8Ghj/u4FfXOOa98fPW+bihOJ4SjnoijweJrNThJfd3ifXpXhREjpoF2mZVH1GfS9LV3kHQ==
 
-konva@~8.4.2:
-  version "8.4.3"
-  resolved "https://registry.yarnpkg.com/konva/-/konva-8.4.3.tgz#d6754fdb53e69295c24dbdfe967a27f92da51e47"
-  integrity sha512-ARqdgAbdNIougRlOKvkQwHlGhXPRBV4KvhCP+qoPpGoVQwwiJe4Hkdu4HHdRPb9rGUp04jDTAxBzEwBsE272pg==
+konva@~9.3.16:
+  version "9.3.16"
+  resolved "https://registry.yarnpkg.com/konva/-/konva-9.3.16.tgz#0e8b52e8cb20c80c5e4cb98d0babd89ff6f95a2c"
+  integrity sha512-qa47cefGDDHzkToGRGDsy24f/Njrz7EHP56jQ8mlDcjAPO7vkfTDeoBDIfmF7PZtpfzDdooafQmEUJMDU2F7FQ==
 
 language-subtag-registry@~0.3.2:
   version "0.3.22"
