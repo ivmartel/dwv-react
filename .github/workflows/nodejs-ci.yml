@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       IS_PUSH_MAIN: ${{ github.ref == 'refs/heads/main' }}
-      IS_PUSH_TAG: ${{ startsWith(github.ref, 'refs/tags/') }}
+      IS_PUSH_TAG: ${{ startsWith(github.ref, 'refs/tags/') && !contains(github.ref, 'beta') }}
     steps:
     - name: Check out code
       uses: actions/checkout@v4
