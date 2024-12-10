@@ -7,7 +7,7 @@
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.14.0",
-    "@emotion/styled": "^11.13.5",
+    "@emotion/styled": "^11.14.0",
     "@mui/icons-material": "^5.16.0",
     "@mui/material": "^5.16.0",
     "@mui/styles": "^6.1.10",
