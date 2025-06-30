@@ -3258,10 +3258,10 @@ caniuse-lite@^1.0.0, caniuse-lite@^1.0.30001688, caniuse-lite@^1.0.30001702:
   resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001705.tgz#dc3510bcdef261444ca944b7be9c8d0bb7fafeef"
   integrity sha512-S0uyMMiYvA7CxNgomYBwwwPUnWzFD83f3B1ce5jHUfHTH//QL6hHsreI8RVC5606R4ssqravelYO5TU6t8sEyg==
 
-canvas@^3.1.1:
-  version "3.1.1"
-  resolved "https://registry.yarnpkg.com/canvas/-/canvas-3.1.1.tgz#d5399808e5cd19b0a9679248a7f98929e3f96341"
-  integrity sha512-o8JptL14zrYFYSh5r7ClVzuwG77tvjRBgSJECyIF6AAHpL4MgORhlI+rru3/ZPKtdC7uopl+biESZWz1l/NpFA==
+canvas@^3.1.2:
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/canvas/-/canvas-3.1.2.tgz#a98406ef6178d31e39eb7dc0a488b1181555b792"
+  integrity sha512-Z/tzFAcBzoCvJlOSlCnoekh1Gu8YMn0J51+UAuXJAbW1Z6I9l2mZgdD7738MepoeeIcUdDtbMnOg6cC7GJxy/g==
   dependencies:
     node-addon-api "^7.0.0"
     prebuild-install "^7.1.3"
