@@ -1,24 +1,24 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@mui/styles';
+import {
+  InputAdornment,
+  TextField,
+  Paper,
+  Table,
+  TableContainer,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  Slider,
+  Stack,
+  Box
+} from '@mui/material';
 
-import InputAdornment from '@mui/material/InputAdornment';
-import TextField from '@mui/material/TextField';
+import { getTagFromKey } from 'dwv';
 
 import Search from '@mui/icons-material/Search';
-
-import Paper from '@mui/material/Paper';
-import Table from '@mui/material/Table';
-import TableContainer from '@mui/material/TableContainer';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Slider from '@mui/material/Slider';
-import Stack from '@mui/material/Stack';
-import Box from '@mui/material/Box';
-
-import {getTagFromKey} from 'dwv';
 
 const styles = theme => ({
   flex: {

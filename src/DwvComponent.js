@@ -1,15 +1,27 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles, useTheme } from '@mui/styles';
-import Typography from '@mui/material/Typography';
+import { withStyles } from '@mui/styles';
+import {
+  Typography,
+  Stack,
+  LinearProgress,
+  Link,
+  IconButton,
+  ToggleButton,
+  ToggleButtonGroup,
+  AppBar,
+  Dialog,
+  Slide,
+  Toolbar
+} from '@mui/material';
 
-import Stack from '@mui/material/Stack';
-import LinearProgress from '@mui/material/LinearProgress';
+import {
+  App,
+  getDwvVersion,
+  decoderScripts
+} from 'dwv';
 
-import Link from '@mui/material/Link';
-import IconButton from '@mui/material/IconButton';
-import ToggleButton from '@mui/material/ToggleButton';
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import TagsTable from './TagsTable.js';
 
 // https://mui.com/material-ui/material-icons/
 import CloseIcon from '@mui/icons-material/Close';
@@ -21,19 +33,7 @@ import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
 import StraightenIcon from '@mui/icons-material/Straighten';
 import CameraswitchIcon from '@mui/icons-material/Cameraswitch';
 
-import Dialog from '@mui/material/Dialog';
-import AppBar from '@mui/material/AppBar';
-import Slide from '@mui/material/Slide';
-import Toolbar from '@mui/material/Toolbar';
-
-import TagsTable from './TagsTable';
-
 import './DwvComponent.css';
-import {
-  App,
-  getDwvVersion,
-  decoderScripts
-} from 'dwv';
 
 // Image decoders (for web workers)
 decoderScripts.jpeg2000 = `${process.env.PUBLIC_URL}/assets/dwv/decoders/pdfjs/decode-jpeg2000.js`;
