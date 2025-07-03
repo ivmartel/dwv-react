@@ -17,8 +17,7 @@ import {
 
 import {
   App,
-  getDwvVersion,
-  decoderScripts
+  getDwvVersion
 } from 'dwv';
 
 import TagsTable from './TagsTable.js';
@@ -34,12 +33,6 @@ import StraightenIcon from '@mui/icons-material/Straighten';
 import CameraswitchIcon from '@mui/icons-material/Cameraswitch';
 
 import './DwvComponent.css';
-
-// Image decoders (for web workers)
-decoderScripts.jpeg2000 = `${process.env.PUBLIC_URL}/assets/dwv/decoders/pdfjs/decode-jpeg2000.js`;
-decoderScripts["jpeg-lossless"] = `${process.env.PUBLIC_URL}/assets/dwv/decoders/rii-mango/decode-jpegloss.js`;
-decoderScripts["jpeg-baseline"] = `${process.env.PUBLIC_URL}/assets/dwv/decoders/pdfjs/decode-jpegbaseline.js`;
-decoderScripts.rle = `${process.env.PUBLIC_URL}/assets/dwv/decoders/dwv/decode-rle.js`;
 
 const styles = theme => ({
   appBar: {
@@ -74,6 +67,8 @@ class DwvComponent extends React.Component {
           options: ['Ruler']
         }
       },
+      canScroll: false,
+      canWindowLevel: false,
       selectedTool: 'Select Tool',
       loadProgress: 0,
       dataLoaded: false,
@@ -207,12 +202,21 @@ class DwvComponent extends React.Component {
     app.addEventListener("loadprogress", (event) => {
       this.setState({loadProgress: event.loaded});
     });
-    app.addEventListener('renderend', (/*event*/) => {
+    app.addEventListener('renderend', (event) => {
       if (isFirstRender) {
         isFirstRender = false;
+        const vl = this.state.dwvApp.getViewLayersByDataId(event.dataid)[0];
+        const vc = vl.getViewController();
+        // available tools
+        if (vc.canScroll()) {
+          this.setState({canScroll: true});
+        }
+        if (vc.isMonochrome()) {
+          this.setState({canWindowLevel: true});
+        }
         // available tools
         let selectedTool = 'ZoomAndPan';
-        if (app.canScroll()) {
+        if (this.state.canScroll) {
           selectedTool = 'Scroll';
         }
         this.onChangeTool(selectedTool);
@@ -297,6 +301,11 @@ class DwvComponent extends React.Component {
       this.state.dwvApp.setTool(tool);
       if (tool === 'Draw') {
         this.onChangeShape(this.state.tools.Draw.options[0]);
+      } else {
+        // if draw was created, active is now a draw layer...
+        // reset to view layer
+        const lg = this.state.dwvApp.getActiveLayerGroup();
+        lg?.setActiveLayer(0);
       }
     }
   }
@@ -310,9 +319,9 @@ class DwvComponent extends React.Component {
   canRunTool = (tool) => {
     let res;
     if (tool === 'Scroll') {
-      res = this.state.dwvApp.canScroll();
+      res = this.state.canScroll;
     } else if (tool === 'WindowLevel') {
-      res = this.state.dwvApp.canWindowLevel();
+      res = this.state.canWindowLevel;
     } else {
       res = true;
     }
@@ -367,7 +376,7 @@ class DwvComponent extends React.Component {
    */
   onReset = () => {
     if (this.state.dwvApp) {
-      this.state.dwvApp.resetDisplay();
+      this.state.dwvApp.resetLayout();
     }
   }
 
