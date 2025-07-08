@@ -20,7 +20,7 @@ import {
   getDwvVersion
 } from 'dwv';
 
-import TagsTable from './TagsTable.js';
+import TagsTable from './TagsTable.jsx';
 
 // https://mui.com/material-ui/material-icons/
 import CloseIcon from '@mui/icons-material/Close';

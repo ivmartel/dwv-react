@@ -6,7 +6,7 @@ import {
   colors
 } from '@mui/material';
 
-import DwvComponent from './DwvComponent.js';
+import DwvComponent from './DwvComponent.jsx';
 
 import './App.css';
 

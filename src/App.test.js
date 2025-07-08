@@ -1,8 +1,9 @@
-import { createRoot } from 'react-dom/client';
-import App from './App.js';
+import {render} from '@testing-library/react'
 
-it('renders without crashing', () => {
-  const div = document.createElement('div');
-  const root = createRoot(div);
-  root.render(<App />);
+import App from './App.jsx';
+
+describe('App', () => {
+  it('renders', () => {
+    render(<App />);
+  });
 });
