@@ -45,7 +45,7 @@ jobs:
         git config user.name github-actions
         git checkout gh-pages
         rm -Rf $DEPLOY_DIR$ALL
-        cp -Rf ./build/* $DEPLOY_DIR
+        cp -Rf ./dist/* $DEPLOY_DIR
         git add -A $DEPLOY_DIR
         git diff-index --quiet HEAD ||
           git commit -m "CI run ${{ github.run_number }} pushed to gh-pages"
