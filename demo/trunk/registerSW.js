@@ -1,1 +1,1 @@
-if('serviceWorker' in navigator) {window.addEventListener('load', () => {navigator.serviceWorker.register('/dwv-vue/demo/trunk/sw.js', { scope: '/dwv-vue/demo/trunk/' })})}
+if('serviceWorker' in navigator) {window.addEventListener('load', () => {navigator.serviceWorker.register('/dwv-react/demo/trunk/sw.js', { scope: '/dwv-react/demo/trunk/' })})}
