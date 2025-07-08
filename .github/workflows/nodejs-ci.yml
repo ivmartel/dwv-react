@@ -24,8 +24,8 @@ jobs:
         node-version: 'lts/*'
     - name: Install dependencies
       run: yarn install --frozen-lockfile
-    # - name: Run tests
-    #   run: yarn run test
+    - name: Run tests
+      run: yarn run test
     - name: Build
       run: |
         BUILD_SCRIPT=build-trunk
