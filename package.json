@@ -11,7 +11,6 @@
     "@emotion/styled": "^11.14.1",
     "@mui/icons-material": "^6.4.8",
     "@mui/material": "^6.4.8",
-    "@mui/styles": "^6.4.12",
     "dwv": "0.35.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"

@@ -1,6 +1,6 @@
 import React from 'react';
+import { styled } from '@mui/material/styles';
 import PropTypes from 'prop-types';
-import { withStyles } from '@mui/styles';
 import {
   Typography,
   Stack,
@@ -34,17 +34,26 @@ import CameraswitchIcon from '@mui/icons-material/Cameraswitch';
 
 import './DwvComponent.css';
 
-const styles = theme => ({
-  appBar: {
+const PREFIX = 'TransitionUp';
+const classes = {
+  appBar: `${PREFIX}-appBar`,
+  title: `${PREFIX}-title`,
+  iconSmall: `${PREFIX}-iconSmall`
+};
+
+const Root = styled('div')(({theme}) => ({
+  [`& .${classes.appBar}`]: {
     position: 'relative',
   },
-  title: {
+
+  [`& .${classes.title}`]: {
     flex: '0 0 auto',
   },
-  iconSmall: {
+
+  [`& .${classes.iconSmall}`]: {
     fontSize: 20,
   }
-});
+}));
 
 export const TransitionUp = React.forwardRef((props, ref) => (
   <Slide direction="up" {...props} ref={ref} />
@@ -84,7 +93,7 @@ class DwvComponent extends React.Component {
   }
 
   render() {
-    const { classes } = this.props;
+    const { } = this.props;
     const { versions, tools, loadProgress, dataLoaded, metaData } = this.state;
 
     const handleToolChange = (event, newTool) => {
@@ -102,7 +111,7 @@ class DwvComponent extends React.Component {
     });
 
     return (
-      <div id="dwv">
+      <Root className={classes.root} id="dwv">
         <LinearProgress variant="determinate" value={loadProgress} />
         <Stack direction="row" spacing={1} padding={1}
           justifyContent="center" flexWrap="wrap">
@@ -172,7 +181,7 @@ class DwvComponent extends React.Component {
           </Typography>
         </p></div>
 
-      </div>
+      </Root>
     );
   }
 
@@ -531,8 +540,4 @@ class DwvComponent extends React.Component {
 
 } // DwvComponent
 
-DwvComponent.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles)(DwvComponent);
+export default (DwvComponent);

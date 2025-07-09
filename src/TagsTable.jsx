@@ -1,6 +1,6 @@
 import React from 'react';
+import { styled } from '@mui/material/styles';
 import PropTypes from 'prop-types';
-import { withStyles } from '@mui/styles';
 import {
   InputAdornment,
   TextField,
@@ -20,24 +20,37 @@ import { getTagFromKey } from 'dwv';
 
 import Search from '@mui/icons-material/Search';
 
-const styles = theme => ({
-  flex: {
+const PREFIX = 'TagsTable';
+const classes = {
+  flex: `${PREFIX}-flex`,
+  spacer: `${PREFIX}-spacer`,
+  searchField: `${PREFIX}-searchField`,
+  slider: `${PREFIX}-slider`,
+  container: `${PREFIX}-container`
+};
+
+const Root = styled('div')(({theme}) => ({
+  [`& .${classes.flex}`]: {
     flex: 1,
   },
-  spacer: {
+
+  [`& .${classes.spacer}`]: {
     flex: '1 1 100%',
   },
-  searchField: {
+
+  [`& .${classes.searchField}`]: {
     width: "45%"
   },
-  slider: {
+
+  [`& .${classes.slider}`]: {
     margin: 20
   },
-  container: {
+
+  [`&.${classes.container}`]: {
     padding: 10,
     overflow: "hidden"
   }
-});
+}));
 
 class TagsTable extends React.Component {
 
@@ -190,11 +203,11 @@ class TagsTable extends React.Component {
   }
 
   render() {
-    const { classes } = this.props;
+    const { } = this.props;
     const { displayData, searchfor, sliderMin, sliderMax } = this.state;
 
     return (
-      <div className={classes.container}>
+      <Root className={classes.container}>
         <Stack direction="row" spacing={2}>
           <TextField
             id="search"
@@ -224,7 +237,6 @@ class TagsTable extends React.Component {
             <div title="Instante number">{this.state.instanceNumber}</div>
           </Box>
         </Stack>
-
         <Paper sx={{ width: '100%', overflow: 'hidden' }}>
           <TableContainer sx={{ maxHeight: 400 }}>
             <Table stickyHeader className={classes.table}>
@@ -247,13 +259,9 @@ class TagsTable extends React.Component {
             </Table>
           </TableContainer>
         </Paper>
-      </div>
+      </Root>
     );
   }
 }
 
-TagsTable.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles)(TagsTable);
+export default (TagsTable);
