@@ -34,7 +34,7 @@ import CameraswitchIcon from '@mui/icons-material/Cameraswitch';
 
 import './DwvComponent.css';
 
-const PREFIX = 'TransitionUp';
+const PREFIX = 'DwvComponent';
 const classes = {
   appBar: `${PREFIX}-appBar`,
   title: `${PREFIX}-title`,
