@@ -147,7 +147,7 @@ class DwvComponent extends React.Component {
           <Dialog
             open={this.state.showDicomTags}
             onClose={this.handleTagsDialogClose}
-            TransitionComponent={TransitionUp}
+            slots={{ transition: TransitionUp }}
             >
               <AppBar className={classes.appBar} position="sticky">
                 <Toolbar>
