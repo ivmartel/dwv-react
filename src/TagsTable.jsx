@@ -202,7 +202,6 @@ class TagsTable extends React.Component {
   }
 
   render() {
-    const { } = this.props;
     const { displayData, searchfor, sliderMin, sliderMax } = this.state;
 
     return (

@@ -92,7 +92,6 @@ class DwvComponent extends React.Component {
   }
 
   render() {
-    const { } = this.props;
     const { versions, tools, loadProgress, dataLoaded, metaData } = this.state;
 
     const handleToolChange = (event, newTool) => {
