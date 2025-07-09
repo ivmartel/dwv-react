@@ -215,12 +215,14 @@ class TagsTable extends React.Component {
             onChange={this.onSearch}
             margin="normal"
             size="small"
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Search />
-                </InputAdornment>
-              )
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Search />
+                  </InputAdornment>
+                )
+              }
             }}
           />
           <Box width={300} display='flex' alignItems="center">
