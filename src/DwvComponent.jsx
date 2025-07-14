@@ -221,9 +221,9 @@ class DwvComponent extends React.Component {
         if (vc.isMonochrome()) {
           this.setState({canWindowLevel: true});
         }
-        // available tools
+        // selected tool
         let selectedTool = 'ZoomAndPan';
-        if (this.state.canScroll) {
+        if (vc.canScroll()) {
           selectedTool = 'Scroll';
         }
         this.onChangeTool(selectedTool);
@@ -232,6 +232,8 @@ class DwvComponent extends React.Component {
     app.addEventListener("load", (event) => {
       // set dicom tags
       this.setState({metaData: app.getMetaData(event.dataid)});
+      // force progress
+      this.setState({loadProgress: 100});
       // set data loaded flag
       this.setState({dataLoaded: true});
     });
