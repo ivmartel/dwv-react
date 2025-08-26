@@ -20,7 +20,7 @@
     "@testing-library/react": "^16.3.0",
     "@testing-library/jest-dom": "^6.7.0",
     "@vitejs/plugin-react": "^5.0.1",
-    "canvas": "^3.1.2",
+    "canvas": "^3.2.0",
     "jsdom": "^26.1.0",
     "vite": "^7.1.2",
     "vite-plugin-pwa": "^1.0.3",
