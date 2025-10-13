@@ -4246,10 +4246,10 @@ vite-node@3.2.4:
     pathe "^2.0.3"
     vite "^5.0.0 || ^6.0.0 || ^7.0.0-0"
 
-vite-plugin-pwa@^1.0.3:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/vite-plugin-pwa/-/vite-plugin-pwa-1.0.3.tgz#607a7fda7170920280d85b1d2dbac293c3d2efdf"
-  integrity sha512-/OpqIpUldALGxcsEnv/ekQiQ5xHkQ53wcoN5ewX4jiIDNGs3W+eNcI1WYZeyOLmzoEjg09D7aX0O89YGjen1aw==
+vite-plugin-pwa@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/vite-plugin-pwa/-/vite-plugin-pwa-1.1.0.tgz#3c08c638be084abda48fac977eac3e9cbcfb0d96"
+  integrity sha512-VsSpdubPzXhHWVINcSx6uHRMpOHVHQcHsef1QgkOlEoaIDAlssFEW88LBq1a59BuokAhsh2kUDJbaX1bZv4Bjw==
   dependencies:
     debug "^4.3.6"
     pretty-bytes "^6.1.1"
