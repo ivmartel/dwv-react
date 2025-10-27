@@ -22,7 +22,7 @@
     "@vitejs/plugin-react": "^5.0.4",
     "canvas": "^3.2.0",
     "jsdom": "^27.0.1",
-    "vite": "^7.1.11",
+    "vite": "^7.1.12",
     "vite-plugin-pwa": "^1.1.0",
     "vitest": "^3.2.4"
   },
