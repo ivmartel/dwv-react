@@ -3597,7 +3597,7 @@ __metadata:
     dwv: "npm:0.35.1"
     jsdom: "npm:^27.4.0"
     react: "npm:^19.2.4"
-    react-dom: "npm:^19.2.3"
+    react-dom: "npm:^19.2.4"
     vite: "npm:^7.3.1"
     vite-plugin-pwa: "npm:^1.2.0"
     vitest: "npm:^4.0.18"
@@ -5678,14 +5678,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-dom@npm:^19.2.3":
-  version: 19.2.3
-  resolution: "react-dom@npm:19.2.3"
+"react-dom@npm:^19.2.4":
+  version: 19.2.4
+  resolution: "react-dom@npm:19.2.4"
   dependencies:
     scheduler: "npm:^0.27.0"
   peerDependencies:
-    react: ^19.2.3
-  checksum: 10c0/dc43f7ede06f46f3acc16ee83107c925530de9b91d1d0b3824583814746ff4c498ea64fd65cd83aba363205268adff52e2827c582634ae7b15069deaeabc4892
+    react: ^19.2.4
+  checksum: 10c0/f0c63f1794dedb154136d4d0f59af00b41907f4859571c155940296808f4b94bf9c0c20633db75b5b2112ec13d8d7dd4f9bf57362ed48782f317b11d05a44f35
   languageName: node
   linkType: hard
 
