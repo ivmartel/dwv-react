@@ -1,8 +1,7 @@
 #dwv {
-  height: 90%; }
-
-.button-row {
-  text-align: center;
+  height: 90%;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Layers */
@@ -11,7 +10,8 @@
   padding: 0;
   display: flex;
   justify-content: center;
-  height: 90%;
+  flex: 1;
+  min-height: 0;
 }
 .layer {
   position: absolute;
@@ -122,4 +122,25 @@
   border: 5px dashed #3f51b5; /*indigo*/  }
 #input-file-link {
   text-decoration-line: underline;
+}
+
+/* header */
+.header {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 5px;
+  flex-wrap: wrap;
+}
+/* content */
+.content {
+  /* occupy space left by header and footer */
+  flex: 1;
+  min-height: 0;
+  display: flex;
+}
+/* footer */
+.footer {
+  text-align: center;
+  font-size: 8pt;
+  margin: 1em;
 }

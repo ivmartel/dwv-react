@@ -117,72 +117,79 @@ class DwvComponent extends React.Component {
     return (
       <Root className={classes.root} id="dwv">
         <LinearProgress variant="determinate" value={loadProgress} />
-        <Stack direction="row" spacing={1} padding={1}
-          justifyContent="center" flexWrap="wrap">
+        <div className='header'>
+          <Stack direction="row" spacing={1} padding={1}
+            justifyContent="center" flexWrap="wrap">
+
             {toolsButtons}
 
-          <Button
-            value="reset"
-            title="Reset"
-            variant="contained"
-            sx={{padding: '6px', minWidth: '20px'}}
-            disabled={!dataLoaded}
-            onChange={this.onReset}
-          ><RefreshIcon /></Button>
+            <Button
+              value="reset"
+              title="Reset"
+              variant="contained"
+              sx={{padding: '6px', minWidth: '20px'}}
+              disabled={!dataLoaded}
+              onChange={this.onReset}
+            ><RefreshIcon /></Button>
 
-          <Button
-            value="toggleOrientation"
-            title="Toggle Orientation"
-            variant="contained"
-            sx={{padding: '6px', minWidth: '20px'}}
-            disabled={!dataLoaded}
-            onClick={this.toggleOrientation}
-          ><CameraswitchIcon /></Button>
+            <Button
+              value="toggleOrientation"
+              title="Toggle Orientation"
+              variant="contained"
+              sx={{padding: '6px', minWidth: '20px'}}
+              disabled={!dataLoaded}
+              onClick={this.toggleOrientation}
+            ><CameraswitchIcon /></Button>
 
-          <Button
-            value="tags"
-            title="Tags"
-            variant="contained"
-            sx={{padding: '6px', minWidth: '20px'}}
-            disabled={!dataLoaded}
-            onClick={this.handleTagsDialogOpen}
-          ><LibraryBooksIcon /></Button>
+            <Button
+              value="tags"
+              title="Tags"
+              variant="contained"
+              sx={{padding: '6px', minWidth: '20px'}}
+              disabled={!dataLoaded}
+              onClick={this.handleTagsDialogOpen}
+            ><LibraryBooksIcon /></Button>
 
-          <Dialog
-            open={this.state.showDicomTags}
-            onClose={this.handleTagsDialogClose}
-            slots={{ transition: TransitionUp }}
-            >
-              <AppBar className={classes.appBar} position="sticky">
-                <Toolbar>
-                  <IconButton color="inherit" onClick={this.handleTagsDialogClose} aria-label="Close">
-                    <CloseIcon />
-                  </IconButton>
-                  <Typography variant="h6" color="inherit" className={classes.flex}>
-                    DICOM Tags
-                  </Typography>
-                </Toolbar>
-              </AppBar>
-              <TagsTable data={metaData} />
-          </Dialog>
-        </Stack>
-
-        <div id="layerGroup0" className="layerGroup">
-          <div id="dropBox"></div>
+            <Dialog
+              open={this.state.showDicomTags}
+              onClose={this.handleTagsDialogClose}
+              slots={{ transition: TransitionUp }}
+              >
+                <AppBar className={classes.appBar} position="sticky">
+                  <Toolbar>
+                    <IconButton color="inherit" onClick={this.handleTagsDialogClose} aria-label="Close">
+                      <CloseIcon />
+                    </IconButton>
+                    <Typography variant="h6" color="inherit" className={classes.flex}>
+                      DICOM Tags
+                    </Typography>
+                  </Toolbar>
+                </AppBar>
+                <TagsTable data={metaData} />
+            </Dialog>
+          </Stack>
         </div>
 
-        <div><p className="legend">
-          <Typography variant="caption">Powered by <Link
-              href="https://github.com/ivmartel/dwv"
-              title="dwv on github"
-              color="inherit">dwv
-            </Link> {versions.dwv} and <Link
-              href="https://github.com/facebook/react"
-              title="react on github"
-              color="inherit">React
-            </Link> {versions.react}
-          </Typography>
-        </p></div>
+        <div className='content'>
+          <div id="layerGroup0" className="layerGroup">
+            <div id="dropBox"></div>
+          </div>
+        </div>
+
+        <div className='footer'>
+          <p className="legend">
+            <Typography variant="caption">Powered by <Link
+                href="https://github.com/ivmartel/dwv"
+                title="dwv on github"
+                color="inherit">dwv
+              </Link> {versions.dwv} and <Link
+                href="https://github.com/facebook/react"
+                title="react on github"
+                color="inherit">React
+              </Link> {versions.react}
+            </Typography>
+          </p>
+        </div>
 
       </Root>
     );
