@@ -105,7 +105,7 @@ class DwvComponent extends React.Component {
           value={tool}
           key={tool}
           title={tool}
-          sx={{padding: '6px', minWidth: '20px'}}
+          sx={{padding: "6px", minWidth: "20px"}}
           variant={tool === selectedTool? "outlined" : "contained"}
           disabled={!dataLoaded || !this.canRunTool(tool)}
           onClick={handleToolChange}>
@@ -117,7 +117,7 @@ class DwvComponent extends React.Component {
     return (
       <Root className={classes.root} id="dwv">
         <LinearProgress variant="determinate" value={loadProgress} />
-        <div className='header'>
+        <div className="header">
           <Stack direction="row" spacing={1} padding={1}
             justifyContent="center" flexWrap="wrap">
 
@@ -127,7 +127,7 @@ class DwvComponent extends React.Component {
               value="reset"
               title="Reset"
               variant="contained"
-              sx={{padding: '6px', minWidth: '20px'}}
+              sx={{padding: "6px", minWidth: "20px"}}
               disabled={!dataLoaded}
               onChange={this.onReset}
             ><RefreshIcon /></Button>
@@ -136,7 +136,7 @@ class DwvComponent extends React.Component {
               value="toggleOrientation"
               title="Toggle Orientation"
               variant="contained"
-              sx={{padding: '6px', minWidth: '20px'}}
+              sx={{padding: "6px", minWidth: "20px"}}
               disabled={!dataLoaded}
               onClick={this.toggleOrientation}
             ><CameraswitchIcon /></Button>
@@ -145,7 +145,7 @@ class DwvComponent extends React.Component {
               value="tags"
               title="Tags"
               variant="contained"
-              sx={{padding: '6px', minWidth: '20px'}}
+              sx={{padding: "6px", minWidth: "20px"}}
               disabled={!dataLoaded}
               onClick={this.handleTagsDialogOpen}
             ><LibraryBooksIcon /></Button>
@@ -170,13 +170,13 @@ class DwvComponent extends React.Component {
           </Stack>
         </div>
 
-        <div className='content'>
+        <div className="content">
           <div id="layerGroup0" className="layerGroup">
             <div id="dropBox"></div>
           </div>
         </div>
 
-        <div className='footer'>
+        <div className="footer">
           <p className="legend">
             <Typography variant="caption">Powered by <Link
                 href="https://github.com/ivmartel/dwv"
