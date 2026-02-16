@@ -6,8 +6,7 @@ import {
   LinearProgress,
   Link,
   IconButton,
-  ToggleButton,
-  ToggleButtonGroup,
+  Button,
   AppBar,
   Dialog,
   Slide,
@@ -92,19 +91,25 @@ class DwvComponent extends React.Component {
   }
 
   render() {
-    const { versions, tools, loadProgress, dataLoaded, metaData } = this.state;
+    const { versions, tools, selectedTool, loadProgress, dataLoaded, metaData } = this.state;
 
-    const handleToolChange = (event, newTool) => {
-      if (newTool) {
-        this.onChangeTool(newTool);
+    const handleToolChange = (event) => {
+      if (event.currentTarget.value) {
+        this.onChangeTool(event.currentTarget.value);
       }
     };
     const toolsButtons = Object.keys(tools).map( (tool) => {
       return (
-        <ToggleButton value={tool} key={tool} title={tool}
-          disabled={!dataLoaded || !this.canRunTool(tool)}>
+        <Button
+          value={tool}
+          key={tool}
+          title={tool}
+          sx={{padding: '6px', minWidth: '20px'}}
+          variant={tool === selectedTool? "outlined" : "contained"}
+          disabled={!dataLoaded || !this.canRunTool(tool)}
+          onClick={handleToolChange}>
           { this.getToolIcon(tool) }
-        </ToggleButton>
+        </Button>
       );
     });
 
@@ -113,35 +118,34 @@ class DwvComponent extends React.Component {
         <LinearProgress variant="determinate" value={loadProgress} />
         <Stack direction="row" spacing={1} padding={1}
           justifyContent="center" flexWrap="wrap">
-          <ToggleButtonGroup size="small"
-            color="primary"
-            value={ this.state.selectedTool }
-            exclusive
-            onChange={handleToolChange}
-          >
             {toolsButtons}
-          </ToggleButtonGroup>
 
-          <ToggleButton size="small"
+          <Button
             value="reset"
             title="Reset"
+            variant="contained"
+            sx={{padding: '6px', minWidth: '20px'}}
             disabled={!dataLoaded}
             onChange={this.onReset}
-          ><RefreshIcon /></ToggleButton>
+          ><RefreshIcon /></Button>
 
-          <ToggleButton size="small"
+          <Button
             value="toggleOrientation"
             title="Toggle Orientation"
+            variant="contained"
+            sx={{padding: '6px', minWidth: '20px'}}
             disabled={!dataLoaded}
             onClick={this.toggleOrientation}
-          ><CameraswitchIcon /></ToggleButton>
+          ><CameraswitchIcon /></Button>
 
-          <ToggleButton size="small"
+          <Button
             value="tags"
             title="Tags"
+            variant="contained"
+            sx={{padding: '6px', minWidth: '20px'}}
             disabled={!dataLoaded}
             onClick={this.handleTagsDialogOpen}
-          ><LibraryBooksIcon /></ToggleButton>
+          ><LibraryBooksIcon /></Button>
 
           <Dialog
             open={this.state.showDicomTags}
