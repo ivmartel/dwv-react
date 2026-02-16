@@ -18,6 +18,7 @@ import {
   getDwvVersion
 } from 'dwv';
 
+import {overlayConfig} from './overlays.js';
 import TagsTable from './TagsTable.jsx';
 
 // https://mui.com/material-ui/material-icons/
@@ -193,7 +194,8 @@ class DwvComponent extends React.Component {
     // initialise app
     app.init({
       "dataViewConfigs": {'*': [{divId: 'layerGroup0'}]},
-      "tools": this.state.tools
+      "tools": this.state.tools,
+      overlayConfig
     });
 
     // load events
