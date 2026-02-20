@@ -1,4 +1,8 @@
-import React from 'react';
+import {
+  version,
+  forwardRef,
+  Component
+} from 'react';
 import { styled } from '@mui/material/styles';
 import {
   Typography,
@@ -30,6 +34,13 @@ import SearchIcon from '@mui/icons-material/Search';
 import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
 import StraightenIcon from '@mui/icons-material/Straighten';
 import CameraswitchIcon from '@mui/icons-material/Cameraswitch';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import CallMadeIcon from '@mui/icons-material/CallMade';
+import CropLandscapeIcon from '@mui/icons-material/CropLandscape';
+import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
+import SportsRugbyIcon from '@mui/icons-material/SportsRugby';
+import SquareFootIcon from '@mui/icons-material/SquareFoot';
+import PolylineIcon from '@mui/icons-material/Polyline';
 
 import './DwvComponent.css';
 
@@ -54,29 +65,45 @@ const Root = styled('div')(({theme}) => ({
   }
 }));
 
-export const TransitionUp = React.forwardRef((props, ref) => (
+export const TransitionUp = forwardRef((props, ref) => (
   <Slide direction="up" {...props} ref={ref} />
 ))
 
-class DwvComponent extends React.Component {
+class DwvComponent extends Component {
 
   constructor(props) {
     super(props);
+    const shapeNames = [
+      'Ruler',
+      'Arrow',
+      'Rectangle',
+      'Circle',
+      'Ellipse',
+      'Protractor',
+      'Roi'
+    ];
+    const tools = {
+      Scroll: {},
+      ZoomAndPan: {},
+      WindowLevel: {},
+      Draw: {
+        options: shapeNames
+      }
+    };
+
     this.state = {
       versions: {
         dwv: getDwvVersion(),
-        react: React.version
+        react: version
       },
-      tools: {
-        Scroll: {},
-        ZoomAndPan: {},
-        WindowLevel: {},
-        Draw: {
-          options: ['Ruler']
-        }
-      },
+      shapeNames,
+      selectedShape: shapeNames[0],
+      tools,
+      toolNames: Object.keys(tools),
       canScroll: false,
       canWindowLevel: false,
+      presetNames: ['a', 'b'],
+      selectedPreset: 'a',
       selectedTool: 'Select Tool',
       loadProgress: 0,
       dataLoaded: false,
@@ -92,37 +119,111 @@ class DwvComponent extends React.Component {
   }
 
   render() {
-    const { versions, tools, selectedTool, loadProgress, dataLoaded, metaData } = this.state;
+    const {
+      versions,
+      tools,
+      selectedTool,
+      loadProgress,
+      dataLoaded,
+      metaData,
+      presetNames,
+      selectedPreset,
+      shapeNames,
+      selectedShape
+    } = this.state;
 
     const handleToolChange = (event) => {
-      if (event.currentTarget.value) {
-        this.onChangeTool(event.currentTarget.value);
-      }
+      this.onChangeTool(event.currentTarget.value);
     };
+    const handlePresetChange = (event) => {
+      this.onChangePreset(event.currentTarget.value);
+    };
+    const handleShapeChange = (event) => {
+      this.onChangeShape(event.currentTarget.value);
+    };
+
     const toolsButtons = Object.keys(tools).map( (tool) => {
-      return (
-        <Button
-          value={tool}
-          key={tool}
-          title={tool}
-          sx={{padding: "6px", minWidth: "20px"}}
-          variant={tool === selectedTool? "outlined" : "contained"}
-          disabled={!dataLoaded || !this.canRunTool(tool)}
-          onClick={handleToolChange}>
-          { this.getToolIcon(tool) }
-        </Button>
-      );
+      let res = [
+        <div key="{{ tool }}-item" className="toolbar-item">
+          <Button
+            value={tool}
+            key={tool}
+            title={tool}
+            sx={{padding: "6px", minWidth: "20px"}}
+            variant={tool === selectedTool? "outlined" : "contained"}
+            disabled={!dataLoaded || !this.canRunTool(tool)}
+            onClick={handleToolChange}>
+            { this.getToolIcon(tool) }
+          </Button>
+        </div>
+      ];
+      if (tool === 'WindowLevel') {
+        const toolName = tool + 'Select';
+        res.push(
+          <div key="wlselect-wrapper" className="select-wrapper">
+            <Button
+              value={toolName}
+              key={toolName}
+              title={toolName}
+              sx={{padding: "6px", minWidth: "20px"}}
+              variant="contained"
+              disabled={!dataLoaded || !this.canRunTool(tool)}>
+              <KeyboardArrowDownIcon />
+            </Button>
+            <select
+              key="WindowLevelPresetsSelect"
+              value={selectedPreset}
+              onChange={handlePresetChange}>
+              {presetNames.map((preset) => (
+                <option
+                  value={preset}
+                  key={preset}>
+                  {preset}
+                </option>
+              ))}
+            </select>
+          </div>
+        );
+      } else if (tool === 'Draw') {
+        const toolName = tool + 'Select';
+        res.push(
+          <div key="drawselect-wrapper" className="select-wrapper">
+            <Button
+              value={toolName}
+              key={toolName}
+              title={toolName}
+              sx={{padding: "6px", minWidth: "20px"}}
+              variant="contained"
+              disabled={!dataLoaded || !this.canRunTool(tool)}>
+              <KeyboardArrowDownIcon />
+            </Button>
+            <select
+              key="DrawShapeSelect"
+              value={selectedShape}
+              onChange={handleShapeChange}>
+              {shapeNames.map((shape) => (
+                <option
+                  value={shape}
+                  key={shape}>
+                  {shape}
+                </option>
+              ))}
+            </select>
+          </div>
+        );
+      }
+
+      return res;
     });
 
     return (
       <Root className={classes.root} id="dwv">
         <LinearProgress variant="determinate" value={loadProgress} />
         <div className="header">
-          <Stack direction="row" spacing={1} padding={1}
-            justifyContent="center" flexWrap="wrap">
 
-            {toolsButtons}
+          {toolsButtons}
 
+          <div key="reset-item" className="toolbar-item">
             <Button
               value="reset"
               title="Reset"
@@ -131,7 +232,9 @@ class DwvComponent extends React.Component {
               disabled={!dataLoaded}
               onChange={this.onReset}
             ><RefreshIcon /></Button>
+          </div>
 
+          <div key="orient-item" className="toolbar-item">
             <Button
               value="toggleOrientation"
               title="Toggle Orientation"
@@ -140,7 +243,9 @@ class DwvComponent extends React.Component {
               disabled={!dataLoaded}
               onClick={this.toggleOrientation}
             ><CameraswitchIcon /></Button>
+          </div>
 
+          <div key="tags-item" className="toolbar-item">
             <Button
               value="tags"
               title="Tags"
@@ -149,25 +254,25 @@ class DwvComponent extends React.Component {
               disabled={!dataLoaded}
               onClick={this.handleTagsDialogOpen}
             ><LibraryBooksIcon /></Button>
+          </div>
 
-            <Dialog
-              open={this.state.showDicomTags}
-              onClose={this.handleTagsDialogClose}
-              slots={{ transition: TransitionUp }}
-              >
-                <AppBar className={classes.appBar} position="sticky">
-                  <Toolbar>
-                    <IconButton color="inherit" onClick={this.handleTagsDialogClose} aria-label="Close">
-                      <CloseIcon />
-                    </IconButton>
-                    <Typography variant="h6" color="inherit" className={classes.flex}>
-                      DICOM Tags
-                    </Typography>
-                  </Toolbar>
-                </AppBar>
-                <TagsTable data={metaData} />
-            </Dialog>
-          </Stack>
+          <Dialog
+            open={this.state.showDicomTags}
+            onClose={this.handleTagsDialogClose}
+            slots={{ transition: TransitionUp }}
+            >
+              <AppBar className={classes.appBar} position="sticky">
+                <Toolbar>
+                  <IconButton color="inherit" onClick={this.handleTagsDialogClose} aria-label="Close">
+                    <CloseIcon />
+                  </IconButton>
+                  <Typography variant="h6" color="inherit" className={classes.flex}>
+                    DICOM Tags
+                  </Typography>
+                </Toolbar>
+              </AppBar>
+              <TagsTable data={metaData} />
+          </Dialog>
         </div>
 
         <div className="content">
@@ -223,23 +328,39 @@ class DwvComponent extends React.Component {
       this.setState({loadProgress: event.loaded});
     });
     app.addEventListener('renderend', (event) => {
+      const {
+        dwvApp,
+        toolNames
+      } = this.state;
+
       if (isFirstRender) {
         isFirstRender = false;
-        const vl = this.state.dwvApp.getViewLayersByDataId(event.dataid)[0];
+        const vl = dwvApp.getViewLayersByDataId(event.dataid)[0];
         const vc = vl.getViewController();
         // available tools
-        if (vc.canScroll()) {
+        if (toolNames.includes('Scroll') && vc.canScroll()) {
           this.setState({canScroll: true});
         }
-        if (vc.isMonochrome()) {
+        if (toolNames.includes('WindowLevel') && vc.isMonochrome()) {
           this.setState({canWindowLevel: true});
         }
         // selected tool
-        let selectedTool = 'ZoomAndPan';
-        if (vc.canScroll()) {
-          selectedTool = 'Scroll';
+        let selectedTool = toolNames[0];
+        if (selectedTool === 'Scroll' &&
+          !vc.canScroll() &&
+          toolNames.length > 0) {
+          selectedTool = toolNames[1];
         }
         this.onChangeTool(selectedTool);
+
+        // get window level presets
+        if (toolNames.includes('WindowLevel')) {
+          const presetNames = vc.getWindowLevelPresetsNames();
+          this.setState({
+            presetNames,
+            selectedPreset: presetNames[0]
+          });
+        }
       }
     });
     app.addEventListener("load", (event) => {
@@ -280,6 +401,20 @@ class DwvComponent extends React.Component {
     app.addEventListener('keydown', (event) => {
       app.defaultOnKeydown(event);
     });
+    // listen to 'wlchange'
+    app.addEventListener('wlchange', (event) => {
+      // value: [center, width, name]
+      const manualStr = 'manual';
+      if (event.value[2] === manualStr) {
+        if (!this.state.presetNames.includes(manualStr)) {
+          const newNames = this.state.presetNames.concat([manualStr]);
+          this.setState({presetNames: newNames});
+        }
+        if (this.state.selectedPreset !== manualStr) {
+          this.setState({selectedPreset: manualStr});
+        }
+      }
+    });
     // handle window resize
     window.addEventListener('resize', app.onResize);
 
@@ -308,26 +443,53 @@ class DwvComponent extends React.Component {
     } else if (tool === 'WindowLevel') {
       res = (<ContrastIcon />);
     } else if (tool === 'Draw') {
-      res = (<StraightenIcon />);
+      if (this.state.selectedShape === 'Ruler') {
+        res = (<StraightenIcon />);
+      } else if (this.state.selectedShape === 'Arrow') {
+        res = (<CallMadeIcon />);
+      } else if (this.state.selectedShape === 'Rectangle') {
+        res = (<CropLandscapeIcon />);
+      } else if (this.state.selectedShape === 'Circle') {
+        res = (<RadioButtonUncheckedIcon />);
+      } else if (this.state.selectedShape === 'Ellipse') {
+        res = (<SportsRugbyIcon />);
+      } else if (this.state.selectedShape === 'Protractor') {
+        res = (<SquareFootIcon />);
+      } else if (this.state.selectedShape === 'Roi') {
+        res = (<PolylineIcon />);
+      }
     }
     return res;
   }
 
   /**
    * Handle a change tool event.
+   *
    * @param {string} tool The new tool name.
    */
   onChangeTool = (tool) => {
+    this.setState({selectedTool: tool}, () => {
+      this.applySelectedTool()
+    });
+  }
+
+  /**
+   * Apply the selected tool.
+   */
+  applySelectedTool = () => {
     if (this.state.dwvApp) {
-      this.setState({selectedTool: tool});
-      this.state.dwvApp.setTool(tool);
-      if (tool === 'Draw') {
-        this.onChangeShape(this.state.tools.Draw.options[0]);
+      this.state.dwvApp.setTool(this.state.selectedTool);
+      const lg = this.state.dwvApp.getActiveLayerGroup();
+      if (this.state.selectedTool === 'Draw') {
+        this.state.dwvApp.setToolFeatures({shapeName: this.state.selectedShape});
+        // reuse created draw layer
+        if (lg !== undefined && lg.getNumberOfLayers() > 1) {
+          lg.setActiveLayer(1);
+        }
       } else {
         // if draw was created, active is now a draw layer...
         // reset to view layer
-        const lg = this.state.dwvApp.getActiveLayerGroup();
-        lg?.setActiveLayer(0);
+        lg.setActiveLayer(0);
       }
     }
   }
@@ -348,6 +510,47 @@ class DwvComponent extends React.Component {
       res = true;
     }
     return res;
+  }
+
+  /**
+   * Handle preset change.
+   *
+   * @param {string} name The name of the new preset.
+   */
+  onChangePreset(name) {
+    this.setState({selectedPreset: name}, () => {
+      this.applySelectedPreset();
+    });
+  };
+
+  /**
+   * Apply the selecte window level preset.
+   */
+  applySelectedPreset() {
+    if (this.state.toolNames.includes('WindowLevel')) {
+      const lg = this.state.dwvApp.getActiveLayerGroup();
+      const vl = lg.getViewLayersFromActive()[0];
+      const vc = vl.getViewController();
+      vc.setWindowLevelPreset(this.state.selectedPreset);
+    }
+  };
+
+  /**
+   * Handle a change draw shape event.
+   *
+   * @param {string} name The name of the new shape.
+   */
+  onChangeShape = (name) => {
+    this.setState({selectedShape: name}, () => {
+      this.applySelectedShape();
+    });
+  }
+
+  /**
+   * Apply the selected draw shape.
+   */
+  applySelectedShape = () => {
+    this.onChangeTool('Draw');
   }
 
   /**
@@ -380,16 +583,6 @@ class DwvComponent extends React.Component {
     const dataIds = this.state.dwvApp.getDataIds();
     for (const dataId of dataIds) {
       this.state.dwvApp.render(dataId);
-    }
-  }
-
-  /**
-   * Handle a change draw shape event.
-   * @param {string} shape The new shape name.
-   */
-  onChangeShape = (shape) => {
-    if (this.state.dwvApp) {
-      this.state.dwvApp.setToolFeatures({shapeName: shape});
     }
   }
 
