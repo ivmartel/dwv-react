@@ -16,12 +16,7 @@ import {
   Toolbar
 } from '@mui/material';
 
-import {
-  App,
-  getDwvVersion
-} from 'dwv';
-
-import {overlayConfig} from './overlays.js';
+import { DwvService } from './dwv.service.js';
 import TagsTable from './TagsTable.jsx';
 
 // https://mui.com/material-ui/material-icons/
@@ -72,55 +67,78 @@ class DwvComponent extends Component {
 
   constructor(props) {
     super(props);
-    const shapeNames = [
-      'Ruler',
-      'Arrow',
-      'Rectangle',
-      'Circle',
-      'Ellipse',
-      'Protractor',
-      'Roi'
-    ];
-    const tools = {
-      Scroll: {},
-      ZoomAndPan: {},
-      WindowLevel: {},
-      Draw: {
-        options: shapeNames
-      }
-    };
+
+    const dwvService = new DwvService();
+    const shapeNames = dwvService.getShapeNames();
 
     this.state = {
+      dwvService,
       versions: {
-        dwv: getDwvVersion(),
+        dwv: dwvService.getDwvVersion(),
         react: version
       },
+      toolNames: dwvService.getToolNames(),
       shapeNames,
+      presetNames: [],
+      selectedTool: '',
       selectedShape: shapeNames[0],
-      tools,
-      toolNames: Object.keys(tools),
-      canScroll: false,
-      canWindowLevel: false,
-      presetNames: ['a', 'b'],
-      selectedPreset: 'a',
-      selectedTool: 'Select Tool',
+      selectedPreset: '',
       loadProgress: 0,
       dataLoaded: false,
-      dwvApp: null,
-      metaData: {},
-      orientation: undefined,
+      metaData: undefined,
       showDicomTags: false,
       dropboxDivId: 'dropBox',
       dropboxClassName: 'dropBox',
       borderClassName: 'dropBoxBorder',
       hoverClassName: 'hover'
     };
+
+    // watch load progress
+    dwvService.addEventListener('loadprogress', (event) => {
+      this.setState({loadProgress: event.detail.value}, () => {
+        this.autoShowDropbox();
+      });
+    });
+    // watch data ready
+    dwvService.addEventListener('dataready', (event) => {
+      const dataReady = event.detail.value;
+      if (dataReady) {
+        const runnableTool = this.state.dwvService.getFirstRunnableTool();
+        if (runnableTool !== undefined) {
+          this.setState({selectedTool: runnableTool});
+          this.applyTool(runnableTool);
+        }
+      }
+    });
+    // watch data loaded
+    dwvService.addEventListener('dataloaded', (event) => {
+      this.setState({dataLoaded: event.detail.value}, () => {
+        this.setState({metaData: this.state.dwvService.getMetaData()});
+        this.autoShowDropbox();
+      });
+    });
+    // watch preset names
+    dwvService.addEventListener('presetnames', (event) => {
+      this.setState({presetNames: event.detail.value}, () => {
+        const presetNames = this.state.presetNames;
+        this.setState({selectedPreset: presetNames[0]});
+      });
+    });
+    // watch is manual preset
+    dwvService.addEventListener('ismanualpreset', (event) => {
+      const isManual = event.detail.value;
+      const preset = this.state.selectedPreset;
+      const manualStr = 'manual';
+      if (isManual && preset !== manualStr) {
+        this.setState({selectedPreset: manualStr});
+      }
+    });
   }
 
   render() {
     const {
       versions,
-      tools,
+      toolNames,
       selectedTool,
       loadProgress,
       dataLoaded,
@@ -131,17 +149,7 @@ class DwvComponent extends Component {
       selectedShape
     } = this.state;
 
-    const handleToolChange = (event) => {
-      this.onChangeTool(event.currentTarget.value);
-    };
-    const handlePresetChange = (event) => {
-      this.onChangePreset(event.currentTarget.value);
-    };
-    const handleShapeChange = (event) => {
-      this.onChangeShape(event.currentTarget.value);
-    };
-
-    const toolsButtons = Object.keys(tools).map( (tool) => {
+    const toolsButtons = toolNames.map( (tool) => {
       let res = [
         <div key="{{ tool }}-item" className="toolbar-item">
           <Button
@@ -151,7 +159,7 @@ class DwvComponent extends Component {
             sx={{padding: "6px", minWidth: "20px"}}
             variant={tool === selectedTool? "outlined" : "contained"}
             disabled={!dataLoaded || !this.canRunTool(tool)}
-            onClick={handleToolChange}>
+            onClick={this.onChangeTool}>
             { this.getToolIcon(tool) }
           </Button>
         </div>
@@ -172,7 +180,7 @@ class DwvComponent extends Component {
             <select
               key="WindowLevelPresetsSelect"
               value={selectedPreset}
-              onChange={handlePresetChange}>
+              onChange={this.onChangePreset}>
               {presetNames.map((preset) => (
                 <option
                   value={preset}
@@ -199,7 +207,7 @@ class DwvComponent extends Component {
             <select
               key="DrawShapeSelect"
               value={selectedShape}
-              onChange={handleShapeChange}>
+              onChange={this.onChangeShape}>
               {shapeNames.map((shape) => (
                 <option
                   value={shape}
@@ -229,7 +237,7 @@ class DwvComponent extends Component {
               variant="contained"
               sx={{padding: "6px", minWidth: "20px"}}
               disabled={!dataLoaded}
-              onChange={this.onReset}
+              onClick={this.onReset}
             ><RefreshIcon /></Button>
           </div>
 
@@ -300,131 +308,11 @@ class DwvComponent extends Component {
   }
 
   componentDidMount() {
-    // create app
-    const app = new App();
-    // initialise app
-    app.init({
-      "dataViewConfigs": {'*': [{divId: 'layerGroup0'}]},
-      "tools": this.state.tools,
-      overlayConfig
-    });
-
-    // load events
-    let nLoadItem = null;
-    let nReceivedLoadError = null;
-    let nReceivedLoadAbort = null;
-    let isFirstRender = null;
-    app.addEventListener('loadstart', (/*event*/) => {
-      // reset flags
-      nLoadItem = 0;
-      nReceivedLoadError = 0;
-      nReceivedLoadAbort = 0;
-      isFirstRender = true;
-      // hide drop box
-      this.showDropbox(app, false);
-    });
-    app.addEventListener("loadprogress", (event) => {
-      this.setState({loadProgress: event.loaded});
-    });
-    app.addEventListener('renderend', (event) => {
-      const {
-        dwvApp,
-        toolNames
-      } = this.state;
-
-      if (isFirstRender) {
-        isFirstRender = false;
-        const vl = dwvApp.getViewLayersByDataId(event.dataid)[0];
-        const vc = vl.getViewController();
-        // available tools
-        if (toolNames.includes('Scroll') && vc.canScroll()) {
-          this.setState({canScroll: true});
-        }
-        if (toolNames.includes('WindowLevel') && vc.isMonochrome()) {
-          this.setState({canWindowLevel: true});
-        }
-        // selected tool
-        let selectedTool = toolNames[0];
-        if (selectedTool === 'Scroll' &&
-          !vc.canScroll() &&
-          toolNames.length > 0) {
-          selectedTool = toolNames[1];
-        }
-        this.onChangeTool(selectedTool);
-
-        // get window level presets
-        if (toolNames.includes('WindowLevel')) {
-          const presetNames = vc.getWindowLevelPresetsNames();
-          this.setState({
-            presetNames,
-            selectedPreset: presetNames[0]
-          });
-        }
-      }
-    });
-    app.addEventListener("load", (event) => {
-      // set dicom tags
-      this.setState({metaData: app.getMetaData(event.dataid)});
-      // force progress
-      this.setState({loadProgress: 100});
-      // set data loaded flag
-      this.setState({dataLoaded: true});
-    });
-    app.addEventListener('loadend', (/*event*/) => {
-      if (nReceivedLoadError) {
-        this.setState({loadProgress: 0});
-        alert('Received errors during load. Check log for details.');
-        // show drop box if nothing has been loaded
-        if (!nLoadItem) {
-          this.showDropbox(app, true);
-        }
-      }
-      if (nReceivedLoadAbort) {
-        this.setState({loadProgress: 0});
-        alert('Load was aborted.');
-        this.showDropbox(app, true);
-      }
-    });
-    app.addEventListener('loaditem', (/*event*/) => {
-      ++nLoadItem;
-    });
-    app.addEventListener('loaderror', (event) => {
-      console.error(event.error);
-      ++nReceivedLoadError;
-    });
-    app.addEventListener('loadabort', (/*event*/) => {
-      ++nReceivedLoadAbort;
-    });
-
-    // handle key events
-    app.addEventListener('keydown', (event) => {
-      app.defaultOnKeydown(event);
-    });
-    // listen to 'wlchange'
-    app.addEventListener('wlchange', (event) => {
-      // value: [center, width, name]
-      const manualStr = 'manual';
-      if (event.value[2] === manualStr) {
-        if (!this.state.presetNames.includes(manualStr)) {
-          const newNames = this.state.presetNames.concat([manualStr]);
-          this.setState({presetNames: newNames});
-        }
-        if (this.state.selectedPreset !== manualStr) {
-          this.setState({selectedPreset: manualStr});
-        }
-      }
-    });
-    // handle window resize
-    window.addEventListener('resize', app.onResize);
-
-    // store
-    this.setState({dwvApp: app});
-
     // setup drop box
-    this.setupDropbox(app);
+    this.setupDropbox();
 
     // possible load from location
-    app.loadFromUri(window.location.href);
+    this.state.dwvService.loadFromUri(window.location.href);
   }
 
   /**
@@ -433,7 +321,7 @@ class DwvComponent extends Component {
    * @param {string} tool The tool name.
    * @returns {Icon} The associated icon.
    */
-  getToolIcon = (tool) => {
+  getToolIcon(tool) {
     let res;
     if (tool === 'Scroll') {
       res = (<MenuIcon />);
@@ -442,21 +330,33 @@ class DwvComponent extends Component {
     } else if (tool === 'WindowLevel') {
       res = (<ContrastIcon />);
     } else if (tool === 'Draw') {
-      if (this.state.selectedShape === 'Ruler') {
-        res = (<StraightenIcon />);
-      } else if (this.state.selectedShape === 'Arrow') {
-        res = (<CallMadeIcon />);
-      } else if (this.state.selectedShape === 'Rectangle') {
-        res = (<CropLandscapeIcon />);
-      } else if (this.state.selectedShape === 'Circle') {
-        res = (<RadioButtonUncheckedIcon />);
-      } else if (this.state.selectedShape === 'Ellipse') {
-        res = (<SportsRugbyIcon />);
-      } else if (this.state.selectedShape === 'Protractor') {
-        res = (<SquareFootIcon />);
-      } else if (this.state.selectedShape === 'Roi') {
-        res = (<PolylineIcon />);
-      }
+      res = this.getShapeIcon(this.state.selectedShape);
+    }
+    return res;
+  }
+
+  /**
+   * Get the icon of a shape.
+   *
+   * @param {string} shape The shape name.
+   * @returns {Icon} The associated icon string.
+   */
+  getShapeIcon(shape) {
+    let res;
+    if (shape === 'Ruler') {
+      res = (<StraightenIcon />);
+    } else if (shape === 'Arrow') {
+      res = (<CallMadeIcon />);
+    } else if (shape === 'Rectangle') {
+      res = (<CropLandscapeIcon />);
+    } else if (shape === 'Circle') {
+      res = (<RadioButtonUncheckedIcon />);
+    } else if (shape === 'Ellipse') {
+      res = (<SportsRugbyIcon />);
+    } else if (shape === 'Protractor') {
+      res = (<SquareFootIcon />);
+    } else if (shape === 'Roi') {
+      res = (<PolylineIcon />);
     }
     return res;
   }
@@ -464,33 +364,69 @@ class DwvComponent extends Component {
   /**
    * Handle a change tool event.
    *
-   * @param {string} tool The new tool name.
+   * @param {event} event The change event.
    */
-  onChangeTool = (tool) => {
+  onChangeTool = (event) => {
+    const tool = event.currentTarget.value;
     this.setState({selectedTool: tool}, () => {
-      this.applySelectedTool()
+      this.applyTool(tool);
     });
   }
 
   /**
-   * Apply the selected tool.
+   * Handle a shape change event.
+   *
+   * @param {Event} event The change event.
    */
-  applySelectedTool = () => {
-    if (this.state.dwvApp) {
-      this.state.dwvApp.setTool(this.state.selectedTool);
-      const lg = this.state.dwvApp.getActiveLayerGroup();
-      if (this.state.selectedTool === 'Draw') {
-        this.state.dwvApp.setToolFeatures({shapeName: this.state.selectedShape});
-        // reuse created draw layer
-        if (lg !== undefined && lg.getNumberOfLayers() > 1) {
-          lg.setActiveLayer(1);
-        }
-      } else {
-        // if draw was created, active is now a draw layer...
-        // reset to view layer
-        lg.setActiveLayer(0);
-      }
+  onChangeShape = (event) => {
+    const shape = event.currentTarget.value;
+    this.setState({selectedShape: shape}, () => {
+      this.setState({selectedTool: 'Draw'});
+      this.applyShape(shape);
+    });
+  }
+
+  /**
+   * Handle a preset change event.
+   *
+   * @param {Event} event The change event.
+   */
+  onChangePreset = (event) => {
+    const preset = event.currentTarget.value;
+    this.setState({selectedPreset: preset}, () => {
+      this.applyPreset(preset);
+    });
+  };
+
+  /**
+   * Apply a tool.
+   *
+   * @param {string} tool The tool name.
+   * @param {object} [features] Optional tool features.
+   */
+  applyTool(tool, features) {
+    if (typeof features === 'undefined' && tool === 'Draw') {
+      features = {shapeName: this.state.selectedShape};
     }
+    this.state.dwvService.applyTool(tool, features);
+  }
+
+  /**
+   * Apply a draw shape.
+   *
+   * @param {string} shape The shape name.
+   */
+  applyShape(shape) {
+    this.applyTool('Draw', {shapeName: shape});
+  }
+
+  /**
+   * Apply a window level preset.
+   *
+   * @param {string} preset The preset name.
+   */
+  applyPreset(preset) {
+    this.state.dwvService.applyPreset(preset);
   }
 
   /**
@@ -499,99 +435,22 @@ class DwvComponent extends Component {
    * @param {string} tool The tool name.
    * @returns {boolean} True if the tool can be run.
    */
-  canRunTool = (tool) => {
-    let res;
-    if (tool === 'Scroll') {
-      res = this.state.canScroll;
-    } else if (tool === 'WindowLevel') {
-      res = this.state.canWindowLevel;
-    } else {
-      res = true;
-    }
-    return res;
-  }
-
-  /**
-   * Handle preset change.
-   *
-   * @param {string} name The name of the new preset.
-   */
-  onChangePreset(name) {
-    this.setState({selectedPreset: name}, () => {
-      this.applySelectedPreset();
-    });
-  };
-
-  /**
-   * Apply the selecte window level preset.
-   */
-  applySelectedPreset() {
-    if (this.state.toolNames.includes('WindowLevel')) {
-      const lg = this.state.dwvApp.getActiveLayerGroup();
-      const vl = lg.getViewLayersFromActive()[0];
-      const vc = vl.getViewController();
-      vc.setWindowLevelPreset(this.state.selectedPreset);
-    }
-  };
-
-  /**
-   * Handle a change draw shape event.
-   *
-   * @param {string} name The name of the new shape.
-   */
-  onChangeShape = (name) => {
-    this.setState({selectedShape: name}, () => {
-      this.applySelectedShape();
-    });
-  }
-
-  /**
-   * Apply the selected draw shape.
-   */
-  applySelectedShape = () => {
-    this.onChangeTool('Draw');
+  canRunTool(tool) {
+    return this.state.dwvService.canRunTool(tool);
   }
 
   /**
    * Toogle the viewer orientation.
    */
   toggleOrientation = () => {
-    if (typeof this.state.orientation !== 'undefined') {
-      if (this.state.orientation === 'axial') {
-        this.state.orientation = 'coronal';
-      } else if (this.state.orientation === 'coronal') {
-        this.state.orientation = 'sagittal';
-      } else if (this.state.orientation === 'sagittal') {
-        this.state.orientation = 'axial';
-      }
-    } else {
-      // default is most probably axial
-      this.state.orientation = 'coronal';
-    }
-    // update data view config
-    const config = {
-      '*': [
-        {
-          divId: 'layerGroup0',
-          orientation: this.state.orientation
-        }
-      ]
-    };
-    this.state.dwvApp.setDataViewConfigs(config);
-    // render data
-    const dataIds = this.state.dwvApp.getDataIds();
-    for (const dataId of dataIds) {
-      this.state.dwvApp.render(dataId);
-    }
+    this.state.dwvService.toggleOrientation();
   }
 
   /**
    * Handle a reset event.
    */
   onReset = () => {
-    if (this.state.dwvApp) {
-      this.state.dwvApp.resetLayout();
-    }
+    this.state.dwvService.reset();
   }
 
   /**
@@ -613,8 +472,8 @@ class DwvComponent extends Component {
   /**
    * Setup the data load drop box: add event listeners and set initial size.
    */
-  setupDropbox = (app) => {
-    this.showDropbox(app, true);
+  setupDropbox() {
+    this.showDropbox(true);
   }
 
   /**
@@ -660,7 +519,7 @@ class DwvComponent extends Component {
   onDrop = (event) => {
     this.defaultHandleDragEvent(event);
     // load files
-    this.state.dwvApp.loadFiles(event.dataTransfer.files);
+    this.state.dwvService.loadFiles(event.dataTransfer.files);
   }
 
   /**
@@ -669,15 +528,25 @@ class DwvComponent extends Component {
    */
   onInputFile = (event) => {
     if (event.target && event.target.files) {
-      this.state.dwvApp.loadFiles(event.target.files);
+      this.state.dwvService.loadFiles(event.target.files);
     }
+  }
+
+  /**
+   * Show the dropbox according to state.
+   */
+  autoShowDropbox() {
+    const isLoaded = this.state.dataLoaded;
+    const progress = this.state.loadProgress;
+    const isLoading = progress !== 0 && progress !== 100;
+    this.showDropbox(!isLoading && !isLoaded);
   }
 
   /**
    * Show/hide the data load drop box.
    * @param show True to show the drop box.
    */
-  showDropbox = (app, show) => {
+  showDropbox(show) {
     const box = document.getElementById(this.state.dropboxDivId);
     if (!box) {
       return;
