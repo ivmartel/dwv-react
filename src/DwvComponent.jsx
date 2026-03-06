@@ -1,7 +1,9 @@
 import {
   version,
   forwardRef,
-  Component
+  useState,
+  useEffect,
+  useMemo
 } from 'react';
 import { styled } from '@mui/material/styles';
 import {
@@ -63,257 +65,72 @@ export const TransitionUp = forwardRef((props, ref) => (
   <Slide direction="up" {...props} ref={ref} />
 ))
 
-class DwvComponent extends Component {
+const DwvComponent = () => {
 
-  constructor(props) {
-    super(props);
+  const dwvService = useMemo(() => new DwvService(), []);
 
-    const dwvService = new DwvService();
-    const shapeNames = dwvService.getShapeNames();
+  const [loadProgress, setLoadProgress] = useState(0);
+  const [dataLoaded, setDataLoaded] = useState(false);
+  const [toolNames] = useState(dwvService.getToolNames());
+  const [shapeNames] = useState(dwvService.getShapeNames());
+  const [selectedTool, setSelectedTool] = useState('');
+  const [selectedShape, setSelectedShape] = useState(shapeNames[0]);
+  const [presetNames, setPresetNames] = useState([]);
+  const [selectedPreset, setSelectedPreset] = useState('');
+  const [metaData, setMetaData] = useState(undefined);
+  const [showDicomTags, setShowDicomTags] = useState(false);
 
-    this.state = {
-      dwvService,
-      versions: {
-        dwv: dwvService.getDwvVersion(),
-        react: version
-      },
-      toolNames: dwvService.getToolNames(),
-      shapeNames,
-      presetNames: [],
-      selectedTool: '',
-      selectedShape: shapeNames[0],
-      selectedPreset: '',
-      loadProgress: 0,
-      dataLoaded: false,
-      metaData: undefined,
-      showDicomTags: false,
-      dropboxDivId: 'dropBox',
-      dropboxClassName: 'dropBox',
-      borderClassName: 'dropBoxBorder',
-      hoverClassName: 'hover'
-    };
+  const versions = {
+    dwv: dwvService.getDwvVersion(),
+    react: version
+  };
 
+  const dropboxDivId = 'dropBox';
+  const dropboxClassName = 'dropBox';
+  const borderClassName = 'dropBoxBorder';
+  const hoverClassName = 'hover';
+
+  useEffect(() => {
     // watch load progress
     dwvService.addEventListener('loadprogress', (event) => {
-      this.setState({loadProgress: event.detail.value}, () => {
-        this.autoShowDropbox();
-      });
+      const progress = event.detail.value;
+      setLoadProgress(progress);
+      autoShowDropbox(dataLoaded, progress);
     });
     // watch data ready
     dwvService.addEventListener('dataready', (event) => {
       const dataReady = event.detail.value;
       if (dataReady) {
-        const runnableTool = this.state.dwvService.getFirstRunnableTool();
+        const runnableTool = dwvService.getFirstRunnableTool();
         if (runnableTool !== undefined) {
-          this.setState({selectedTool: runnableTool});
-          this.applyTool(runnableTool);
+          setSelectedTool(runnableTool);
+          applyTool(runnableTool);
         }
       }
     });
     // watch data loaded
     dwvService.addEventListener('dataloaded', (event) => {
-      this.setState({dataLoaded: event.detail.value}, () => {
-        this.setState({metaData: this.state.dwvService.getMetaData()});
-        this.autoShowDropbox();
-      });
+      const isLoaded = event.detail.value;
+      setDataLoaded(isLoaded);
+      setMetaData(dwvService.getMetaData());
+      autoShowDropbox(isLoaded, loadProgress);
     });
     // watch preset names
     dwvService.addEventListener('presetnames', (event) => {
-      this.setState({presetNames: event.detail.value}, () => {
-        const presetNames = this.state.presetNames;
-        this.setState({selectedPreset: presetNames[0]});
-      });
+      setPresetNames(event.detail.value);
+      setSelectedPreset(presetNames[0]);
     });
     // watch is manual preset
     dwvService.addEventListener('ismanualpreset', (event) => {
       const isManual = event.detail.value;
-      const preset = this.state.selectedPreset;
+      const preset = selectedPreset;
       const manualStr = 'manual';
       if (isManual && preset !== manualStr) {
-        this.setState({selectedPreset: manualStr});
+        setSelectedPreset(manualStr);
       }
     });
-  }
 
-  render() {
-    const {
-      versions,
-      toolNames,
-      selectedTool,
-      loadProgress,
-      dataLoaded,
-      metaData,
-      presetNames,
-      selectedPreset,
-      shapeNames,
-      selectedShape
-    } = this.state;
-
-    const toolsButtons = toolNames.map( (tool) => {
-      let res = [
-        <div key="{{ tool }}-item" className="toolbar-item">
-          <Button
-            value={tool}
-            key={tool}
-            title={tool}
-            sx={{padding: "6px", minWidth: "20px"}}
-            variant={tool === selectedTool? "outlined" : "contained"}
-            disabled={!dataLoaded || !this.canRunTool(tool)}
-            onClick={this.onChangeTool}>
-            { this.getToolIcon(tool) }
-          </Button>
-        </div>
-      ];
-      if (tool === 'WindowLevel') {
-        const toolName = tool + 'Select';
-        res.push(
-          <div key="wlselect-wrapper" className="select-wrapper">
-            <Button
-              value={toolName}
-              key={toolName}
-              title={toolName}
-              sx={{padding: "6px", minWidth: "20px"}}
-              variant="contained"
-              disabled={!dataLoaded || !this.canRunTool(tool)}>
-              <KeyboardArrowDownIcon />
-            </Button>
-            <select
-              key="WindowLevelPresetsSelect"
-              value={selectedPreset}
-              onChange={this.onChangePreset}>
-              {presetNames.map((preset) => (
-                <option
-                  value={preset}
-                  key={preset}>
-                  {preset}
-                </option>
-              ))}
-            </select>
-          </div>
-        );
-      } else if (tool === 'Draw') {
-        const toolName = tool + 'Select';
-        res.push(
-          <div key="drawselect-wrapper" className="select-wrapper">
-            <Button
-              value={toolName}
-              key={toolName}
-              title={toolName}
-              sx={{padding: "6px", minWidth: "20px"}}
-              variant="contained"
-              disabled={!dataLoaded || !this.canRunTool(tool)}>
-              <KeyboardArrowDownIcon />
-            </Button>
-            <select
-              key="DrawShapeSelect"
-              value={selectedShape}
-              onChange={this.onChangeShape}>
-              {shapeNames.map((shape) => (
-                <option
-                  value={shape}
-                  key={shape}>
-                  {shape}
-                </option>
-              ))}
-            </select>
-          </div>
-        );
-      }
-
-      return res;
-    });
-
-    return (
-      <Root className={classes.root} id="dwv">
-        <LinearProgress variant="determinate" value={loadProgress} />
-        <div className="header">
-
-          {toolsButtons}
-
-          <div key="reset-item" className="toolbar-item">
-            <Button
-              value="reset"
-              title="Reset"
-              variant="contained"
-              sx={{padding: "6px", minWidth: "20px"}}
-              disabled={!dataLoaded}
-              onClick={this.onReset}
-            ><RefreshIcon /></Button>
-          </div>
-
-          <div key="orient-item" className="toolbar-item">
-            <Button
-              value="toggleOrientation"
-              title="Toggle Orientation"
-              variant="contained"
-              sx={{padding: "6px", minWidth: "20px"}}
-              disabled={!dataLoaded}
-              onClick={this.toggleOrientation}
-            ><CameraswitchIcon /></Button>
-          </div>
-
-          <div key="tags-item" className="toolbar-item">
-            <Button
-              value="tags"
-              title="Tags"
-              variant="contained"
-              sx={{padding: "6px", minWidth: "20px"}}
-              disabled={!dataLoaded}
-              onClick={this.handleTagsDialogOpen}
-            ><LibraryBooksIcon /></Button>
-          </div>
-
-          <Dialog
-            open={this.state.showDicomTags}
-            onClose={this.handleTagsDialogClose}
-            slots={{ transition: TransitionUp }}
-            >
-              <AppBar className={classes.appBar} position="sticky">
-                <Toolbar>
-                  <IconButton color="inherit" onClick={this.handleTagsDialogClose} aria-label="Close">
-                    <CloseIcon />
-                  </IconButton>
-                  <Typography variant="h6" color="inherit" className={classes.flex}>
-                    DICOM Tags
-                  </Typography>
-                </Toolbar>
-              </AppBar>
-              <TagsTable data={metaData} />
-          </Dialog>
-        </div>
-
-        <div className="content">
-          <div id="layerGroup0" className="layerGroup">
-            <div id="dropBox"></div>
-          </div>
-        </div>
-
-        <div className="footer">
-          <p className="legend">
-            <Typography variant="caption">Powered by <Link
-                href="https://github.com/ivmartel/dwv"
-                title="dwv on github"
-                color="inherit">dwv
-              </Link> {versions.dwv} and <Link
-                href="https://github.com/facebook/react"
-                title="react on github"
-                color="inherit">React
-              </Link> {versions.react}
-            </Typography>
-          </p>
-        </div>
-
-      </Root>
-    );
-  }
-
-  componentDidMount() {
-    // setup drop box
-    this.setupDropbox();
-
-    // possible load from location
-    this.state.dwvService.loadFromUri(window.location.href);
-  }
+  }, [dwvService]);
 
   /**
    * Get the icon of a tool.
@@ -321,7 +138,7 @@ class DwvComponent extends Component {
    * @param {string} tool The tool name.
    * @returns {Icon} The associated icon.
    */
-  getToolIcon(tool) {
+  const getToolIcon = (tool) => {
     let res;
     if (tool === 'Scroll') {
       res = (<MenuIcon />);
@@ -330,7 +147,7 @@ class DwvComponent extends Component {
     } else if (tool === 'WindowLevel') {
       res = (<ContrastIcon />);
     } else if (tool === 'Draw') {
-      res = this.getShapeIcon(this.state.selectedShape);
+      res = getShapeIcon(selectedShape);
     }
     return res;
   }
@@ -341,7 +158,7 @@ class DwvComponent extends Component {
    * @param {string} shape The shape name.
    * @returns {Icon} The associated icon string.
    */
-  getShapeIcon(shape) {
+  const getShapeIcon = (shape) => {
     let res;
     if (shape === 'Ruler') {
       res = (<StraightenIcon />);
@@ -366,11 +183,10 @@ class DwvComponent extends Component {
    *
    * @param {event} event The change event.
    */
-  onChangeTool = (event) => {
+  const onChangeTool = (event) => {
     const tool = event.currentTarget.value;
-    this.setState({selectedTool: tool}, () => {
-      this.applyTool(tool);
-    });
+    setSelectedTool(tool);
+    applyTool(tool);
   }
 
   /**
@@ -378,12 +194,11 @@ class DwvComponent extends Component {
    *
    * @param {Event} event The change event.
    */
-  onChangeShape = (event) => {
+  const onChangeShape = (event) => {
     const shape = event.currentTarget.value;
-    this.setState({selectedShape: shape}, () => {
-      this.setState({selectedTool: 'Draw'});
-      this.applyShape(shape);
-    });
+    setSelectedShape(shape);
+    setSelectedTool('Draw');
+    applyShape(shape);
   }
 
   /**
@@ -391,11 +206,10 @@ class DwvComponent extends Component {
    *
    * @param {Event} event The change event.
    */
-  onChangePreset = (event) => {
+  const onChangePreset = (event) => {
     const preset = event.currentTarget.value;
-    this.setState({selectedPreset: preset}, () => {
-      this.applyPreset(preset);
-    });
+    setSelectedPreset(preset);
+    applyPreset(preset);
   };
 
   /**
@@ -404,11 +218,11 @@ class DwvComponent extends Component {
    * @param {string} tool The tool name.
    * @param {object} [features] Optional tool features.
    */
-  applyTool(tool, features) {
+  const applyTool = (tool, features) => {
     if (typeof features === 'undefined' && tool === 'Draw') {
-      features = {shapeName: this.state.selectedShape};
+      features = {shapeName: selectedShape};
     }
-    this.state.dwvService.applyTool(tool, features);
+    dwvService.applyTool(tool, features);
   }
 
   /**
@@ -416,8 +230,8 @@ class DwvComponent extends Component {
    *
    * @param {string} shape The shape name.
    */
-  applyShape(shape) {
-    this.applyTool('Draw', {shapeName: shape});
+  const applyShape = (shape) => {
+    applyTool('Draw', {shapeName: shape});
   }
 
   /**
@@ -425,8 +239,8 @@ class DwvComponent extends Component {
    *
    * @param {string} preset The preset name.
    */
-  applyPreset(preset) {
-    this.state.dwvService.applyPreset(preset);
+  const applyPreset = (preset) => {
+    dwvService.applyPreset(preset);
   }
 
   /**
@@ -435,52 +249,45 @@ class DwvComponent extends Component {
    * @param {string} tool The tool name.
    * @returns {boolean} True if the tool can be run.
    */
-  canRunTool(tool) {
-    return this.state.dwvService.canRunTool(tool);
+  const canRunTool = (tool) => {
+    return dwvService.canRunTool(tool);
   }
 
   /**
    * Toogle the viewer orientation.
    */
-  toggleOrientation = () => {
-    this.state.dwvService.toggleOrientation();
+  const toggleOrientation = () => {
+    dwvService.toggleOrientation();
   }
 
   /**
    * Handle a reset event.
    */
-  onReset = () => {
-    this.state.dwvService.reset();
+  const onReset = () => {
+    dwvService.reset();
   }
 
   /**
    * Open the DICOM tags dialog.
    */
-  handleTagsDialogOpen = () => {
-    this.setState({ showDicomTags: true });
+  const handleTagsDialogOpen = () => {
+    setShowDicomTags(true);
   }
 
   /**
    * Close the DICOM tags dialog.
    */
-  handleTagsDialogClose = () => {
-    this.setState({ showDicomTags: false });
+  const handleTagsDialogClose = () => {
+    setShowDicomTags(false);
   };
 
   // drag and drop [begin] -----------------------------------------------------
 
   /**
-   * Setup the data load drop box: add event listeners and set initial size.
-   */
-  setupDropbox() {
-    this.showDropbox(true);
-  }
-
-  /**
    * Default drag event handling.
    * @param {DragEvent} event The event to handle.
    */
-  defaultHandleDragEvent = (event) => {
+  const defaultHandleDragEvent = (event) => {
     // prevent default handling
     event.stopPropagation();
     event.preventDefault();
@@ -490,12 +297,12 @@ class DwvComponent extends Component {
    * Handle a drag over.
    * @param {DragEvent} event The event to handle.
    */
-  onBoxDragOver = (event) => {
-    this.defaultHandleDragEvent(event);
+  const onBoxDragOver = (event) => {
+    defaultHandleDragEvent(event);
     // update box border
-    const box = document.getElementById(this.state.dropboxDivId);
-    if (box && box.className.indexOf(this.state.hoverClassName) === -1) {
-        box.className += ' ' + this.state.hoverClassName;
+    const box = document.getElementById(dropboxDivId);
+    if (box && box.className.indexOf(hoverClassName) === -1) {
+        box.className += ' ' + hoverClassName;
     }
   }
 
@@ -503,12 +310,12 @@ class DwvComponent extends Component {
    * Handle a drag leave.
    * @param {DragEvent} event The event to handle.
    */
-  onBoxDragLeave = (event) => {
-    this.defaultHandleDragEvent(event);
+  const onBoxDragLeave = (event) => {
+    defaultHandleDragEvent(event);
     // update box class
-    const box = document.getElementById(this.state.dropboxDivId);
-    if (box && box.className.indexOf(this.state.hoverClassName) !== -1) {
-        box.className = box.className.replace(' ' + this.state.hoverClassName, '');
+    const box = document.getElementById(dropboxDivId);
+    if (box && box.className.indexOf(hoverClassName) !== -1) {
+        box.className = box.className.replace(' ' + hoverClassName, '');
     }
   }
 
@@ -516,38 +323,36 @@ class DwvComponent extends Component {
    * Handle a drop event.
    * @param {DragEvent} event The event to handle.
    */
-  onDrop = (event) => {
-    this.defaultHandleDragEvent(event);
+  const onDrop = (event) => {
+    defaultHandleDragEvent(event);
     // load files
-    this.state.dwvService.loadFiles(event.dataTransfer.files);
+    dwvService.loadFiles(event.dataTransfer.files);
   }
 
   /**
    * Handle a an input[type:file] change event.
    * @param event The event to handle.
    */
-  onInputFile = (event) => {
+  const onInputFile = (event) => {
     if (event.target && event.target.files) {
-      this.state.dwvService.loadFiles(event.target.files);
+      dwvService.loadFiles(event.target.files);
     }
   }
 
   /**
    * Show the dropbox according to state.
    */
-  autoShowDropbox() {
-    const isLoaded = this.state.dataLoaded;
-    const progress = this.state.loadProgress;
+  const autoShowDropbox = (isLoaded, progress) => {
     const isLoading = progress !== 0 && progress !== 100;
-    this.showDropbox(!isLoading && !isLoaded);
+    showDropbox(!isLoading && !isLoaded);
   }
 
   /**
    * Show/hide the data load drop box.
    * @param show True to show the drop box.
    */
-  showDropbox(show) {
-    const box = document.getElementById(this.state.dropboxDivId);
+  const showDropbox = (show) => {
+    const box = document.getElementById(dropboxDivId);
     if (!box) {
       return;
     }
@@ -555,14 +360,14 @@ class DwvComponent extends Component {
 
     if (show) {
       // reset css class
-      box.className = this.state.dropboxClassName + ' ' + this.state.borderClassName;
+      box.className = dropboxClassName + ' ' + borderClassName;
       // check content
       if (box.innerHTML === '') {
         const p = document.createElement('p');
         p.appendChild(document.createTextNode('Drag and drop data here or '));
         // input file
         const input = document.createElement('input');
-        input.onchange = this.onInputFile;
+        input.onchange = onInputFile;
         input.type = 'file';
         input.multiple = true;
         input.id = 'input-file';
@@ -582,35 +387,211 @@ class DwvComponent extends Component {
       box.setAttribute('style', 'display:initial');
       // stop layer listening
       if (layerDiv) {
-        layerDiv.removeEventListener('dragover', this.defaultHandleDragEvent);
-        layerDiv.removeEventListener('dragleave', this.defaultHandleDragEvent);
-        layerDiv.removeEventListener('drop', this.onDrop);
+        layerDiv.removeEventListener('dragover', defaultHandleDragEvent);
+        layerDiv.removeEventListener('dragleave', defaultHandleDragEvent);
+        layerDiv.removeEventListener('drop', onDrop);
       }
       // listen to box events
-      box.addEventListener('dragover', this.onBoxDragOver);
-      box.addEventListener('dragleave', this.onBoxDragLeave);
-      box.addEventListener('drop', this.onDrop);
+      box.addEventListener('dragover', onBoxDragOver);
+      box.addEventListener('dragleave', onBoxDragLeave);
+      box.addEventListener('drop', onDrop);
     } else {
       // remove border css class
-      box.className = this.state.dropboxClassName;
+      box.className = dropboxClassName;
       // remove content
       box.innerHTML = '';
       // hide box
       box.setAttribute('style', 'display:none');
       // stop box listening
-      box.removeEventListener('dragover', this.onBoxDragOver);
-      box.removeEventListener('dragleave', this.onBoxDragLeave);
-      box.removeEventListener('drop', this.onDrop);
+      box.removeEventListener('dragover', onBoxDragOver);
+      box.removeEventListener('dragleave', onBoxDragLeave);
+      box.removeEventListener('drop', onDrop);
       // listen to layer events
       if (layerDiv) {
-        layerDiv.addEventListener('dragover', this.defaultHandleDragEvent);
-        layerDiv.addEventListener('dragleave', this.defaultHandleDragEvent);
-        layerDiv.addEventListener('drop', this.onDrop);
+        layerDiv.addEventListener('dragover', defaultHandleDragEvent);
+        layerDiv.addEventListener('dragleave', defaultHandleDragEvent);
+        layerDiv.addEventListener('drop', onDrop);
       }
     }
   }
 
   // drag and drop [end] -------------------------------------------------------
+
+  const getToolsButtons = () => {
+
+    const toolsButtons = toolNames.map( (tool) => {
+      let res = [
+        <div key="{{ tool }}-item" className="toolbar-item">
+          <Button
+            value={tool}
+            key={tool}
+            title={tool}
+            sx={{padding: "6px", minWidth: "20px"}}
+            variant={tool === selectedTool? "outlined" : "contained"}
+            disabled={!dataLoaded || !canRunTool(tool)}
+            onClick={onChangeTool}>
+            { getToolIcon(tool) }
+          </Button>
+        </div>
+      ];
+      if (tool === 'WindowLevel') {
+        const toolName = tool + 'Select';
+        res.push(
+          <div key="wlselect-wrapper" className="select-wrapper">
+            <Button
+              value={toolName}
+              key={toolName}
+              title={toolName}
+              sx={{padding: "6px", minWidth: "20px"}}
+              variant="contained"
+              disabled={!dataLoaded || !canRunTool(tool)}>
+              <KeyboardArrowDownIcon />
+            </Button>
+            <select
+              key="WindowLevelPresetsSelect"
+              value={selectedPreset}
+              onChange={onChangePreset}>
+              {presetNames.map((preset) => (
+                <option
+                  value={preset}
+                  key={preset}>
+                  {preset}
+                </option>
+              ))}
+            </select>
+          </div>
+        );
+      } else if (tool === 'Draw') {
+        const toolName = tool + 'Select';
+        res.push(
+          <div key="drawselect-wrapper" className="select-wrapper">
+            <Button
+              value={toolName}
+              key={toolName}
+              title={toolName}
+              sx={{padding: "6px", minWidth: "20px"}}
+              variant="contained"
+              disabled={!dataLoaded || !canRunTool(tool)}>
+              <KeyboardArrowDownIcon />
+            </Button>
+            <select
+              key="DrawShapeSelect"
+              value={selectedShape}
+              onChange={onChangeShape}>
+              {shapeNames.map((shape) => (
+                <option
+                  value={shape}
+                  key={shape}>
+                  {shape}
+                </option>
+              ))}
+            </select>
+          </div>
+        );
+      }
+
+      return res;
+    });
+
+    return toolsButtons;
+  }
+
+  return (
+    <Root className={classes.root} id="dwv">
+      <LinearProgress variant="determinate" value={loadProgress} />
+      <div className="header">
+
+        {getToolsButtons()}
+
+        <div key="reset-item" className="toolbar-item">
+          <Button
+            value="reset"
+            title="Reset"
+            variant="contained"
+            sx={{padding: "6px", minWidth: "20px"}}
+            disabled={!dataLoaded}
+            onClick={onReset}
+          ><RefreshIcon /></Button>
+        </div>
+
+        <div key="orient-item" className="toolbar-item">
+          <Button
+            value="toggleOrientation"
+            title="Toggle Orientation"
+            variant="contained"
+            sx={{padding: "6px", minWidth: "20px"}}
+            disabled={!dataLoaded}
+            onClick={toggleOrientation}
+          ><CameraswitchIcon /></Button>
+        </div>
+
+        <div key="tags-item" className="toolbar-item">
+          <Button
+            value="tags"
+            title="Tags"
+            variant="contained"
+            sx={{padding: "6px", minWidth: "20px"}}
+            disabled={!dataLoaded}
+            onClick={handleTagsDialogOpen}
+          ><LibraryBooksIcon /></Button>
+        </div>
+
+        <Dialog
+          open={showDicomTags}
+          onClose={handleTagsDialogClose}
+          slots={{ transition: TransitionUp }}
+          >
+            <AppBar className={classes.appBar} position="sticky">
+              <Toolbar>
+                <IconButton color="inherit" onClick={handleTagsDialogClose} aria-label="Close">
+                  <CloseIcon />
+                </IconButton>
+                <Typography variant="h6" color="inherit" className={classes.flex}>
+                  DICOM Tags
+                </Typography>
+              </Toolbar>
+            </AppBar>
+            <TagsTable data={metaData} />
+        </Dialog>
+      </div>
+
+      <div className="content">
+        <div id="layerGroup0" className="layerGroup">
+          <div id="dropBox" className={!dataLoaded ? 'dropBox dropBoxBorder' : 'dropBox'}>
+            <p>Drag and drop data here or
+              <label htmlFor="input-file">
+                <a id="input-file-link"> click here</a>
+              </label>
+              <input
+                id="input-file"
+                type='file'
+                onChange={onInputFile}
+                style={{display: 'none'}}
+                multiple
+              ></input>
+              <a></a>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div className="footer">
+        <p className="legend">
+          <Typography variant="caption">Powered by <Link
+              href="https://github.com/ivmartel/dwv"
+              title="dwv on github"
+              color="inherit">dwv
+            </Link> {versions.dwv} and <Link
+              href="https://github.com/facebook/react"
+              title="react on github"
+              color="inherit">React
+            </Link> {versions.react}
+          </Typography>
+        </p>
+      </div>
+
+    </Root>
+  );
 
 } // DwvComponent
 
