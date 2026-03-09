@@ -99,14 +99,12 @@ const DwvComponent = () => {
       dwvService.loadFromUri(window.location.href);
     }
 
-    // watch load progress
-    dwvService.addEventListener('loadprogress', (event) => {
+    const handleLoadProgress = (event) => {
       const progress = event.detail.value;
       setLoadProgress(progress);
       autoShowDropbox(dataLoaded, progress);
-    });
-    // watch data ready
-    dwvService.addEventListener('dataready', (event) => {
+    };
+    const handleDataReady = (event) => {
       const dataReady = event.detail.value;
       if (dataReady) {
         const runnableTool = dwvService.getFirstRunnableTool();
@@ -115,29 +113,41 @@ const DwvComponent = () => {
           applyTool(runnableTool);
         }
       }
-    });
-    // watch data loaded
-    dwvService.addEventListener('dataloaded', (event) => {
+    };
+    const handleDataLoaded = (event) => {
       const isLoaded = event.detail.value;
       setDataLoaded(isLoaded);
       setMetaData(dwvService.getMetaData());
       autoShowDropbox(isLoaded, loadProgress);
-    });
-    // watch preset names
-    dwvService.addEventListener('presetnames', (event) => {
+    };
+    const handlePresetNames = (event) => {
       setPresetNames(event.detail.value);
-      setSelectedPreset(presetNames[0]);
-    });
-    // watch is manual preset
-    dwvService.addEventListener('ismanualpreset', (event) => {
+      setSelectedPreset(event.detail.value[0]);
+    };
+    const handleIsManualPreset = (event) => {
       const isManual = event.detail.value;
       const preset = selectedPreset;
       const manualStr = 'manual';
       if (isManual && preset !== manualStr) {
         setSelectedPreset(manualStr);
       }
-    });
+    };
 
+    // subscribe
+    dwvService.addEventListener('loadprogress', handleLoadProgress);
+    dwvService.addEventListener('dataready', handleDataReady);
+    dwvService.addEventListener('dataloaded', handleDataLoaded);
+    dwvService.addEventListener('presetnames', handlePresetNames);
+    dwvService.addEventListener('ismanualpreset', handleIsManualPreset);
+
+    // cleanup
+    return () => {
+      dwvService.removeEventListener('loadprogress', handleLoadProgress);
+      dwvService.removeEventListener('dataready', handleDataReady);
+      dwvService.removeEventListener('dataloaded', handleDataLoaded);
+      dwvService.removeEventListener('presetnames', handlePresetNames);
+      dwvService.removeEventListener('ismanualpreset', handleIsManualPreset);
+    };
   }, [dwvService]);
 
   /**
