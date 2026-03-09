@@ -3,7 +3,8 @@ import {
   forwardRef,
   useState,
   useEffect,
-  useMemo
+  useMemo,
+  useRef
 } from 'react';
 import { styled } from '@mui/material/styles';
 import {
@@ -80,6 +81,8 @@ const DwvComponent = () => {
   const [metaData, setMetaData] = useState(undefined);
   const [showDicomTags, setShowDicomTags] = useState(false);
 
+  const hasInitialized = useRef(false);
+
   const versions = {
     dwv: dwvService.getDwvVersion(),
     react: version
@@ -91,6 +94,12 @@ const DwvComponent = () => {
   const hoverClassName = 'hover';
 
   useEffect(() => {
+    // possible load from location
+    if (!hasInitialized.current) {
+      hasInitialized.current = true;
+      dwvService.loadFromUri(window.location.href);
+    }
+
     // watch load progress
     dwvService.addEventListener('loadprogress', (event) => {
       const progress = event.detail.value;
