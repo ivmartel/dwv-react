@@ -552,7 +552,7 @@ const DwvComponent = () => {
       <div className="content">
         <div id="layerGroup0" className="layerGroup">
           <div id="dropBox"
-            className='dropBox dropBoxBorder'
+            className="dropBox dropBoxBorder"
             onDragOver={onBoxDragOver}
             onDragLeave={onBoxDragLeave}
             onDrop={onDrop}
@@ -563,9 +563,9 @@ const DwvComponent = () => {
               </label>
               <input
                 id="input-file"
-                type='file'
+                type="file"
                 onChange={onInputFile}
-                style={{display: 'none'}}
+                style={{display: "none"}}
                 multiple
               ></input>
               <a></a>
