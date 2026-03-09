@@ -361,28 +361,6 @@ const DwvComponent = () => {
     if (show) {
       // reset css class
       box.className = dropboxClassName + ' ' + borderClassName;
-      // check content
-      if (box.innerHTML === '') {
-        const p = document.createElement('p');
-        p.appendChild(document.createTextNode('Drag and drop data here or '));
-        // input file
-        const input = document.createElement('input');
-        input.onchange = onInputFile;
-        input.type = 'file';
-        input.multiple = true;
-        input.id = 'input-file';
-        input.style.display = 'none';
-        const label = document.createElement('label');
-        label.htmlFor = 'input-file';
-        const link = document.createElement('a');
-        link.appendChild(document.createTextNode('click here'));
-        link.id = 'input-file-link';
-        label.appendChild(link);
-        p.appendChild(input);
-        p.appendChild(label);
-
-        box.appendChild(p);
-      }
       // show box
       box.setAttribute('style', 'display:initial');
       // stop layer listening
@@ -398,8 +376,6 @@ const DwvComponent = () => {
     } else {
       // remove border css class
       box.className = dropboxClassName;
-      // remove content
-      box.innerHTML = '';
       // hide box
       box.setAttribute('style', 'display:none');
       // stop box listening
@@ -557,7 +533,12 @@ const DwvComponent = () => {
 
       <div className="content">
         <div id="layerGroup0" className="layerGroup">
-          <div id="dropBox" className={!dataLoaded ? 'dropBox dropBoxBorder' : 'dropBox'}>
+          <div id="dropBox"
+            className='dropBox dropBoxBorder'
+            onDragOver={onBoxDragOver}
+            onDragLeave={onBoxDragLeave}
+            onDrop={onDrop}
+            >
             <p>Drag and drop data here or
               <label htmlFor="input-file">
                 <a id="input-file-link"> click here</a>
