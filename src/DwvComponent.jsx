@@ -560,15 +560,13 @@ const DwvComponent = () => {
             <p>Drag and drop data here or
               <label htmlFor="input-file">
                 <a id="input-file-link"> click here</a>
+                <input
+                  id="input-file"
+                  type="file"
+                  multiple
+                  onChange={onInputFile}
+                  style={{display: "none"}}/>
               </label>
-              <input
-                id="input-file"
-                type="file"
-                onChange={onInputFile}
-                style={{display: "none"}}
-                multiple
-              ></input>
-              <a></a>
             </p>
           </div>
         </div>
