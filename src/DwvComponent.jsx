@@ -3,7 +3,6 @@ import {
   forwardRef,
   useState,
   useEffect,
-  useMemo,
   useRef
 } from 'react';
 import { styled } from '@mui/material/styles';
@@ -19,7 +18,7 @@ import {
   Toolbar
 } from '@mui/material';
 
-import { DwvService } from './dwv.service.js';
+import { useDwvService } from './DwvServiceProvider.jsx';
 import TagsTable from './TagsTable.jsx';
 
 // https://mui.com/material-ui/material-icons/
@@ -68,7 +67,7 @@ export const TransitionUp = forwardRef((props, ref) => (
 
 const DwvComponent = () => {
 
-  const dwvService = useMemo(() => new DwvService(), []);
+  const dwvService = useDwvService();
 
   const [loadProgress, setLoadProgress] = useState(0);
   const [dataLoaded, setDataLoaded] = useState(false);
