@@ -15,7 +15,7 @@ import {
   Toolbar
 } from '@mui/material';
 
-import { useDwvService } from './DwvServiceProvider.jsx';
+import { useDwvService } from '../services/DwvServiceProvider.jsx';
 
 import TagsTable from './TagsTable.jsx';
 

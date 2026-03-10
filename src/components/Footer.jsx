@@ -5,7 +5,7 @@ import {
   Link,
 } from '@mui/material';
 
-import { useDwvService } from './DwvServiceProvider.jsx';
+import { useDwvService } from '../services/DwvServiceProvider.jsx';
 
 import './Footer.css';
 

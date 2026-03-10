@@ -4,7 +4,7 @@ import {
 } from 'react';
 import { styled } from '@mui/material/styles';
 
-import { useDwvService } from './DwvServiceProvider.jsx';
+import { useDwvService } from '../services/DwvServiceProvider.jsx';
 
 import './Content.css';
 

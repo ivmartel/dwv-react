@@ -6,8 +6,8 @@ import {
   colors
 } from '@mui/material';
 
-import DwvComponent from './DwvComponent.jsx';
-import { DwvServiceProvider } from './DwvServiceProvider.jsx';
+import DwvComponent from './components/DwvComponent.jsx';
+import { DwvServiceProvider } from './services/DwvServiceProvider.jsx';
 
 import './App.css';
 
