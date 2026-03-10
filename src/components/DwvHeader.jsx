@@ -36,7 +36,7 @@ import SportsRugbyIcon from '@mui/icons-material/SportsRugby';
 import SquareFootIcon from '@mui/icons-material/SquareFoot';
 import PolylineIcon from '@mui/icons-material/Polyline';
 
-import './Header.css';
+import './DwvHeader.css';
 
 const PREFIX = 'Header';
 const classes = {

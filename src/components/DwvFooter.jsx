@@ -7,7 +7,7 @@ import {
 
 import { useDwvService } from '../services/DwvServiceProvider.jsx';
 
-import './Footer.css';
+import './DwvFooter.css';
 
 const Root = styled('div')();
 

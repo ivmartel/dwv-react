@@ -6,9 +6,9 @@ import { styled } from '@mui/material/styles';
 
 import { useDwvService } from '../services/DwvServiceProvider.jsx';
 
-import Header from './Header.jsx';
-import Content from './Content.jsx';
-import Footer from './Footer.jsx';
+import DwvHeader from './DwvHeader.jsx';
+import DwvContent from './DwvContent.jsx';
+import DwvFooter from './DwvFooter.jsx';
 
 import './DwvComponent.css';
 
@@ -30,9 +30,9 @@ const DwvComponent = () => {
 
   return (
     <Root className="dwv">
-      <Header />
-      <Content className="content"/>
-      <Footer />
+      <DwvHeader />
+      <DwvContent className="content"/>
+      <DwvFooter />
     </Root>
   );
 

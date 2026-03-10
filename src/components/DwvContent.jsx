@@ -6,7 +6,7 @@ import { styled } from '@mui/material/styles';
 
 import { useDwvService } from '../services/DwvServiceProvider.jsx';
 
-import './Content.css';
+import './DwvContent.css';
 
 const Root = styled('div')();
 
