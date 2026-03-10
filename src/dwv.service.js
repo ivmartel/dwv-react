@@ -183,7 +183,7 @@ export class DwvService extends EventTarget {
       isFirstRender = true;
     });
     this.#dwvApp.addEventListener('loadprogress', (event) => {
-      this.#dispatch('loadproogress', {value: event.loaded});
+      this.#dispatch('loadprogress', {value: event.loaded});
     });
     this.#dwvApp.addEventListener('renderend', (event) => {
       if (isFirstRender) {
