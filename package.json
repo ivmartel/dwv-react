@@ -26,7 +26,7 @@
     "jsdom": "^29.0.1",
     "vite": "^8.0.2",
     "vite-plugin-pwa": "^1.2.0",
-    "vitest": "^4.1.0"
+    "vitest": "^4.1.1"
   },
   "scripts": {
     "dev": "vite",
