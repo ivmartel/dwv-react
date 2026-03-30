@@ -3268,7 +3268,7 @@ __metadata:
     "@vitejs/plugin-react": "npm:^6.0.1"
     "@vitest/coverage-v8": "npm:^4.1.1"
     canvas: "npm:^3.2.2"
-    dwv: "npm:0.36.1"
+    dwv: "npm:0.36.2"
     jsdom: "npm:^29.0.1"
     react: "npm:^19.2.4"
     react-dom: "npm:^19.2.4"
@@ -3278,14 +3278,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"dwv@npm:0.36.1":
-  version: 0.36.1
-  resolution: "dwv@npm:0.36.1"
+"dwv@npm:0.36.2":
+  version: 0.36.2
+  resolution: "dwv@npm:0.36.2"
   dependencies:
     jszip: "npm:^3.10.1"
     konva: "npm:~10.2.0"
     magic-wand-tool: "npm:~1.1.7"
-  checksum: 10c0/7988583acd624be576d94d58cdd05ece694f8f169f7aed4d46160dc77cabf5b5367fa82c934b9b6d36d32797e325b73c0756f3d1e6a7017e1d0c3d175f0ec8a2
+  checksum: 10c0/d6d7409e2d0840ddd209981f39bd7adbd7892b24d7ee8b8be538887c22ad6865f9df4f38360fe5a02202bfe67e6aeace017f47fcfbf6c338b8c91714f0bc1765
   languageName: node
   linkType: hard
 
