@@ -22,7 +22,7 @@
     "@types/react": "^19.2.14",
     "@vitejs/plugin-react": "^6.0.1",
     "@vitest/coverage-v8": "^4.1.2",
-    "canvas": "^3.2.2",
+    "canvas": "^3.2.3",
     "jsdom": "^29.0.1",
     "vite": "^8.0.5",
     "vite-plugin-pwa": "^1.2.0",
