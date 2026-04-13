@@ -9,7 +9,7 @@
   "dependencies": {
     "dwv": "0.36.2",
     "react": "^19.2.4",
-    "react-dom": "^19.2.4"
+    "react-dom": "^19.2.5"
   },
   "devDependencies": {
     "@emotion/react": "^11.14.0",
