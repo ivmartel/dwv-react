@@ -24,7 +24,7 @@
     "@vitest/coverage-v8": "^4.1.4",
     "canvas": "^3.2.3",
     "jsdom": "^29.0.2",
-    "vite": "^8.0.9",
+    "vite": "^8.0.10",
     "vite-plugin-pwa": "^1.2.0",
     "vitest": "^4.1.4"
   },
