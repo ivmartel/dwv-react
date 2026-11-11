@@ -1,11 +1,20 @@
-import { createContext, useContext } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import { DwvService } from './dwv.service.js';
 
 export const DwvServiceContext = createContext();
 
 export const DwvServiceProvider = ({ children }) => {
 
-  const dwvService = new DwvService();
+  // create the service once: re-renders must not create a new dwv app
+  const [dwvService] = useState(() => new DwvService());
+
+  // window listeners follow the provider lifecycle
+  useEffect(() => {
+    dwvService.connect();
+    return () => {
+      dwvService.disconnect();
+    };
+  }, [dwvService]);
 
   return (
     <DwvServiceContext.Provider value={dwvService}>

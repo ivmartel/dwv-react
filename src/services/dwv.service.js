@@ -253,8 +253,21 @@ export class DwvService extends EventTarget {
     this.#dwvApp.addEventListener('keydown', (event) => {
       this.#dwvApp.defaultOnKeydown(event);
     });
-    // handle window resize
+  }
+
+  /**
+   * Start listening to window events (resize).
+   * Call `disconnect` to stop.
+   */
+  connect() {
     window.addEventListener('resize', this.#dwvApp.onResize);
+  }
+
+  /**
+   * Stop listening to window events.
+   */
+  disconnect() {
+    window.removeEventListener('resize', this.#dwvApp.onResize);
   }
 
   /**
