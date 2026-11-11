@@ -23,6 +23,13 @@ export default function App() {
           main: colors.pink[500]
         },
         mode: prefersDarkMode ? 'dark' : 'light',
+        background: {
+          // custom token (Material 3 like 'surface-container'):
+          // side panels, lighter than the default background
+          surfaceContainer: prefersDarkMode
+            ? colors.grey[900]
+            : colors.grey[100]
+        }
       }
     }), [prefersDarkMode]);
 

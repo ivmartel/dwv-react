@@ -17,7 +17,8 @@ const MAX_WIDTH_RATIO = 0.8;
 
 const Root = styled('div')(({ theme }) => ({
   borderLeft: `1px solid ${theme.palette.divider}`,
-  backgroundColor: theme.palette.background.paper,
+  backgroundColor: theme.palette.background.surfaceContainer ??
+    theme.palette.background.paper,
   '& .resizeHandle:hover, & .resizeHandle.dragging': {
     backgroundColor: theme.palette.primary.main,
   },
