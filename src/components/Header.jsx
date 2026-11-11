@@ -20,6 +20,7 @@ import {
 import { useDwvAppService } from '../services/DwvAppServiceProvider.jsx';
 
 import TagsTable from './TagsTable.jsx';
+import { getShapeIcon } from './shapeIcons.jsx';
 
 // https://mui.com/material-ui/material-icons/
 import CloseIcon from '@mui/icons-material/Close';
@@ -28,15 +29,8 @@ import MenuIcon from '@mui/icons-material/Menu';
 import ContrastIcon from '@mui/icons-material/Contrast';
 import SearchIcon from '@mui/icons-material/Search';
 import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
-import StraightenIcon from '@mui/icons-material/Straighten';
 import CameraswitchIcon from '@mui/icons-material/Cameraswitch';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import CallMadeIcon from '@mui/icons-material/CallMade';
-import CropLandscapeIcon from '@mui/icons-material/CropLandscape';
-import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
-import SportsRugbyIcon from '@mui/icons-material/SportsRugby';
-import SquareFootIcon from '@mui/icons-material/SquareFoot';
-import PolylineIcon from '@mui/icons-material/Polyline';
 
 import './Header.css';
 
@@ -152,32 +146,6 @@ const Header = () => {
       res = (<ContrastIcon />);
     } else if (tool === 'Draw') {
       res = getShapeIcon(selectedShape);
-    }
-    return res;
-  }
-
-  /**
-   * Get the icon of a shape.
-   *
-   * @param {string} shape The shape name.
-   * @returns {Icon} The associated icon string.
-   */
-  const getShapeIcon = (shape) => {
-    let res;
-    if (shape === 'Ruler') {
-      res = (<StraightenIcon />);
-    } else if (shape === 'Arrow') {
-      res = (<CallMadeIcon />);
-    } else if (shape === 'Rectangle') {
-      res = (<CropLandscapeIcon />);
-    } else if (shape === 'Circle') {
-      res = (<RadioButtonUncheckedIcon />);
-    } else if (shape === 'Ellipse') {
-      res = (<SportsRugbyIcon />);
-    } else if (shape === 'Protractor') {
-      res = (<SquareFootIcon />);
-    } else if (shape === 'Roi') {
-      res = (<PolylineIcon />);
     }
     return res;
   }
