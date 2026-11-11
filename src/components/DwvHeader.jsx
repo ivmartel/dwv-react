@@ -2,6 +2,7 @@ import {
   forwardRef,
   useState,
   useEffect,
+  useRef,
 } from 'react';
 import { styled } from '@mui/material/styles';
 import {
@@ -63,6 +64,8 @@ const Header = () => {
   const [shapeNames] = useState(dwvService.getShapeNames());
   const [selectedTool, setSelectedTool] = useState('');
   const [selectedShape, setSelectedShape] = useState(shapeNames[0]);
+  // latest selected shape, readable from the (mount time) event handlers
+  const selectedShapeRef = useRef(selectedShape);
   const [presetNames, setPresetNames] = useState([]);
   const [selectedPreset, setSelectedPreset] = useState('');
   const [metaData, setMetaData] = useState(undefined);
@@ -95,10 +98,9 @@ const Header = () => {
     };
     const handleIsManualPreset = (event) => {
       const isManual = event.detail.value;
-      const preset = selectedPreset;
-      const manualStr = 'manual';
-      if (isManual && preset !== manualStr) {
-        setSelectedPreset(manualStr);
+      if (isManual) {
+        // no-op if already 'manual'
+        setSelectedPreset('manual');
       }
     };
 
@@ -183,6 +185,7 @@ const Header = () => {
    */
   const onChangeShape = (event) => {
     const shape = event.currentTarget.value;
+    selectedShapeRef.current = shape;
     setSelectedShape(shape);
     setSelectedTool('Draw');
     applyShape(shape);
@@ -207,7 +210,7 @@ const Header = () => {
    */
   const applyTool = (tool, features) => {
     if (typeof features === 'undefined' && tool === 'Draw') {
-      features = {shapeName: selectedShape};
+      features = {shapeName: selectedShapeRef.current};
     }
     dwvService.applyTool(tool, features);
   }

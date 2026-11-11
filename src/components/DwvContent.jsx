@@ -10,28 +10,29 @@ import './DwvContent.css';
 
 const Root = styled('div')();
 
+/**
+ * Prevent the browser default drag handling (i.e. opening the file).
+ * @param {DragEvent} event The event to handle.
+ */
+const preventDefaultDrag = (event) => {
+  event.stopPropagation();
+  event.preventDefault();
+};
+
 const Content = () => {
 
   const dwvService = useDwvService();
 
   const [loadProgress, setLoadProgress] = useState(0);
   const [dataLoaded, setDataLoaded] = useState(false);
-
-  const dropboxDivId = 'dropBox';
-  const dropboxClassName = 'dropBox';
-  const borderClassName = 'dropBoxBorder';
-  const hoverClassName = 'hover';
+  const [isDragHover, setIsDragHover] = useState(false);
 
   useEffect(() => {
     const handleLoadProgress = (event) => {
-      const progress = event.detail.value;
-      setLoadProgress(progress);
-      autoShowDropbox(dataLoaded, progress);
+      setLoadProgress(event.detail.value);
     };
     const handleDataLoaded = (event) => {
-      const isLoaded = event.detail.value;
-      setDataLoaded(isLoaded);
-      autoShowDropbox(isLoaded, loadProgress);
+      setDataLoaded(event.detail.value);
     };
 
     // subscribe
@@ -45,53 +46,38 @@ const Content = () => {
     };
   }, [dwvService]);
 
-  // drag and drop [begin] -----------------------------------------------------
+  // the drop box is shown when not loading and no data is loaded
+  const isLoading = loadProgress !== 0 && loadProgress !== 100;
+  const showDropbox = !isLoading && !dataLoaded;
 
   /**
-   * Default drag event handling.
-   * @param {DragEvent} event The event to handle.
-   */
-  const defaultHandleDragEvent = (event) => {
-    // prevent default handling
-    event.stopPropagation();
-    event.preventDefault();
-  }
-
-  /**
-   * Handle a drag over.
+   * Handle a drag over the drop box.
    * @param {DragEvent} event The event to handle.
    */
   const onBoxDragOver = (event) => {
-    defaultHandleDragEvent(event);
-    // update box border
-    const box = document.getElementById(dropboxDivId);
-    if (box && box.className.indexOf(hoverClassName) === -1) {
-        box.className += ' ' + hoverClassName;
-    }
-  }
+    preventDefaultDrag(event);
+    setIsDragHover(true);
+  };
 
   /**
-   * Handle a drag leave.
+   * Handle a drag leave of the drop box.
    * @param {DragEvent} event The event to handle.
    */
   const onBoxDragLeave = (event) => {
-    defaultHandleDragEvent(event);
-    // update box class
-    const box = document.getElementById(dropboxDivId);
-    if (box && box.className.indexOf(hoverClassName) !== -1) {
-        box.className = box.className.replace(' ' + hoverClassName, '');
-    }
-  }
+    preventDefaultDrag(event);
+    setIsDragHover(false);
+  };
 
   /**
-   * Handle a drop event.
+   * Handle a drop: on the drop box or on the layer group
+   * (to replace already loaded data).
    * @param {DragEvent} event The event to handle.
    */
   const onDrop = (event) => {
-    defaultHandleDragEvent(event);
-    // load files
+    preventDefaultDrag(event);
+    setIsDragHover(false);
     dwvService.loadFiles(event.dataTransfer.files);
-  }
+  };
 
   /**
    * Handle a an input[type:file] change event.
@@ -101,67 +87,20 @@ const Content = () => {
     if (event.target && event.target.files) {
       dwvService.loadFiles(event.target.files);
     }
-  }
+  };
 
-  /**
-   * Show the dropbox according to state.
-   */
-  const autoShowDropbox = (isLoaded, progress) => {
-    const isLoading = progress !== 0 && progress !== 100;
-    showDropbox(!isLoading && !isLoaded);
-  }
-
-  /**
-   * Show/hide the data load drop box.
-   * @param show True to show the drop box.
-   */
-  const showDropbox = (show) => {
-    const box = document.getElementById(dropboxDivId);
-    if (!box) {
-      return;
-    }
-    const layerDiv = document.getElementById('layerGroup0');
-
-    if (show) {
-      // reset css class
-      box.className = dropboxClassName + ' ' + borderClassName;
-      // show box
-      box.setAttribute('style', 'display:initial');
-      // stop layer listening
-      if (layerDiv) {
-        layerDiv.removeEventListener('dragover', defaultHandleDragEvent);
-        layerDiv.removeEventListener('dragleave', defaultHandleDragEvent);
-        layerDiv.removeEventListener('drop', onDrop);
-      }
-      // listen to box events
-      box.addEventListener('dragover', onBoxDragOver);
-      box.addEventListener('dragleave', onBoxDragLeave);
-      box.addEventListener('drop', onDrop);
-    } else {
-      // remove border css class
-      box.className = dropboxClassName;
-      // hide box
-      box.setAttribute('style', 'display:none');
-      // stop box listening
-      box.removeEventListener('dragover', onBoxDragOver);
-      box.removeEventListener('dragleave', onBoxDragLeave);
-      box.removeEventListener('drop', onDrop);
-      // listen to layer events
-      if (layerDiv) {
-        layerDiv.addEventListener('dragover', defaultHandleDragEvent);
-        layerDiv.addEventListener('dragleave', defaultHandleDragEvent);
-        layerDiv.addEventListener('drop', onDrop);
-      }
-    }
-  }
-
-  // drag and drop [end] -------------------------------------------------------
+  const boxClassName = 'dropBox dropBoxBorder' + (isDragHover ? ' hover' : '');
 
   return (
     <Root className="content">
-      <div id="layerGroup0" className="layerGroup">
+      <div id="layerGroup0" className="layerGroup"
+        onDragOver={preventDefaultDrag}
+        onDragLeave={preventDefaultDrag}
+        onDrop={onDrop}
+        >
         <div id="dropBox"
-          className="dropBox dropBoxBorder"
+          className={boxClassName}
+          style={{display: showDropbox ? 'initial' : 'none'}}
           onDragOver={onBoxDragOver}
           onDragLeave={onBoxDragLeave}
           onDrop={onDrop}
