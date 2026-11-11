@@ -317,6 +317,14 @@ export class DwvAppService extends EventTarget {
   }
 
   /**
+   * Fit the view to its container: to call when the container
+   *   size changes without a window resize (for ex a side panel).
+   */
+  resize() {
+    this.#dwvApp.onResize();
+  }
+
+  /**
    * Load a list of urls.
    *
    * @param {string[]} urls The urls.

@@ -1,10 +1,13 @@
 import {
   useState,
   useEffect,
+  useRef,
 } from 'react';
 import { styled } from '@mui/material/styles';
 
 import { useDwvAppService } from '../services/DwvAppServiceProvider.jsx';
+
+import RightPanel from './RightPanel.jsx';
 
 import './Content.css';
 
@@ -26,6 +29,30 @@ const Content = () => {
   const [loadProgress, setLoadProgress] = useState(0);
   const [dataLoaded, setDataLoaded] = useState(false);
   const [isDragHover, setIsDragHover] = useState(false);
+
+  const layerGroupRef = useRef(null);
+
+  // fit the view when the layer group size changes
+  // (for ex when the right panel is opened or resized)
+  useEffect(() => {
+    const element = layerGroupRef.current;
+    if (!element || typeof ResizeObserver === 'undefined') {
+      return;
+    }
+    let isFirst = true;
+    const observer = new ResizeObserver(() => {
+      // skip the initial call made on observe
+      if (isFirst) {
+        isFirst = false;
+        return;
+      }
+      dwvAppService.resize();
+    });
+    observer.observe(element);
+    return () => {
+      observer.disconnect();
+    };
+  }, [dwvAppService]);
 
   useEffect(() => {
     const handleLoadProgress = (event) => {
@@ -94,6 +121,7 @@ const Content = () => {
   return (
     <Root className="content">
       <div id="layerGroup0" className="layerGroup"
+        ref={layerGroupRef}
         onDragOver={preventDefaultDrag}
         onDragLeave={preventDefaultDrag}
         onDrop={onDrop}
@@ -118,6 +146,7 @@ const Content = () => {
           </p>
         </div>
       </div>
+      <RightPanel />
     </Root>
   );
 

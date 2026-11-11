@@ -11,6 +11,9 @@
   justify-content: center;
   flex: 1;
   min-height: 0;
+  /* allow shrinking when the right panel opens */
+  min-width: 0;
+  overflow: hidden;
 }
 .layer {
   position: absolute;

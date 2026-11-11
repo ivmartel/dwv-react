@@ -25,7 +25,7 @@ vi.mock('dwv', () => {
     render = vi.fn();
     resetZoomPan = vi.fn();
     defaultOnKeydown = vi.fn();
-    onResize = () => {};
+    onResize = vi.fn();
     constructor() {
       FakeApp.instances.push(this);
     }
@@ -371,6 +371,12 @@ describe('DwvAppService', () => {
     expect(remove).toHaveBeenCalledWith('resize', app.onResize);
     add.mockRestore();
     remove.mockRestore();
+  });
+
+  it('fits the view on resize', () => {
+    const {app, service} = setup();
+    service.resize();
+    expect(app.onResize).toHaveBeenCalledTimes(1);
   });
 
   it('forwards key events to dwv', () => {

@@ -1,0 +1,33 @@
+.rightPanel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: none;
+  min-height: 0;
+  text-align: left;
+}
+
+/* toggle button bar */
+.rightPanelBar {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.rightPanelContent {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 0 8px 8px 8px;
+}
+
+/* drag handle on the left border */
+.resizeHandle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -3px;
+  width: 6px;
+  cursor: col-resize;
+  touch-action: none;
+  z-index: 10;
+}
