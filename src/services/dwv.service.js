@@ -86,11 +86,12 @@ export class DwvService extends EventTarget {
   #metaData;
 
   /**
-   * List of preset names: set after first render.
+   * List of preset names: set after first render
+   *   (empty before, so that 'wlchange' can safely use it).
    *
    * @type {string[]}
    */
-  #presetNames;
+  #presetNames = [];
 
   /**
    * Data id of the active image: the last image that was
@@ -181,10 +182,13 @@ export class DwvService extends EventTarget {
    */
   #setupLoadListeners() {
     // handle load events
-    let nReceivedLoadError = 0;
+    // error messages received during the current load(s)
+    let loadErrors = [];
     let nReceivedLoadAbort = 0;
     // ids of the loading data that have not been rendered yet
     const notYetRendered = new Set();
+    // ids of the data being loaded
+    const loading = new Set();
     this.#dwvApp.addEventListener('loadstart', (event) => {
       // reset flags only if there is no displayed data:
       // otherwise the new data will be an overlay
@@ -192,9 +196,10 @@ export class DwvService extends EventTarget {
         this.#dispatch('dataready', {value: false});
         this.#dispatch('dataloaded', {value: false});
       }
-      nReceivedLoadError = 0;
+      loadErrors = [];
       nReceivedLoadAbort = 0;
       notYetRendered.add(event.dataid);
+      loading.add(event.dataid);
     });
     this.#dwvApp.addEventListener('loadprogress', (event) => {
       this.#dispatch('loadprogress', {value: event.loaded});
@@ -232,28 +237,43 @@ export class DwvService extends EventTarget {
     });
     this.#dwvApp.addEventListener('loadend', (event) => {
       notYetRendered.delete(event.dataid);
-      if (nReceivedLoadError) {
+      loading.delete(event.dataid);
+      if (loadErrors.length !== 0) {
         this.#dispatch('loadprogress', {value: 0});
-        alert('Received errors during load. Check log for details.');
+        let message = 'Load error: ' + loadErrors[0];
+        if (loadErrors.length > 1) {
+          message += ' (+' + (loadErrors.length - 1) +
+            ' more, check log for details)';
+        }
+        this.#dispatch('error', {value: message});
+        loadErrors = [];
       }
       if (nReceivedLoadAbort) {
         this.#dispatch('loadprogress', {value: 0});
-        alert('Load was aborted.');
+        this.#dispatch('error', {value: 'Load was aborted.'});
+        nReceivedLoadAbort = 0;
       }
     });
-    this.#dwvApp.addEventListener('loaderror', (event) => {
+    // dwv (0.36) fires load errors as 'error' (and aborts as 'abort'),
+    // render errors (for example an overlay with incompatible
+    // geometry) are also fired as 'error'
+    const onError = (event) => {
       console.error(event.error);
-      ++nReceivedLoadError;
-    });
-    this.#dwvApp.addEventListener('loadabort', (/*event*/) => {
+      const message = event.error?.message ?? String(event.error);
+      if (loading.size !== 0) {
+        // reported at load end
+        loadErrors.push(message);
+      } else {
+        this.#dispatch('error', {value: message});
+      }
+    };
+    this.#dwvApp.addEventListener('loaderror', onError);
+    this.#dwvApp.addEventListener('error', onError);
+    const onAbort = () => {
       ++nReceivedLoadAbort;
-    });
-    // generic app error, for example an overlay with
-    // incompatible geometry
-    this.#dwvApp.addEventListener('error', (event) => {
-      console.error(event.error);
-      alert('Cannot display data: ' + event.error?.message);
-    });
+    };
+    this.#dwvApp.addEventListener('loadabort', onAbort);
+    this.#dwvApp.addEventListener('abort', onAbort);
   }
 
   /**
