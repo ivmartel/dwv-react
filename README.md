@@ -11,15 +11,15 @@ dwv-react is not certified for diagnostic use. Released under GNU GPL-3.0 licens
 ## Available Scripts
 
  - `install`: install dependencies
- - `start`: serve with hot reload at localhost:3000
- - `test`: run unit tests
+ - `dev`: serve with hot reload at localhost:5173
+ - `lint`: lint the code with [ESLint](https://eslint.org/)
+ - `test`: run unit tests (watch mode)
+ - `test-ci`: run unit tests once with coverage
  - `build`: build for production
 
-Unit tests use [Jest](https://facebook.github.io/jest/).
+Unit tests use [Vitest](https://vitest.dev/) and [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/).
 
-This project was generated with the [Create React App](https://github.com/facebookincubator/create-react-app) version 1.1.1.
-
-More details in the [user guide](https://github.com/facebook/create-react-app/blob/master/packages/react-scripts/template/README.md).
+This project uses [Vite](https://vite.dev/) and [Yarn](https://yarnpkg.com/) (enable it with `corepack enable`).
 
 ## Steps to run the viewer from scratch
 
@@ -33,11 +33,11 @@ cd dwv-react
 # install dependencies
 yarn install
 
-# call the start script to launch the viewer on a local server
-yarn run start
+# call the dev script to launch the viewer on a local server
+yarn run dev
 ```
 
-You can now open a browser at http://localhost:3000 and enjoy!
+You can now open a browser at http://localhost:5173 and enjoy!
 
 ## DWVs' Web workers
 Web workers used in dwv do not get automatically imported in the dev environment or build,
