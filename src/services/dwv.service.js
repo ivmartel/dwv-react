@@ -92,6 +92,16 @@ export class DwvService extends EventTarget {
    */
   #presetNames;
 
+  /**
+   * Data id of the active image: the last image that was
+   *   successfully rendered. Undefined if no image is displayed.
+   * Data loaded after the first one is displayed as an overlay
+   *   and becomes the active image.
+   *
+   * @type {string|undefined}
+   */
+  #activeDataId;
+
   constructor() {
     super();
 
@@ -173,21 +183,26 @@ export class DwvService extends EventTarget {
     // handle load events
     let nReceivedLoadError = 0;
     let nReceivedLoadAbort = 0;
-    let isFirstRender = false;
-    this.#dwvApp.addEventListener('loadstart', (/*event*/) => {
-      // reset flags
-      this.#dispatch('dataready', {value: false});
-      this.#dispatch('dataloaded', {value: false});
+    // ids of the loading data that have not been rendered yet
+    const notYetRendered = new Set();
+    this.#dwvApp.addEventListener('loadstart', (event) => {
+      // reset flags only if there is no displayed data:
+      // otherwise the new data will be an overlay
+      if (this.#activeDataId === undefined) {
+        this.#dispatch('dataready', {value: false});
+        this.#dispatch('dataloaded', {value: false});
+      }
       nReceivedLoadError = 0;
       nReceivedLoadAbort = 0;
-      isFirstRender = true;
+      notYetRendered.add(event.dataid);
     });
     this.#dwvApp.addEventListener('loadprogress', (event) => {
       this.#dispatch('loadprogress', {value: event.loaded});
     });
     this.#dwvApp.addEventListener('renderend', (event) => {
-      if (isFirstRender) {
-        isFirstRender = false;
+      if (notYetRendered.has(event.dataid)) {
+        notYetRendered.delete(event.dataid);
+        this.#activeDataId = event.dataid;
         const vl = this.#dwvApp.getViewLayersByDataId(event.dataid)[0];
         const vc = vl.getViewController();
         // available tools
@@ -200,18 +215,23 @@ export class DwvService extends EventTarget {
       }
     });
     this.#dwvApp.addEventListener('load', (event) => {
-      // set dicom tags
-      this.#metaData = structuredClone(this.#dwvApp.getMetaData(event.dataid));
-      const pixelDataKey = '7FE00010';
-      if (typeof this.#metaData[pixelDataKey] !== 'undefined') {
-        delete this.#metaData[pixelDataKey];
+      // set dicom tags if the data is displayed
+      // (an overlay can be rejected at render, see 'error')
+      if (event.dataid === this.#activeDataId) {
+        this.#metaData =
+          structuredClone(this.#dwvApp.getMetaData(event.dataid));
+        const pixelDataKey = '7FE00010';
+        if (typeof this.#metaData[pixelDataKey] !== 'undefined') {
+          delete this.#metaData[pixelDataKey];
+        }
       }
       // force progress
       this.#dispatch('loadprogress', {value: 100});
       // set data loaded flag
-      this.#dispatch('dataloaded', {value: true});
+      this.#dispatch('dataloaded', {value: this.#activeDataId !== undefined});
     });
-    this.#dwvApp.addEventListener('loadend', (/*event*/) => {
+    this.#dwvApp.addEventListener('loadend', (event) => {
+      notYetRendered.delete(event.dataid);
       if (nReceivedLoadError) {
         this.#dispatch('loadprogress', {value: 0});
         alert('Received errors during load. Check log for details.');
@@ -227,6 +247,12 @@ export class DwvService extends EventTarget {
     });
     this.#dwvApp.addEventListener('loadabort', (/*event*/) => {
       ++nReceivedLoadAbort;
+    });
+    // generic app error, for example an overlay with
+    // incompatible geometry
+    this.#dwvApp.addEventListener('error', (event) => {
+      console.error(event.error);
+      alert('Cannot display data: ' + event.error?.message);
     });
   }
 
@@ -340,15 +366,22 @@ export class DwvService extends EventTarget {
     }
 
     const lg = this.#dwvApp.getActiveLayerGroup();
+    if (lg === undefined) {
+      return;
+    }
     if (toolName === 'Draw') {
-      // reuse created draw layer
-      if (lg !== undefined && lg.getNumberOfLayers() > 1) {
-        lg?.setActiveLayer(1);
+      // reuse the last created draw layer if any
+      // (otherwise the draw tool will create one on the active image)
+      const drawLayers = lg.getDrawLayers();
+      if (drawLayers.length !== 0) {
+        lg.setActiveLayerByDataId(drawLayers.at(-1).getDataId());
+      } else if (this.#activeDataId !== undefined) {
+        lg.setActiveLayerByDataId(this.#activeDataId);
       }
-    } else {
+    } else if (this.#activeDataId !== undefined) {
       // if draw was created, active is now a draw layer...
-      // reset to view layer
-      lg?.setActiveLayer(0);
+      // reset to the active image
+      lg.setActiveLayerByDataId(this.#activeDataId);
     }
   }
 
@@ -358,12 +391,11 @@ export class DwvService extends EventTarget {
    * @param {string} presetName The preset name.
    */
   applyPreset(presetName) {
-    const lg = this.#dwvApp.getActiveLayerGroup();
-    if (lg !== undefined) {
-      const vl = lg.getViewLayersFromActive()[0];
-      const vc = vl.getViewController();
-      vc.setWindowLevelPreset(presetName);
+    if (this.#activeDataId === undefined) {
+      return;
     }
+    const vl = this.#dwvApp.getViewLayersByDataId(this.#activeDataId)[0];
+    vl?.getViewController().setWindowLevelPreset(presetName);
   }
 
   /**
