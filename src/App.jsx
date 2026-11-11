@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import {
   CssBaseline,
   ThemeProvider,
@@ -13,10 +14,7 @@ import './App.css';
 
 export default function App() {
     const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
-    const theme = createTheme({
-      typography: {
-        useNextVariants: true,
-      },
+    const theme = useMemo(() => createTheme({
       palette: {
         primary: {
           main: colors.indigo[500]
@@ -26,7 +24,7 @@ export default function App() {
         },
         mode: prefersDarkMode ? 'dark' : 'light',
       }
-    });
+    }), [prefersDarkMode]);
 
     return (
       <ThemeProvider theme={theme}>
