@@ -1,5 +1,7 @@
-import React from 'react';
-import { styled } from '@mui/material/styles';
+import {
+  useMemo,
+  useState
+} from 'react';
 import {
   InputAdornment,
   TextField,
@@ -19,249 +21,206 @@ import { getTagFromKey } from 'dwv';
 
 import Search from '@mui/icons-material/Search';
 
-const PREFIX = 'TagsTable';
-const classes = {
-  flex: `${PREFIX}-flex`,
-  spacer: `${PREFIX}-spacer`,
-  searchField: `${PREFIX}-searchField`,
-  slider: `${PREFIX}-slider`,
-  container: `${PREFIX}-container`
+/**
+ * Get the sorted instance numbers ('00200013') of the meta data.
+ *
+ * @param {object} metaData The meta data.
+ * @returns {number[]} The sorted list, empty if no instance number.
+ */
+const getInstanceNumbers = (metaData) => {
+  const instanceElement = metaData['00200013'];
+  if (typeof instanceElement === 'undefined') {
+    return [];
+  }
+  let values = instanceElement.value;
+  if (typeof values === 'string') {
+    values = [values];
+  }
+  return values.map(Number).sort((a, b) => a - b);
 };
 
-const Root = styled('div')(({theme}) => ({
-  [`& .${classes.flex}`]: {
-    flex: 1,
-  },
+/**
+ * Check if the meta data is DICOM.
+ *
+ * @param {object} metaData The meta data.
+ * @returns {boolean} True if DICOM.
+ */
+const isDicomMeta = (metaData) => {
+  return typeof metaData['00020010'] !== 'undefined';
+};
 
-  [`& .${classes.spacer}`]: {
-    flex: '1 1 100%',
-  },
-
-  [`& .${classes.searchField}`]: {
-    width: "45%"
-  },
-
-  [`& .${classes.slider}`]: {
-    margin: 20
-  },
-
-  [`&.${classes.container}`]: {
-    padding: 10,
-    overflow: "hidden"
-  }
-}));
-
-class TagsTable extends React.Component {
-
-  constructor(props) {
-    super(props);
-
-    const fullMetaData = this.props.data;
-
-    this.state = {
-      fullMetaData: fullMetaData,
-      searchfor: "",
-      instanceNumber: 0
-    };
-
-    // set slider with instance numbers ('00200013')
-    const instanceElement = fullMetaData['00200013'];
-    if (typeof instanceElement !== 'undefined') {
-      let instanceNumberValue = instanceElement.value;
-      if (typeof instanceNumberValue === 'string') {
-        instanceNumberValue = [instanceNumberValue];
-      }
-      // convert string to numbers
-      this.state.instanceNumbers = instanceNumberValue.map(Number);
-      this.state.instanceNumbers.sort((a, b) => a - b);
-      this.state.sliderMin = 0;
-      this.state.sliderMax = this.state.instanceNumbers.length - 1;
-      this.state.instanceNumber = this.state.instanceNumbers[
-        this.state.sliderMin
-      ];
-    }
-
-    this.state.displayData = this.getMetaArray(this.state.instanceNumber);
-
-    // bind listener
-    this.filterList = this.filterList.bind(this);
-  }
-
-  filterList(search, instanceNumber) {
-    var searchLo = search.toLowerCase();
-    var metaArray = this.getMetaArray(instanceNumber);
-    var updatedList = metaArray.filter( function (item) {
-      for ( var key in item ) {
-        if( item.hasOwnProperty(key) ) {
-          var value = item[key];
-          if (typeof value !== 'undefined') {
-            if ( typeof value !== "string" ) {
-              value = value.toString();
-            }
-            if ( value.toLowerCase().indexOf(searchLo) !== -1 ) {
-              return true;
-            }
-          }
-        }
-      }
-      return false;
+/**
+ * Get a non DICOM tag reducer.
+ *
+ * @param {object} tagData The meta data.
+ * @returns {Function} The reducer.
+ */
+const getTagReducer = (tagData) => {
+  return (accumulator, currentValue) => {
+    accumulator.push({
+      name: currentValue,
+      value: tagData[currentValue].value
     });
-    this.setState({searchfor: search, displayData: updatedList});
-  }
+    return accumulator;
+  };
+};
 
-  getMetaArray(instanceNumber) {
-    let reducer;
-    if (this.isDicomMeta(this.state.fullMetaData)) {
-      reducer = this.getDicomTagReducer(this.state.fullMetaData, instanceNumber, '');
+/**
+ * Get a DICOM tag reducer.
+ *
+ * @param {object} tagData The meta data.
+ * @param {number} instanceNumber The instance number.
+ * @param {string} prefix The tag name prefix (used for sequences).
+ * @returns {Function} The reducer.
+ */
+const getDicomTagReducer = (tagData, instanceNumber, prefix) => {
+  return (accumulator, currentValue) => {
+    const tag = getTagFromKey(currentValue);
+    let name = tag.getNameFromDictionary();
+    if (typeof name === 'undefined') {
+      // add 'x' to help sorting
+      name = 'x' + tag.getKey();
+    }
+    const element = tagData[currentValue];
+    let value = element.value;
+    // possible 'merged' object
+    // (use slice method as test for array and typed array)
+    if (typeof value.slice === 'undefined' &&
+      typeof value[instanceNumber] !== 'undefined') {
+      value = value[instanceNumber];
+    }
+    // force instance number (otherwise takes value in non indexed array)
+    if (name === 'InstanceNumber') {
+      value = instanceNumber;
+    }
+    const fullName = (prefix ? prefix + ' ' : '') + name;
+    // recurse for sequence
+    if (element.vr === 'SQ') {
+      // sequence tag
+      accumulator.push({name: fullName, value: ''});
+      // sequence value
+      for (let i = 0; i < value.length; ++i) {
+        const sqItems = value[i];
+        const res = Object.keys(sqItems).reduce(
+          getDicomTagReducer(sqItems, instanceNumber, prefix + '[' + i + ']'),
+          []
+        );
+        accumulator = accumulator.concat(res);
+      }
     } else {
-      reducer = this.getTagReducer(this.state.fullMetaData);
+      // shorten long 'o'ther data
+      if (element.vr[0] === 'O' && value.length > 10) {
+        value = value.slice(0, 10).toString() +
+          '... (len:' + value.length + ')';
+      }
+      accumulator.push({name: fullName, value: value.toString()});
     }
-    const keys = Object.keys(this.state.fullMetaData);
-    return keys.reduce(reducer, []);
-  }
+    return accumulator;
+  };
+};
 
-  isDicomMeta(meta) {
-    return typeof meta['00020010'] !== 'undefined';
-  }
+/**
+ * Get the list of {name, value} items of the meta data.
+ *
+ * @param {object} metaData The meta data.
+ * @param {number} instanceNumber The instance number.
+ * @returns {object[]} The list of items.
+ */
+const getMetaArray = (metaData, instanceNumber) => {
+  const reducer = isDicomMeta(metaData)
+    ? getDicomTagReducer(metaData, instanceNumber, '')
+    : getTagReducer(metaData);
+  return Object.keys(metaData).reduce(reducer, []);
+};
 
-  getTagReducer(tagData) {
-    return function (accumulator, currentValue) {
-      accumulator.push({
-        name: currentValue,
-        value: tagData[currentValue].value
-      });
-      return accumulator;
-    };
-  }
+/**
+ * Filter a list of items: keep the ones with a name or value
+ *   containing the search string (case insensitive).
+ *
+ * @param {object[]} items The list of {name, value} items.
+ * @param {string} search The search string.
+ * @returns {object[]} The filtered list.
+ */
+const filterItems = (items, search) => {
+  const searchLo = search.toLowerCase();
+  return items.filter((item) => Object.values(item).some(
+    (value) => typeof value !== 'undefined' &&
+      String(value).toLowerCase().includes(searchLo)
+  ));
+};
 
-  getDicomTagReducer(tagData, instanceNumber, prefix) {
-    return (accumulator, currentValue) => {
-      const tag = getTagFromKey(currentValue);
-      let key = tag.getNameFromDictionary();
-      if (typeof key === 'undefined') {
-        // add 'x' to help sorting
-        key = 'x' + tag.getKey();
-      }
-      const name = key;
-      const element = tagData[currentValue];
-      let value = element.value;
-      // possible 'merged' object
-      // (use slice method as test for array and typed array)
-      if (typeof value.slice === 'undefined' &&
-        typeof value[instanceNumber] !== 'undefined') {
-        value = value[instanceNumber];
-      }
-      // force instance number (otherwise takes value in non indexed array)
-      if (name === 'InstanceNumber') {
-        value = instanceNumber;
-      }
-      // recurse for sequence
-      if (element.vr === 'SQ') {
-        // sequence tag
-        accumulator.push({
-          name: (prefix ? prefix + ' ' : '') + name,
-          value: ''
-        });
-        // sequence value
-        for (let i = 0; i < value.length; ++i) {
-          const sqItems = value[i];
-          const keys = Object.keys(sqItems);
-          const res = keys.reduce(
-            this.getDicomTagReducer(sqItems, instanceNumber, prefix + '[' + i + ']'), []
-          );
-          accumulator = accumulator.concat(res);
-        }
-      } else {
-        // shorten long 'o'ther data
-        if (element.vr[0] === 'O' && value.length > 10) {
-          value = value.slice(0, 10).toString() + '... (len:' + value.length + ')';
-        }
-        accumulator.push({
-          name: (prefix ? prefix + ' ' : '') + name,
-          value: value.toString()
-        });
-      }
-      return accumulator;
-    }
-  }
+const TagsTable = ({ data }) => {
 
-  onSliderChange = (event) => {
-    const sliderValue = parseInt(event.target.value, 10);
-    const instanceNumber = this.state.instanceNumbers[sliderValue];
-    const metaArray = this.getMetaArray(instanceNumber);
-    this.setState({
-      instanceNumber: instanceNumber,
-      displayData: metaArray
-    });
-    this.filterList(this.state.searchfor, instanceNumber);
-  }
+  const instanceNumbers = useMemo(() => getInstanceNumbers(data), [data]);
+  const [sliderIndex, setSliderIndex] = useState(0);
+  const [search, setSearch] = useState('');
 
-  onSearch = (event) => {
-    var search = event.target.value;
-    this.filterList(search, this.state.instanceNumber);
-  }
+  const instanceNumber = instanceNumbers.length !== 0
+    ? instanceNumbers[sliderIndex]
+    : 0;
 
-  render() {
-    const { displayData, searchfor, sliderMin, sliderMax } = this.state;
+  const displayData = useMemo(
+    () => filterItems(getMetaArray(data, instanceNumber), search),
+    [data, instanceNumber, search]
+  );
 
-    return (
-      <Root className={classes.container}>
-        <Stack direction="row" spacing={2}>
-          <TextField
-            id="search"
-            type="search"
-            value={searchfor}
-            className={classes.searchField}
-            onChange={this.onSearch}
-            margin="normal"
-            size="small"
-            slotProps={{
-              input: {
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Search />
-                  </InputAdornment>
-                )
-              }
-            }}
+  return (
+    <Box sx={{padding: '10px', overflow: 'hidden'}}>
+      <Stack direction="row" spacing={2}>
+        <TextField
+          id="search"
+          type="search"
+          value={search}
+          sx={{width: '45%'}}
+          onChange={(event) => setSearch(event.target.value)}
+          margin="normal"
+          size="small"
+          slotProps={{
+            input: {
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Search />
+                </InputAdornment>
+              )
+            }
+          }}
+        />
+        <Box sx={{width: 300, display: 'flex', alignItems: 'center'}}>
+          <Slider
+            title="Instance number"
+            sx={{margin: '20px'}}
+            marks
+            min={0}
+            max={Math.max(instanceNumbers.length - 1, 0)}
+            value={sliderIndex}
+            onChange={(_event, value) => setSliderIndex(value)}
           />
-          <Box width={300} display='flex' alignItems="center">
-            <Slider
-              title="Instance number"
-              className={classes.slider}
-              marks
-              min={sliderMin}
-              max={sliderMax}
-              onChange={this.onSliderChange}
-            />
-            <div title="Instante number">{this.state.instanceNumber}</div>
-          </Box>
-        </Stack>
-        <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-          <TableContainer sx={{ maxHeight: 400 }}>
-            <Table stickyHeader className={classes.table}>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Tag</TableCell>
-                  <TableCell>Value</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-              {displayData.map((item, index) => {
-                return (
-                  <TableRow key={index}>
-                    <TableCell>{item.name}</TableCell>
-                    <TableCell>{item.value}</TableCell>
-                  </TableRow>
-                );
-              })}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Paper>
-      </Root>
-    );
-  }
-}
+          <div title="Instance number">{instanceNumber}</div>
+        </Box>
+      </Stack>
+      <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+        <TableContainer sx={{ maxHeight: 400 }}>
+          <Table stickyHeader>
+            <TableHead>
+              <TableRow>
+                <TableCell>Tag</TableCell>
+                <TableCell>Value</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+            {displayData.map((item, index) => (
+              <TableRow key={index}>
+                <TableCell>{item.name}</TableCell>
+                <TableCell>{item.value}</TableCell>
+              </TableRow>
+            ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Paper>
+    </Box>
+  );
+
+} // TagsTable
 
 export default (TagsTable);
