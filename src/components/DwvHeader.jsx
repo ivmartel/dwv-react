@@ -275,7 +275,7 @@ const Header = () => {
 
     const toolsButtons = toolNames.map( (tool) => {
       let res = [
-        <div key="{{ tool }}-item" className="toolbar-item">
+        <div key={`${tool}-item`} className="toolbar-item">
           <Button
             value={tool}
             key={tool}
@@ -399,7 +399,7 @@ const Header = () => {
               <IconButton color="inherit" onClick={handleTagsDialogClose} aria-label="Close">
                 <CloseIcon />
               </IconButton>
-              <Typography variant="h6" color="inherit" className={classes.flex}>
+              <Typography variant="h6" color="inherit">
                 DICOM Tags
               </Typography>
             </Toolbar>
