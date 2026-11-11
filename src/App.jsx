@@ -8,7 +8,7 @@ import {
 } from '@mui/material';
 
 import DwvComponent from './components/DwvComponent.jsx';
-import { DwvServiceProvider } from './services/DwvServiceProvider.jsx';
+import { DwvAppServiceProvider } from './services/DwvAppServiceProvider.jsx';
 
 import './App.css';
 
@@ -29,11 +29,11 @@ export default function App() {
     return (
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <DwvServiceProvider>
+        <DwvAppServiceProvider>
           <div className="App">
             <DwvComponent />
           </div>
-        </DwvServiceProvider>
+        </DwvAppServiceProvider>
       </ThemeProvider>
     );
 }

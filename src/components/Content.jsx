@@ -4,9 +4,9 @@ import {
 } from 'react';
 import { styled } from '@mui/material/styles';
 
-import { useDwvService } from '../services/DwvServiceProvider.jsx';
+import { useDwvAppService } from '../services/DwvAppServiceProvider.jsx';
 
-import './DwvContent.css';
+import './Content.css';
 
 const Root = styled('div')();
 
@@ -21,7 +21,7 @@ const preventDefaultDrag = (event) => {
 
 const Content = () => {
 
-  const dwvService = useDwvService();
+  const dwvAppService = useDwvAppService();
 
   const [loadProgress, setLoadProgress] = useState(0);
   const [dataLoaded, setDataLoaded] = useState(false);
@@ -36,15 +36,15 @@ const Content = () => {
     };
 
     // subscribe
-    dwvService.addEventListener('loadprogress', handleLoadProgress);
-    dwvService.addEventListener('dataloaded', handleDataLoaded);
+    dwvAppService.addEventListener('loadprogress', handleLoadProgress);
+    dwvAppService.addEventListener('dataloaded', handleDataLoaded);
 
     // cleanup
     return () => {
-      dwvService.removeEventListener('loadprogress', handleLoadProgress);
-      dwvService.removeEventListener('dataloaded', handleDataLoaded);
+      dwvAppService.removeEventListener('loadprogress', handleLoadProgress);
+      dwvAppService.removeEventListener('dataloaded', handleDataLoaded);
     };
-  }, [dwvService]);
+  }, [dwvAppService]);
 
   // the drop box is shown when not loading and no data is loaded
   const isLoading = loadProgress !== 0 && loadProgress !== 100;
@@ -76,7 +76,7 @@ const Content = () => {
   const onDrop = (event) => {
     preventDefaultDrag(event);
     setIsDragHover(false);
-    dwvService.loadFiles(event.dataTransfer.files);
+    dwvAppService.loadFiles(event.dataTransfer.files);
   };
 
   /**
@@ -85,7 +85,7 @@ const Content = () => {
    */
   const onInputFile = (event) => {
     if (event.target && event.target.files) {
-      dwvService.loadFiles(event.target.files);
+      dwvAppService.loadFiles(event.target.files);
     }
   };
 

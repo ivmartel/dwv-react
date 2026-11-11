@@ -76,7 +76,7 @@ vi.mock('dwv', () => {
 });
 
 import { App } from 'dwv';
-import { DwvService } from './dwv.service.js';
+import { DwvAppService } from './DwvAppService.js';
 
 const EVENT_TYPES = [
   'loadprogress', 'dataready', 'dataloaded',
@@ -89,7 +89,7 @@ const EVENT_TYPES = [
  * @returns {object} {service, app, events, eventsOf}
  */
 const setup = () => {
-  const service = new DwvService();
+  const service = new DwvAppService();
   const app = App.instances.at(-1);
   const events = [];
   for (const type of EVENT_TYPES) {
@@ -143,7 +143,7 @@ const simulateLoad = (app, dataId, viewLayer = fakeViewLayer()) => {
   app.fire('loadend', {dataid: dataId});
 };
 
-describe('DwvService', () => {
+describe('DwvAppService', () => {
 
   it('initialises the dwv app', () => {
     const {app, service} = setup();

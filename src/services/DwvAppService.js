@@ -10,7 +10,7 @@ import { overlayConfig } from './overlays';
 /**
  * DWV service.
  */
-export class DwvService extends EventTarget {
+export class DwvAppService extends EventTarget {
   /**
    * List of annotation shape names.
    *

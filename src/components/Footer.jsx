@@ -5,18 +5,18 @@ import {
   Link,
 } from '@mui/material';
 
-import { useDwvService } from '../services/DwvServiceProvider.jsx';
+import { useDwvAppService } from '../services/DwvAppServiceProvider.jsx';
 
-import './DwvFooter.css';
+import './Footer.css';
 
 const Root = styled('div')();
 
 const Footer = () => {
 
-  const dwvService = useDwvService();
+  const dwvAppService = useDwvAppService();
 
   const versions = {
-    dwv: dwvService.getDwvVersion(),
+    dwv: dwvAppService.getDwvVersion(),
     react: version
   };
 

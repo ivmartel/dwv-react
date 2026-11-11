@@ -17,7 +17,7 @@ import {
   Toolbar
 } from '@mui/material';
 
-import { useDwvService } from '../services/DwvServiceProvider.jsx';
+import { useDwvAppService } from '../services/DwvAppServiceProvider.jsx';
 
 import TagsTable from './TagsTable.jsx';
 
@@ -38,7 +38,7 @@ import SportsRugbyIcon from '@mui/icons-material/SportsRugby';
 import SquareFootIcon from '@mui/icons-material/SquareFoot';
 import PolylineIcon from '@mui/icons-material/Polyline';
 
-import './DwvHeader.css';
+import './Header.css';
 
 const PREFIX = 'Header';
 const classes = {
@@ -57,12 +57,12 @@ export const TransitionUp = forwardRef((props, ref) => (
 
 const Header = () => {
 
-  const dwvService = useDwvService();
+  const dwvAppService = useDwvAppService();
 
   const [loadProgress, setLoadProgress] = useState(0);
   const [dataLoaded, setDataLoaded] = useState(false);
-  const [toolNames] = useState(dwvService.getToolNames());
-  const [shapeNames] = useState(dwvService.getShapeNames());
+  const [toolNames] = useState(dwvAppService.getToolNames());
+  const [shapeNames] = useState(dwvAppService.getShapeNames());
   const [selectedTool, setSelectedTool] = useState('');
   const [selectedShape, setSelectedShape] = useState(shapeNames[0]);
   // latest selected shape, readable from the (mount time) event handlers
@@ -79,8 +79,8 @@ const Header = () => {
     if (typeof features === 'undefined' && tool === 'Draw') {
       features = {shapeName: selectedShapeRef.current};
     }
-    dwvService.applyTool(tool, features);
-  }, [dwvService]);
+    dwvAppService.applyTool(tool, features);
+  }, [dwvAppService]);
   const [presetNames, setPresetNames] = useState([]);
   const [selectedPreset, setSelectedPreset] = useState('');
   const [metaData, setMetaData] = useState(undefined);
@@ -95,7 +95,7 @@ const Header = () => {
     const handleDataReady = (event) => {
       const dataReady = event.detail.value;
       if (dataReady) {
-        const runnableTool = dwvService.getFirstRunnableTool();
+        const runnableTool = dwvAppService.getFirstRunnableTool();
         if (runnableTool !== undefined) {
           setSelectedTool(runnableTool);
           applyTool(runnableTool);
@@ -105,7 +105,7 @@ const Header = () => {
     const handleDataLoaded = (event) => {
       const isLoaded = event.detail.value;
       setDataLoaded(isLoaded);
-      setMetaData(dwvService.getMetaData());
+      setMetaData(dwvAppService.getMetaData());
     };
     const handlePresetNames = (event) => {
       setPresetNames(event.detail.value);
@@ -120,21 +120,21 @@ const Header = () => {
     };
 
     // subscribe
-    dwvService.addEventListener('loadprogress', handleLoadProgress);
-    dwvService.addEventListener('dataready', handleDataReady);
-    dwvService.addEventListener('dataloaded', handleDataLoaded);
-    dwvService.addEventListener('presetnames', handlePresetNames);
-    dwvService.addEventListener('ismanualpreset', handleIsManualPreset);
+    dwvAppService.addEventListener('loadprogress', handleLoadProgress);
+    dwvAppService.addEventListener('dataready', handleDataReady);
+    dwvAppService.addEventListener('dataloaded', handleDataLoaded);
+    dwvAppService.addEventListener('presetnames', handlePresetNames);
+    dwvAppService.addEventListener('ismanualpreset', handleIsManualPreset);
 
     // cleanup
     return () => {
-      dwvService.removeEventListener('loadprogress', handleLoadProgress);
-      dwvService.removeEventListener('dataready', handleDataReady);
-      dwvService.removeEventListener('dataloaded', handleDataLoaded);
-      dwvService.removeEventListener('presetnames', handlePresetNames);
-      dwvService.removeEventListener('ismanualpreset', handleIsManualPreset);
+      dwvAppService.removeEventListener('loadprogress', handleLoadProgress);
+      dwvAppService.removeEventListener('dataready', handleDataReady);
+      dwvAppService.removeEventListener('dataloaded', handleDataLoaded);
+      dwvAppService.removeEventListener('presetnames', handlePresetNames);
+      dwvAppService.removeEventListener('ismanualpreset', handleIsManualPreset);
     };
-  }, [dwvService, applyTool]);
+  }, [dwvAppService, applyTool]);
 
   /**
    * Get the icon of a tool.
@@ -232,7 +232,7 @@ const Header = () => {
    * @param {string} preset The preset name.
    */
   const applyPreset = (preset) => {
-    dwvService.applyPreset(preset);
+    dwvAppService.applyPreset(preset);
   }
 
   /**
@@ -242,21 +242,21 @@ const Header = () => {
    * @returns {boolean} True if the tool can be run.
    */
   const canRunTool = (tool) => {
-    return dwvService.canRunTool(tool);
+    return dwvAppService.canRunTool(tool);
   }
 
   /**
    * Toogle the viewer orientation.
    */
   const toggleOrientation = () => {
-    dwvService.toggleOrientation();
+    dwvAppService.toggleOrientation();
   }
 
   /**
    * Handle a reset event.
    */
   const onReset = () => {
-    dwvService.reset();
+    dwvAppService.reset();
   }
 
   /**

@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react'
-import { DwvServiceProvider } from '../services/DwvServiceProvider.jsx';
+import { DwvAppServiceProvider } from '../services/DwvAppServiceProvider.jsx';
 
 import DwvComponent from './DwvComponent.jsx';
 
@@ -7,18 +7,18 @@ describe('DwvComponent', () => {
   // Inspect the component instance on mount
   it('renders without crashing', () => {
     render(
-      <DwvServiceProvider>
+      <DwvAppServiceProvider>
         <DwvComponent />
-      </DwvServiceProvider>
+      </DwvAppServiceProvider>
     );
   });
 
   // Mount an instance and inspect the render output
   it('renders the beginning of the legend', () => {
     const { container } = render(
-      <DwvServiceProvider>
+      <DwvAppServiceProvider>
         <DwvComponent />
-      </DwvServiceProvider>
+      </DwvAppServiceProvider>
     );
 
     const legend = container.querySelector('.legend');

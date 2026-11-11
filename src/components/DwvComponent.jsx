@@ -6,11 +6,11 @@ import {
 import { styled } from '@mui/material/styles';
 import { Alert, Snackbar } from '@mui/material';
 
-import { useDwvService } from '../services/DwvServiceProvider.jsx';
+import { useDwvAppService } from '../services/DwvAppServiceProvider.jsx';
 
-import DwvHeader from './DwvHeader.jsx';
-import DwvContent from './DwvContent.jsx';
-import DwvFooter from './DwvFooter.jsx';
+import Header from './Header.jsx';
+import Content from './Content.jsx';
+import Footer from './Footer.jsx';
 
 import './DwvComponent.css';
 
@@ -18,7 +18,7 @@ const Root = styled('div')();
 
 const DwvComponent = () => {
 
-  const dwvService = useDwvService();
+  const dwvAppService = useDwvAppService();
 
   const hasInitialized = useRef(false);
 
@@ -28,19 +28,19 @@ const DwvComponent = () => {
     // possible load from location
     if (!hasInitialized.current) {
       hasInitialized.current = true;
-      dwvService.loadFromUri(window.location.href);
+      dwvAppService.loadFromUri(window.location.href);
     }
-  }, [dwvService]);
+  }, [dwvAppService]);
 
   useEffect(() => {
     const handleError = (event) => {
       setErrorMessage(event.detail.value);
     };
-    dwvService.addEventListener('error', handleError);
+    dwvAppService.addEventListener('error', handleError);
     return () => {
-      dwvService.removeEventListener('error', handleError);
+      dwvAppService.removeEventListener('error', handleError);
     };
-  }, [dwvService]);
+  }, [dwvAppService]);
 
   const handleErrorClose = (_event, reason) => {
     // keep the message on click away
@@ -51,9 +51,9 @@ const DwvComponent = () => {
 
   return (
     <Root className="dwv">
-      <DwvHeader />
-      <DwvContent className="content"/>
-      <DwvFooter />
+      <Header />
+      <Content className="content"/>
+      <Footer />
       <Snackbar
         open={errorMessage !== undefined}
         autoHideDuration={6000}
