@@ -20,8 +20,15 @@
   padding: 10px;
 }
 
+/* split button: stick the main button to its arrow */
+.toolbar-item:has(+ .select-wrapper) {
+  margin-right: 0;
+  width: auto;
+}
+
 /* select-wraper */
 .select-wrapper {
+  margin-right: 3px;
   height: 100%;
   position: relative;
   display: flex;
