@@ -9,6 +9,9 @@ import {
 
 import DwvComponent from './components/DwvComponent.jsx';
 import { DwvAppServiceProvider } from './services/DwvAppServiceProvider.jsx';
+import {
+  AnnotationServiceProvider
+} from './services/AnnotationServiceProvider.jsx';
 
 import './App.css';
 
@@ -37,9 +40,11 @@ export default function App() {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <DwvAppServiceProvider>
-          <div className="App">
-            <DwvComponent />
-          </div>
+          <AnnotationServiceProvider>
+            <div className="App">
+              <DwvComponent />
+            </div>
+          </AnnotationServiceProvider>
         </DwvAppServiceProvider>
       </ThemeProvider>
     );

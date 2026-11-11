@@ -387,4 +387,15 @@ describe('DwvAppService', () => {
       expect.objectContaining({key: 'a'})
     );
   });
+
+  it('forwards data and annotation events', () => {
+    const {app, service} = setup();
+    const details = [];
+    service.addEventListener('annotationadd', (event) => {
+      details.push(event.detail);
+    });
+    const annotation = {trackingUid: 'a0'};
+    app.fire('annotationadd', {dataid: '1', data: annotation});
+    expect(details).toEqual([{dataid: '1', data: annotation}]);
+  });
 });

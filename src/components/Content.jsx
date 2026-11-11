@@ -8,6 +8,7 @@ import { styled } from '@mui/material/styles';
 import { useDwvAppService } from '../services/DwvAppServiceProvider.jsx';
 
 import RightPanel from './RightPanel.jsx';
+import AnnotationComponent from './AnnotationComponent.jsx';
 
 import './Content.css';
 
@@ -146,7 +147,9 @@ const Content = () => {
           </p>
         </div>
       </div>
-      <RightPanel />
+      <RightPanel>
+        <AnnotationComponent />
+      </RightPanel>
     </Root>
   );
 

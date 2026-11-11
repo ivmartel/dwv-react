@@ -8,6 +8,21 @@ import {
 import { overlayConfig } from './overlays';
 
 /**
+ * dwv app event types forwarded by the service as `CustomEvent`s:
+ *   the event detail is a copy of the app event (for ex
+ *   `{dataid, data}`).
+ */
+const forwardedEventTypes = [
+  'dataadd',
+  'dataremove',
+  'drawlayeradd',
+  'annotationadd',
+  'annotationupdate',
+  'annotationremove',
+  'annotationselect'
+];
+
+/**
  * DWV service.
  */
 export class DwvAppService extends EventTarget {
@@ -299,6 +314,84 @@ export class DwvAppService extends EventTarget {
     this.#dwvApp.addEventListener('keydown', (event) => {
       this.#dwvApp.defaultOnKeydown(event);
     });
+
+    // forward data and annotation events
+    for (const type of forwardedEventTypes) {
+      this.#dwvApp.addEventListener(type, (event) => {
+        const detail = {...event};
+        delete detail.type;
+        this.#dispatch(type, detail);
+      });
+    }
+  }
+
+  /**
+   * Get the main layer group div id.
+   *
+   * @returns {string} The div id.
+   */
+  getMainLayerGroupDivId() {
+    return this.#layerGroupName;
+  }
+
+  /**
+   * Get a layer group by its div id.
+   *
+   * @param {string} divId The div id.
+   * @returns {object|undefined} The dwv layer group.
+   */
+  getLayerGroupByDivId(divId) {
+    return this.#dwvApp.getLayerGroupByDivId(divId);
+  }
+
+  /**
+   * Get the draw layers associated to a data id.
+   *
+   * @param {string} dataId The data id.
+   * @returns {object[]} The dwv draw layers.
+   */
+  getDrawLayersByDataId(dataId) {
+    return this.#dwvApp.getDrawLayersByDataId(dataId);
+  }
+
+  /**
+   * Get the data associated to a data id.
+   *
+   * @param {string} dataId The data id.
+   * @returns {object|undefined} The dwv data.
+   */
+  getData(dataId) {
+    return this.#dwvApp.getData(dataId);
+  }
+
+  /**
+   * Add a command to the undo stack.
+   *
+   * @param {object} command The dwv command.
+   */
+  addToUndoStack = (command) => {
+    this.#dwvApp.addToUndoStack(command);
+  };
+
+  /**
+   * Create new annotation data.
+   *
+   * @param {string} refDataId The reference data id.
+   * @returns {object} The dwv data.
+   */
+  createAnnotationData(refDataId) {
+    return this.#dwvApp.createAnnotationData(refDataId);
+  }
+
+  /**
+   * Add and render annotation data.
+   *
+   * @param {object} data The dwv data.
+   * @param {string} divId The layer group div id.
+   * @param {string} refDataId The reference data id.
+   */
+  addAndRenderAnnotationData(data, divId, refDataId) {
+    this.#dwvApp.addAndRenderAnnotationData(data, divId, refDataId);
   }
 
   /**
