@@ -26,6 +26,8 @@ jobs:
       run: corepack enable
     - name: Install dependencies
       run: yarn install --immutable
+    - name: Lint
+      run: yarn run lint
     - name: Run tests
       run: yarn run test-ci
     - name: Build

@@ -1,4 +1,3 @@
-/* eslint-disable @stylistic/js/max-len */
 export const overlayConfig = {
   DOM: [
     {tags: ['fileName'], pos: 'tl'},
@@ -32,4 +31,3 @@ export const overlayConfig = {
     {event: 'positionchange', pos: 'br', format: 'Value: {v2}'}
   ]
 };
-/* eslint-enable @stylistic/js/max-len */

@@ -3,6 +3,7 @@ import {
   useState,
   useEffect,
   useRef,
+  useCallback,
 } from 'react';
 import { styled } from '@mui/material/styles';
 import {
@@ -44,11 +45,11 @@ const classes = {
   appBar: `${PREFIX}-appBar`
 };
 
-const Root = styled('div')(({theme}) => ({
+const Root = styled('div')({
   [`& .${classes.appBar}`]: {
     position: 'relative',
   },
-}));
+});
 
 export const TransitionUp = forwardRef((props, ref) => (
   <Slide direction="up" {...props} ref={ref} />
@@ -66,6 +67,20 @@ const Header = () => {
   const [selectedShape, setSelectedShape] = useState(shapeNames[0]);
   // latest selected shape, readable from the (mount time) event handlers
   const selectedShapeRef = useRef(selectedShape);
+
+  /**
+   * Apply a tool.
+   * (stable: only uses the service and the shape ref)
+   *
+   * @param {string} tool The tool name.
+   * @param {object} [features] Optional tool features.
+   */
+  const applyTool = useCallback((tool, features) => {
+    if (typeof features === 'undefined' && tool === 'Draw') {
+      features = {shapeName: selectedShapeRef.current};
+    }
+    dwvService.applyTool(tool, features);
+  }, [dwvService]);
   const [presetNames, setPresetNames] = useState([]);
   const [selectedPreset, setSelectedPreset] = useState('');
   const [metaData, setMetaData] = useState(undefined);
@@ -119,7 +134,7 @@ const Header = () => {
       dwvService.removeEventListener('presetnames', handlePresetNames);
       dwvService.removeEventListener('ismanualpreset', handleIsManualPreset);
     };
-  }, [dwvService]);
+  }, [dwvService, applyTool]);
 
   /**
    * Get the icon of a tool.
@@ -201,19 +216,6 @@ const Header = () => {
     setSelectedPreset(preset);
     applyPreset(preset);
   };
-
-  /**
-   * Apply a tool.
-   *
-   * @param {string} tool The tool name.
-   * @param {object} [features] Optional tool features.
-   */
-  const applyTool = (tool, features) => {
-    if (typeof features === 'undefined' && tool === 'Draw') {
-      features = {shapeName: selectedShapeRef.current};
-    }
-    dwvService.applyTool(tool, features);
-  }
 
   /**
    * Apply a draw shape.

@@ -14,6 +14,7 @@
   "devDependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
+    "@eslint/js": "^10.0.1",
     "@mui/icons-material": "^9.0.1",
     "@mui/material": "^9.0.1",
     "@testing-library/dom": "^10.4.1",
@@ -23,6 +24,9 @@
     "@vitejs/plugin-react": "^6.0.2",
     "@vitest/coverage-v8": "^4.1.6",
     "canvas": "^3.2.3",
+    "eslint": "^10.14.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "globals": "^17.14.0",
     "jsdom": "^29.1.1",
     "vite": "^8.0.13",
     "vite-plugin-pwa": "^1.3.0",
@@ -34,6 +38,7 @@
     "build-trunk": "vite build --mode development --base /dwv-react/demo/trunk",
     "build-stable": "vite build --mode production --base /dwv-react/demo/stable",
     "preview": "vite preview",
+    "lint": "eslint .",
     "test": "vitest",
     "test-ci": "vitest run --coverage"
   },

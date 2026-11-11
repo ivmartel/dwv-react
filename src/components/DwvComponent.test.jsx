@@ -1,4 +1,4 @@
-import {render, screens} from '@testing-library/react'
+import { render } from '@testing-library/react'
 import { DwvServiceProvider } from '../services/DwvServiceProvider.jsx';
 
 import DwvComponent from './DwvComponent.jsx';
