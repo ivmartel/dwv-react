@@ -37,7 +37,7 @@ jobs:
       run: npm install -g corepack && corepack enable
     - name: Install dependencies
       run: yarn install --immutable
-    - name: Lint
+    - name: Run lint
       run: yarn run lint
     - name: Run tests
       run: yarn run test-ci
