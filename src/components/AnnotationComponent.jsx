@@ -6,17 +6,13 @@ import {
 import {
   Alert,
   Box,
+  ButtonBase,
   Collapse,
   IconButton,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
   Stack,
   Typography
 } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import { alpha, styled } from '@mui/material/styles';
 
 import LockIcon from '@mui/icons-material/Lock';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
@@ -40,6 +36,7 @@ import { getShapeIcon } from './shapeIcons.jsx';
 /**
  * Mapped to the dwv `dev/viewer/src/annotationComponent.js`:
  *   React renderer of the annotation service state.
+ * Design spec: `doc/design/AnnotationComponent.md`.
  */
 
 /**
@@ -51,6 +48,16 @@ import { getShapeIcon } from './shapeIcons.jsx';
  */
 const getAnnotationKey = (dataId, annotationId) =>
   `${dataId}-${annotationId}`;
+
+/**
+ * Get the html element id of an annotation.
+ *
+ * @param {string} dataId The annotation group data id.
+ * @param {string} annotationId The annotation tracking UID.
+ * @returns {string} The element id.
+ */
+const getAnnotationElementId = (dataId, annotationId) =>
+  `annotationgroup${dataId}-annotation${annotationId}`;
 
 /**
  * Download a blob.
@@ -67,34 +74,48 @@ const downloadBlob = (blob, fileName) => {
 };
 
 /**
- * Stop an event propagation: the annotation item click
- *   triggers a go to.
+ * Get the 'on container' colour of a palette colour: dark variant
+ *   in light mode, light variant in dark mode.
  *
- * @param {Event} event The event.
+ * @param {object} theme The MUI theme.
+ * @param {object} color The palette colour.
+ * @returns {string} The colour.
  */
-const stopPropagation = (event) => {
-  event.stopPropagation();
-};
+const getOnContainerColour = (theme, color) =>
+  theme.palette.mode === 'dark' ? color.light : color.dark;
 
 /**
- * Colour input: a square swatch with the size of a small icon button
- *   (so that it aligns with the other row actions).
+ * Action icon button: 28px hit area, 18px icon, primary container
+ *   background when pressed.
+ */
+const ActionButton = styled(IconButton)(({ theme }) => ({
+  width: 28,
+  height: 28,
+  padding: 0,
+  '& .MuiSvgIcon-root': {
+    fontSize: 18
+  },
+  '&[aria-pressed="true"]': {
+    backgroundColor: alpha(theme.palette.primary.main,
+      theme.palette.action.activatedOpacity),
+    color: getOnContainerColour(theme, theme.palette.primary)
+  }
+}));
+
+/**
+ * Colour input: a 20px square swatch.
  */
 const ColourInput = styled('input')(({ theme }) => ({
   boxSizing: 'border-box',
-  width: 30,
-  height: 30,
-  // swatch size of a small icon (20px)
-  padding: 5,
-  margin: 0,
+  flex: 'none',
+  width: 20,
+  height: 20,
+  padding: 0,
+  margin: '0 4px',
   border: 'none',
-  borderRadius: '50%',
   background: 'none',
   cursor: 'pointer',
   appearance: 'none',
-  '&:hover:not(:disabled)': {
-    backgroundColor: theme.palette.action.hover
-  },
   '&:disabled': {
     cursor: 'default',
     opacity: theme.palette.action.disabledOpacity
@@ -113,6 +134,32 @@ const ColourInput = styled('input')(({ theme }) => ({
 }));
 
 /**
+ * Annotation row: raised surface, darkened on hover, secondary
+ *   container when selected.
+ */
+const AnnotationRow = styled('li')(({ theme }) => ({
+  listStyle: 'none',
+  borderRadius: 4,
+  backgroundColor: theme.palette.background.paper,
+  '&:hover': {
+    // state layer: 8% of the text colour
+    backgroundImage: `linear-gradient(${
+      alpha(theme.palette.text.primary, 0.08)}, ${
+      alpha(theme.palette.text.primary, 0.08)})`
+  },
+  '&.selected': {
+    backgroundColor: alpha(theme.palette.secondary.main,
+      theme.palette.action.activatedOpacity),
+    color: getOnContainerColour(theme, theme.palette.secondary),
+    // dark mode: dark blue background, default (white) text
+    ...theme.applyStyles('dark', {
+      backgroundColor: theme.palette.primary.dark,
+      color: theme.palette.text.primary
+    })
+  }
+}));
+
+/**
  * Quantification details of an annotation.
  *
  * @param {object} props The component props.
@@ -123,28 +170,31 @@ const Quantification = ({ quantification }) => {
   const groups = getQuantificationGroups(quantification);
   if (groups.length === 0) {
     return (
-      <Typography variant="body2" color="textSecondary">
-        No quantification.
+      <Typography variant="caption" component="div"
+        sx={{fontStyle: 'italic'}}>
+        No quantification
       </Typography>
     );
   }
-  // one line per group (wrapped if too long): title then label/value pairs
+  // one line per group (wrapped if too long): title then items
   return groups.map((group) => (
     <Box key={group.title}
       sx={{display: 'flex', flexWrap: 'wrap', alignItems: 'baseline',
-        columnGap: 2}}>
-      <Typography variant="body2" color="textSecondary"
+        columnGap: 1}}>
+      <Typography variant="caption" component="div"
         sx={{fontWeight: 'medium'}}>
         {group.title}
       </Typography>
       <Box component="dl" sx={{m: 0, display: 'contents'}}>
         {group.items.map((item) => (
-          <Box key={item.label} sx={{display: 'flex', gap: 0.5}}>
-            <Typography component="dt" variant="body2"
-              color="textDisabled">
-              {item.label}:
+          <Box key={item.label} title={item.label}
+            sx={{display: 'flex', alignItems: 'baseline', gap: 0.5}}>
+            <Typography component="dt" variant="caption"
+              color="textSecondary"
+              sx={{opacity: 0.7, fontSize: '0.9em'}}>
+              {item.shortLabel}
             </Typography>
-            <Typography component="dd" variant="body2" sx={{m: 0}}>
+            <Typography component="dd" variant="caption" sx={{m: 0}}>
               {item.value}
             </Typography>
           </Box>
@@ -179,7 +229,7 @@ const AnnotationItem = ({
   const annotationService = useAnnotationService();
   const itemRef = useRef(null);
 
-  // scroll into view on selection
+  // scroll into view on selection (after rendering)
   useEffect(() => {
     if (selected) {
       itemRef.current?.scrollIntoView?.({block: 'nearest'});
@@ -187,6 +237,8 @@ const AnnotationItem = ({
   }, [selected]);
 
   const annotationId = annotation.id;
+  const elementId = getAnnotationElementId(dataId, annotationId);
+  const detailsId = `qd-${elementId}`;
 
   const onClick = () => {
     annotationService.selectAnnotation(dataId, annotationId);
@@ -194,87 +246,71 @@ const AnnotationItem = ({
   };
 
   return (
-    <ListItem
+    <AnnotationRow
       ref={itemRef}
-      disablePadding
-      sx={{display: 'block'}}
+      id={elementId}
+      className={selected ? 'selected' : undefined}
       >
-      <ListItemButton
-        dense
-        selected={selected}
-        title="Go to annotation"
-        onClick={onClick}
-        sx={{py: 0.75, pr: 0.5}}
-        >
-        <ListItemIcon sx={{minWidth: 32}}>
-          {getShapeIcon(annotation.factoryName, {fontSize: 'small'})}
-        </ListItemIcon>
-        <ListItemText
-          primary={annotation.label}
-          sx={{my: 0, minWidth: 0}}
-          slotProps={{primary: {
-            noWrap: true,
-            // strike through non viewable annotations
-            sx: annotation.canView
-              ? undefined : {textDecoration: 'line-through'}
-          }}}
-        />
-        <Stack
-          direction="row"
-          alignItems="center"
-          sx={{flex: 'none'}}
-          // actions do not trigger the row go to (nor its ripple)
-          onClick={stopPropagation}
-          onMouseDown={stopPropagation}
-          onKeyDown={stopPropagation}
+      <Stack direction="row" sx={{alignItems: 'center'}}>
+        <ButtonBase
+          title="Go to annotation"
+          onClick={onClick}
+          sx={{flex: 1, minWidth: 0, justifyContent: 'flex-start',
+            gap: 1, pl: 1, py: 0.5, borderRadius: 1,
+            font: 'inherit', color: 'inherit'}}
           >
-          <IconButton
-            size="small"
+          {getShapeIcon(annotation.factoryName,
+            {sx: {fontSize: 18, flex: 'none'}})}
+          <Typography variant="body2" noWrap
+            sx={annotation.canView
+              ? undefined
+              // strike through non viewable annotations
+              : {textDecoration: 'line-through'}}>
+            {annotation.label}
+          </Typography>
+        </ButtonBase>
+        <Stack direction="row" sx={{alignItems: 'center', flex: 'none'}}>
+          <ActionButton
             title="Show/hide quantification"
+            aria-pressed={detailsOpen}
             aria-expanded={detailsOpen}
+            aria-controls={detailsId}
             onClick={onToggleDetails}
             >
-            {detailsOpen
-              ? <InfoIcon fontSize="small" />
-              : <InfoOutlinedIcon fontSize="small" />}
-          </IconButton>
+            {detailsOpen ? <InfoIcon /> : <InfoOutlinedIcon />}
+          </ActionButton>
           <ColourInput
             type="color"
             title="Change annotation colour"
-            aria-label="Change annotation colour"
             value={annotation.colour}
             disabled={!editable}
             onChange={(event) => annotationService.changeAnnotationColour(
               dataId, annotationId, event.target.value)}
           />
-          <IconButton
-            size="small"
+          <ActionButton
             title="Show/hide annotation"
             aria-pressed={!annotation.visible}
             onClick={() => annotationService.setAnnotationVisibility(
               dataId, annotationId, !annotation.visible)}
             >
-            {annotation.visible
-              ? <VisibilityIcon fontSize="small" />
-              : <VisibilityOffIcon fontSize="small" />}
-          </IconButton>
-          <IconButton
-            size="small"
+            {annotation.visible ? <VisibilityIcon /> : <VisibilityOffIcon />}
+          </ActionButton>
+          <ActionButton
             title="Delete annotation"
             disabled={!editable}
             onClick={() => annotationService.deleteAnnotation(
               dataId, annotationId)}
             >
-            <DeleteIcon fontSize="small" />
-          </IconButton>
+            <DeleteIcon />
+          </ActionButton>
         </Stack>
-      </ListItemButton>
-      <Collapse in={detailsOpen} unmountOnExit>
-        <Box sx={{px: 2, py: 0.5}}>
+      </Stack>
+      <Collapse id={detailsId} in={detailsOpen}>
+        <Box sx={{pl: 1, pr: 0.5, pb: 0.5}}>
           <Quantification quantification={annotation.quantification} />
         </Box>
       </Collapse>
-    </ListItem>
+    </AnnotationRow>
   );
 };
 
@@ -316,52 +352,44 @@ const AnnotationGroup = ({
   };
 
   return (
-    <Box sx={{mb: 2}}>
-      {/* same horizontal padding as the rows to align the actions */}
-      <Stack direction="row" alignItems="center"
-        sx={{pl: 2, pr: 0.5, py: 0.5}}>
+    <Box>
+      <Stack direction="row"
+        sx={{alignItems: 'center', pl: 1, py: 0.5}}>
         <Typography variant="subtitle2" sx={{flex: 1}} noWrap>
           group #{dataId}
         </Typography>
-        <IconButton
-          size="small"
+        <ActionButton
           title={group.editable ? 'Lock group' : 'Unlock group'}
           aria-pressed={!group.editable}
           onClick={() => annotationService.setAnnotationGroupEditable(
             dataId, !group.editable)}
           >
-          {group.editable
-            ? <LockOpenIcon fontSize="small" />
-            : <LockIcon fontSize="small" />}
-        </IconButton>
-        <IconButton
-          size="small"
+          {group.editable ? <LockOpenIcon /> : <LockIcon />}
+        </ActionButton>
+        <ActionButton
           title="Save annotation group"
           onClick={onSave}
           >
-          <SaveIcon fontSize="small" />
-        </IconButton>
-        <IconButton
-          size="small"
+          <SaveIcon />
+        </ActionButton>
+        <ActionButton
           title="Show/hide annotation labels"
           aria-pressed={!group.labelsVisible}
           onClick={() => annotationService.setLabelsVisibility(
             dataId, !group.labelsVisible)}
           >
-          {group.labelsVisible
-            ? <LabelIcon fontSize="small" />
-            : <LabelOffIcon fontSize="small" />}
-        </IconButton>
+          {group.labelsVisible ? <LabelIcon /> : <LabelOffIcon />}
+        </ActionButton>
       </Stack>
       {group.annotations.length === 0
         ? (
           <Typography variant="body2" color="textSecondary"
-            sx={{px: 2, py: 0.75}}>
-            No annotation.
+            sx={{pl: 1, py: 0.5, fontStyle: 'italic'}}>
+            No annotation
           </Typography>
         )
         : (
-          <List dense disablePadding>
+          <Stack component="ul" spacing={0.5} sx={{m: 0, p: 0}}>
             {group.annotations.map((annotation) => {
               const key = getAnnotationKey(dataId, annotation.id);
               return (
@@ -377,7 +405,7 @@ const AnnotationGroup = ({
                 />
               );
             })}
-          </List>
+          </Stack>
         )
       }
     </Box>
@@ -412,9 +440,9 @@ const AnnotationComponent = () => {
   };
 
   return (
-    <Box>
+    <Stack spacing={1}>
       {errorMessage &&
-        <Alert severity="warning" sx={{mb: 1}}
+        <Alert severity="warning"
           onClose={() => setErrorMessage(undefined)}>
           {errorMessage}
         </Alert>
@@ -429,7 +457,7 @@ const AnnotationComponent = () => {
           onError={setErrorMessage}
         />
       ))}
-    </Box>
+    </Stack>
   );
 
 } // AnnotationComponent

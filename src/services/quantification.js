@@ -42,6 +42,25 @@ function getQuantificationLabel(key) {
 }
 
 /**
+ * Specific quantification short labels, others use the lowercase key
+ *   (lowercase keys, compared case insensitive).
+ */
+const quantificationShortLabels = {
+  surface: 'area'
+};
+
+/**
+ * Get a short label for a quantification key.
+ *
+ * @param {string} key The quantification key.
+ * @returns {string} The short label.
+ */
+function getQuantificationShortLabel(key) {
+  const lowerKey = key.toLowerCase();
+  return quantificationShortLabels[lowerKey] ?? lowerKey;
+}
+
+/**
  * Format a quantification value with its unit.
  *
  * @param {number} value The value.
@@ -69,11 +88,20 @@ export function formatQuantificationValue(value, unit) {
 }
 
 /**
- * Quantification group: a title and label/value pairs.
+ * Quantification item: a value with its labels.
+ *
+ * @typedef {object} QuantificationItem
+ * @property {string} label The full label.
+ * @property {string} shortLabel The short label.
+ * @property {string} value The formatted value.
+ */
+
+/**
+ * Quantification group: a title and items.
  *
  * @typedef {object} QuantificationGroup
  * @property {string} title The group title.
- * @property {{label: string, value: string}[]} items The group items.
+ * @property {QuantificationItem[]} items The group items.
  */
 
 /**
@@ -108,6 +136,7 @@ export function getQuantificationGroups(quantification, titles) {
     }
     const item = {
       label: getQuantificationLabel(key),
+      shortLabel: getQuantificationShortLabel(key),
       value: formatQuantificationValue(quant.value, quant.unit)
     };
     if (pixelValueKeys.includes(key.toLowerCase())) {

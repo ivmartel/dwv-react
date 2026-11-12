@@ -17,24 +17,27 @@ import './App.css';
 
 export default function App() {
     const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
-    const theme = useMemo(() => createTheme({
-      palette: {
-        primary: {
-          main: colors.indigo[500]
-        },
-        secondary: {
-          main: colors.pink[500]
-        },
-        mode: prefersDarkMode ? 'dark' : 'light',
-        background: {
-          // custom token (Material 3 like 'surface-container'):
-          // side panels, lighter than the default background
-          surfaceContainer: prefersDarkMode
-            ? colors.grey[900]
-            : colors.grey[100]
+    const theme = useMemo(() => {
+      const mode = prefersDarkMode ? 'dark' : 'light';
+      return createTheme({
+        palette: {
+          primary: {
+            main: colors.indigo[500]
+          },
+          secondary: {
+            main: colors.pink[500]
+          },
+          mode: mode,
+          background: {
+            // custom token (Material 3 like 'surface-container'):
+            // side panels, follows the palette mode
+            surfaceContainer: mode === 'dark'
+              ? colors.grey[900]
+              : colors.grey[100]
+          }
         }
-      }
-    }), [prefersDarkMode]);
+      });
+    }, [prefersDarkMode]);
 
     return (
       <ThemeProvider theme={theme}>

@@ -89,10 +89,97 @@ describe('AnnotationComponent', () => {
 
   it('shows the quantification', () => {
     renderWith(fakeService(state));
-    expect(screen.queryByText('area:')).not.toBeInTheDocument();
-    fireEvent.click(screen.getByTitle('Show/hide quantification'));
-    expect(screen.getByText('area:')).toBeInTheDocument();
+    const info = screen.getByTitle('Show/hide quantification');
+    const detailsId = 'qd-annotationgroup1-annotationa0';
+    expect(info).toHaveAttribute('aria-controls', detailsId);
+    expect(info).toHaveAttribute('aria-pressed', 'false');
+    expect(info).toHaveAttribute('aria-expanded', 'false');
+    expect(document.getElementById(detailsId)).toBeInTheDocument();
+    fireEvent.click(info);
+    expect(info).toHaveAttribute('aria-pressed', 'true');
+    expect(info).toHaveAttribute('aria-expanded', 'true');
+    // short label, full label as title
+    expect(screen.getByText('area')).toBeInTheDocument();
+    expect(screen.getByTitle('area')).toHaveTextContent('area12.35 mm2');
     expect(screen.getByText('12.35 mm2')).toBeInTheDocument();
+  });
+
+  it('uses short labels and groups for the quantification', () => {
+    const quantified = {
+      ...state,
+      groups: [{
+        ...state.groups[0],
+        annotations: [{
+          ...state.groups[0].annotations[0],
+          quantification: {
+            stddev: {value: 1.5},
+            p25: {value: 120},
+            surface: {value: undefined}
+          }
+        }]
+      }]
+    };
+    renderWith(fakeService(quantified));
+    fireEvent.click(screen.getByTitle('Show/hide quantification'));
+    expect(screen.getByText('Pixel values')).toBeInTheDocument();
+    expect(screen.queryByText('Geometry')).not.toBeInTheDocument();
+    expect(screen.getByTitle('standard deviation'))
+      .toHaveTextContent('stddev1.50');
+    expect(screen.getByTitle('25th percentile'))
+      .toHaveTextContent('p25120.0');
+  });
+
+  it('shows empty states', () => {
+    const empty = {
+      groups: [
+        {...state.groups[0], dataId: '0', annotations: []},
+        {
+          ...state.groups[0],
+          annotations: [{...state.groups[0].annotations[0],
+            quantification: undefined}]
+        }
+      ],
+      selected: undefined
+    };
+    renderWith(fakeService(empty));
+    expect(screen.getByText('No annotation')).toBeInTheDocument();
+    fireEvent.click(screen.getByTitle('Show/hide quantification'));
+    expect(screen.getByText('No quantification')).toBeInTheDocument();
+  });
+
+  it('marks and scrolls to the selected annotation', () => {
+    const scrollIntoView = vi.fn();
+    window.HTMLElement.prototype.scrollIntoView = scrollIntoView;
+    renderWith(fakeService({
+      ...state,
+      selected: {dataId: '1', annotationId: 'a0'}
+    }));
+    const row = document.getElementById('annotationgroup1-annotationa0');
+    expect(row).toHaveClass('selected');
+    expect(scrollIntoView).toHaveBeenCalledWith({block: 'nearest'});
+    delete window.HTMLElement.prototype.scrollIntoView;
+  });
+
+  it('uses a button for the row content', () => {
+    renderWith(fakeService(state));
+    const content = screen.getByTitle('Go to annotation');
+    expect(content.tagName).toBe('BUTTON');
+    expect(content).toHaveTextContent('circle-0');
+    // actions are not nested in the content button
+    expect(content).not.toContainElement(
+      screen.getByTitle('Delete annotation'));
+  });
+
+  it('strikes through non viewable annotations', () => {
+    renderWith(fakeService({
+      ...state,
+      groups: [{
+        ...state.groups[0],
+        annotations: [{...state.groups[0].annotations[0], canView: false}]
+      }]
+    }));
+    expect(screen.getByText('circle-0'))
+      .toHaveStyle({textDecoration: 'line-through'});
   });
 
   it('disables edits on locked groups', () => {

@@ -1,5 +1,8 @@
 import { render } from '@testing-library/react'
 import { DwvAppServiceProvider } from '../services/DwvAppServiceProvider.jsx';
+import {
+  AnnotationServiceProvider
+} from '../services/AnnotationServiceProvider.jsx';
 
 import DwvComponent from './DwvComponent.jsx';
 
@@ -8,7 +11,9 @@ describe('DwvComponent', () => {
   it('renders without crashing', () => {
     render(
       <DwvAppServiceProvider>
-        <DwvComponent />
+        <AnnotationServiceProvider>
+          <DwvComponent />
+        </AnnotationServiceProvider>
       </DwvAppServiceProvider>
     );
   });
@@ -17,7 +22,9 @@ describe('DwvComponent', () => {
   it('renders the beginning of the legend', () => {
     const { container } = render(
       <DwvAppServiceProvider>
-        <DwvComponent />
+        <AnnotationServiceProvider>
+          <DwvComponent />
+        </AnnotationServiceProvider>
       </DwvAppServiceProvider>
     );
 

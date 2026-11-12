@@ -15,7 +15,7 @@ export const AnnotationServiceContext = createContext();
  * Annotation service provider: to use inside a `DwvAppServiceProvider`.
  *   The service lives with the provider so that the annotation state
  *   is kept when the annotation component is unmounted
- *   (for ex when the right panel is closed).
+ *   (for ex when the annotation component is re-created).
  * @param {object} props The component props.
  * @param {React.ReactNode} props.children The children.
  * @returns {React.ReactElement} The provider element.
