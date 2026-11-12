@@ -101,6 +101,7 @@ is scrolled into view (`scrollIntoView({block: 'nearest'})`) after rendering.
 - Values are split into two groups, and empty groups are dropped:
   - **Pixel values**: `min`, `max`, `mean`, `stddev`, `median`, `p25`, `p75`.
   - **Geometry**: every other key.
+- Groups are shown in this order: Geometry first, then Pixel values.
 - Each item shows a short label and the value; the full label is in the
   `title` tooltip.
   - Full labels: `stddev` is "standard deviation", `surface` is "area",
