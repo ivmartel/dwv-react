@@ -5,25 +5,36 @@
 
 name: Node.js CI
 
-on: [push, pull_request, merge_group]
+on: [push, pull_request]
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      IS_PUSH_MAIN: ${{ github.ref == 'refs/heads/main' }}
-      IS_PUSH_TAG: ${{ startsWith(github.ref, 'refs/tags/') && !contains(github.ref, 'beta') }}
+    permissions:
+      contents: read
+    outputs:
+      build-type: ${{ steps.build-type.outputs.type }}
     steps:
+    - name: Get build type
+      id: build-type
+      # main branch: 'trunk', release tag (v1.2.3): 'stable',
+      # anything else (other branches, pre-release tags, PRs): '' (no deploy)
+      run: |
+        if [[ "$GITHUB_REF" == refs/heads/main ]]; then
+          echo "type=trunk" >> "$GITHUB_OUTPUT"
+        elif [[ "$GITHUB_REF" =~ ^refs/tags/v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+          echo "type=stable" >> "$GITHUB_OUTPUT"
+        else
+          echo "type=" >> "$GITHUB_OUTPUT"
+        fi
     - name: Check out code
       uses: actions/checkout@v7
-      with:
-        fetch-depth: 0
     - name: Setup Node.js
       uses: actions/setup-node@v7
       with:
         node-version: '26'
-    - name: Enable Corepack
-      run: corepack enable
+    - name: Install and enable corepack
+      run: npm install -g corepack && corepack enable
     - name: Install dependencies
       run: yarn install --immutable
     - name: Lint
@@ -31,26 +42,53 @@ jobs:
     - name: Run tests
       run: yarn run test-ci
     - name: Build
+      env:
+        BUILD_TYPE: ${{ steps.build-type.outputs.type }}
+      # not deployed builds use the trunk configuration
+      run: yarn run build-${BUILD_TYPE:-trunk}
+    - name: Upload build
+      if: steps.build-type.outputs.type != ''
+      uses: actions/upload-artifact@v7
+      with:
+        name: dist
+        path: dist
+        if-no-files-found: error
+        retention-days: 1
+
+  deploy:
+    needs: build
+    if: needs.build.outputs.build-type != ''
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    # deploys (main, version tags) share a group so that they
+    # push to gh-pages one after the other
+    concurrency:
+      group: ${{ github.workflow }}-gh-pages
+      cancel-in-progress: false
+    steps:
+    - name: Check out gh-pages
+      uses: actions/checkout@v7
+      with:
+        ref: gh-pages
+    - name: Download demo
+      uses: actions/download-artifact@v8
+      with:
+        name: dist
+        path: ${{ runner.temp }}/dist
+    - name: Push to gh-pages
+      env:
+        BUILD_TYPE: ${{ needs.build.outputs.build-type }}
+        DEMO_DIR: ${{ runner.temp }}/dist
       run: |
-        BUILD_SCRIPT=build-trunk
-        if ${{ env.IS_PUSH_TAG }}; then
-          BUILD_SCRIPT=build-stable
-        fi
-        yarn run $BUILD_SCRIPT
-    - name: Push to gh-pages (if tag or main branch)
-      if: env.IS_PUSH_MAIN == 'true' || env.IS_PUSH_TAG == 'true'
-      run: |
-        DEPLOY_DIR=./demo/trunk
-        if ${{ env.IS_PUSH_TAG }}; then
-          DEPLOY_DIR=./demo/stable
-        fi
-        ALL=/*
         git config user.email github-actions@github.com
         git config user.name github-actions
-        git checkout gh-pages
-        rm -Rf $DEPLOY_DIR$ALL
-        cp -Rf ./dist/* $DEPLOY_DIR
-        git add -A $DEPLOY_DIR
+        # ':?' aborts if BUILD_TYPE is empty or unset (avoids 'rm -Rf demo/*')
+        DEPLOY_DIR="./demo/${BUILD_TYPE:?}"
+        mkdir -p "$DEPLOY_DIR"
+        rm -Rf "${DEPLOY_DIR:?}"/*
+        cp -Rf "$DEMO_DIR"/* "$DEPLOY_DIR"
+        git add -A "$DEPLOY_DIR"
         git diff-index --quiet HEAD ||
-          git commit -m "CI run ${{ github.run_number }} pushed to gh-pages"
-        git push -fq origin gh-pages
+          git commit -m "CI run ${{ github.run_number }} pushed to $DEPLOY_DIR"
+        git push origin gh-pages
