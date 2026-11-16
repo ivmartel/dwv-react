@@ -3975,7 +3975,7 @@ __metadata:
     "@vitejs/plugin-react": "npm:^6.0.2"
     "@vitest/coverage-v8": "npm:^4.1.6"
     canvas: "npm:^3.2.3"
-    dwv: "npm:0.36.2"
+    dwv: "npm:0.36.4"
     eslint: "npm:^10.14.0"
     eslint-plugin-react-hooks: "npm:^7.1.1"
     globals: "npm:^17.14.0"
@@ -3988,14 +3988,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"dwv@npm:0.36.2":
-  version: 0.36.2
-  resolution: "dwv@npm:0.36.2"
+"dwv@npm:0.36.4":
+  version: 0.36.4
+  resolution: "dwv@npm:0.36.4"
   dependencies:
     jszip: "npm:^3.10.1"
     konva: "npm:~10.2.0"
     magic-wand-tool: "npm:~1.1.7"
-  checksum: 10c0/d6d7409e2d0840ddd209981f39bd7adbd7892b24d7ee8b8be538887c22ad6865f9df4f38360fe5a02202bfe67e6aeace017f47fcfbf6c338b8c91714f0bc1765
+  checksum: 10c0/7b07be1e3ff70d09fc98eca497a912f613adbf3fc0718277b586897a8cf5c536bc4a448ecf8bb2db3906a18178e3d53ff39abe7fd636ccd2b797fb75bd182261
   languageName: node
   linkType: hard
 
