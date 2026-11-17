@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
+import { dwvWorkers } from './plugins/dwvWorkers.js'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -13,6 +14,8 @@ export default defineConfig({
   },
   plugins: [
     react(),
+    // dwv web workers (dev server and build)
+    dwvWorkers(),
     VitePWA({
       includeAssets: ['favicon.ico'],
       manifest: {

@@ -122,11 +122,14 @@ push and PR.
 - `src/components/` - React function components (`DwvViewer`,
   `AnnotationList`, `RightPanel`, `TagsTable`, header/footer...),
   each with a co-located `.css` file when needed.
+- `plugins/` - Vite plugins used by the build (`dwvWorkers.js`).
 - `tests/setup.js` - Vitest setup (jest-dom matchers, cleanup).
 - `public/` - static files served by the demo (`favicon.ico`, icons).
-- `public/assets/workers/` - vendored, minified dwv web workers. They are
-  not bundled automatically: update them when the `dwv` version changes.
-  Do not edit or lint them.
+- dwv web workers: dwv loads them at runtime from `assets/workers/`
+  (relative to the page base URI). The `dwvWorkers` Vite plugin
+  (`plugins/dwvWorkers.js`) serves them from
+  `node_modules/dwv/dist/assets/workers` in dev and copies them to the
+  build; do not vendor them.
 
 ## Conventions
 

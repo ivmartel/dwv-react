@@ -40,6 +40,8 @@ yarn run dev
 You can now open a browser at http://localhost:5173 and enjoy!
 
 ## DWVs' Web workers
-Web workers used in dwv do not get automatically imported in the dev environment or build,
-they need to be available in the `public/assets` folder. Do not forget to update them if they are
-changed when updating dwv.
+dwv loads its web workers at runtime from `assets/workers/` relative to the page base URI.
+They are not bundled automatically: the `dwvWorkers` Vite plugin (`plugins/dwvWorkers.js`) serves them
+from the dwv package (`node_modules/dwv/dist/assets/workers`) in dev and copies them to
+`dist/assets/workers` in the build, so they always match the installed dwv version.
+An application embedding the viewer needs to serve them the same way.

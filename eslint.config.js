@@ -4,8 +4,7 @@ import reactHooks from 'eslint-plugin-react-hooks';
 
 export default [
   {
-    // public: vendored (minified) dwv workers
-    ignores: ['dist/', 'coverage/', 'dev-dist/', 'public/']
+    ignores: ['dist/', 'coverage/', 'dev-dist/']
   },
   js.configs.recommended,
   reactHooks.configs.flat.recommended,
@@ -38,8 +37,8 @@ export default [
     }
   },
   {
-    // config files run in node
-    files: ['*.config.js'],
+    // config files and vite plugins run in node
+    files: ['*.config.js', 'plugins/**/*.js'],
     languageOptions: {
       globals: {
         ...globals.node
