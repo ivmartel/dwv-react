@@ -6,7 +6,7 @@ Guidance for AI coding agents working on this repository.
 
 Medical (DICOM) image viewer component built on
 [DWV](https://github.com/ivmartel/dwv), React 19 and MUI, bundled with Vite.
-Shipped with a demo application.
+Shipped with a demo application (`demo/`).
 Not certified for diagnostic use. License: GPL-3.0.
 
 ## Requirements
@@ -106,9 +106,12 @@ push and PR.
 
 ## Layout
 
-- `src/main.jsx`, `src/App.jsx` - entry point, MUI theme (light/dark from
-  `prefers-color-scheme`, custom `background.surfaceContainer` token for
-  side panels) and service providers.
+- `demo/` - the demo application (Vite root, see `vite.config.js`):
+  `index.html`, `main.jsx` entry point and `App.jsx` with the MUI theme
+  (light/dark from `prefers-color-scheme`, custom
+  `background.surfaceContainer` token for side panels). It uses the
+  viewer from `src/` and is not part of it.
+- `src/` - the viewer: only code needed to embed `DwvViewer`.
 - `src/services/` - framework-independent logic wrapping dwv:
   - `DwvAppService.js` - owns the dwv `App`; extends `EventTarget` and
     re-dispatches selected dwv events as `CustomEvent`s.
@@ -120,6 +123,7 @@ push and PR.
   `AnnotationList`, `RightPanel`, `TagsTable`, header/footer...),
   each with a co-located `.css` file when needed.
 - `tests/setup.js` - Vitest setup (jest-dom matchers, cleanup).
+- `public/` - static files served by the demo (`favicon.ico`, icons).
 - `public/assets/workers/` - vendored, minified dwv web workers. They are
   not bundled automatically: update them when the `dwv` version changes.
   Do not edit or lint them.

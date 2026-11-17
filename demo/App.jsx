@@ -7,7 +7,7 @@ import {
   colors
 } from '@mui/material';
 
-import DwvViewer from './components/DwvViewer.jsx';
+import DwvViewer from '../src/components/DwvViewer.jsx';
 
 import './App.css';
 
