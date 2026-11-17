@@ -18,8 +18,10 @@ Package manager is Yarn 4 (via Corepack). Node 24 is used in CI.
 - `yarn test-ci` - single run with coverage (as in CI)
 - `yarn build` - production build to `dist/`
 
-Before considering a change done, run `yarn lint` and `yarn test-ci`:
-CI (`.github/workflows/nodejs-ci.yml`) runs lint, tests and build on every
+Before considering a change done, follow the `verify` skill
+(`.agents/skills/verify/SKILL.md`): tests, lint and a review against
+the conventions below. CI
+(`.github/workflows/nodejs-ci.yml`) runs lint, tests and build on every
 push and PR.
 
 ## Layout
@@ -64,24 +66,7 @@ push and PR.
 - Style: 2-space indent, single quotes, semicolons, private class fields
   (`#field`) for service internals. Unused args must be prefixed with `_`.
 - Pin `dwv` to an exact version.
-
-## Tests
-
-- Vitest with jsdom and globals (`describe`, `it`, `expect`, `vi`), plus
-  React Testing Library. Tests are co-located: `Foo.jsx` -> `Foo.test.jsx`.
-- dwv is mocked with `vi.mock('dwv', ...)` (see
-  `DwvAppService.test.js`); do not rely on real image rendering.
-- Prefer querying by role/accessible name (`getByRole('button',
-  {name: ...})`), and add tests for new services and components.
-
-## Git
-
-- Commit messages: short, imperative, capitalised, no trailing period
-  (e.g. `Add annotation list, fixes #527`). Reference issues with
-  `fixes #N` / `relates to #N`.
-- Pushes to `main` deploy the trunk demo to `gh-pages`; non-beta tags
-  deploy the stable demo.
-
-## Notes
-
-- Do not patch dwv (no edits in `node_modules/dwv`, no `patch-package` or Yarn patches, no monkey-patching at runtime). If a fix or feature is needed in dwv itself, propose a pull request to the [dwv repository](https://github.com/ivmartel/dwv) instead.
+- Do not patch dwv (no edits in `node_modules/dwv`, no `patch-package` or
+  Yarn patches, no monkey-patching at runtime). If a fix or feature is
+  needed in dwv itself, propose a pull request to the
+  [dwv repository](https://github.com/ivmartel/dwv) instead.
