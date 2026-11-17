@@ -6,7 +6,13 @@ import {
 import { styled } from '@mui/material/styles';
 import { Alert, Snackbar } from '@mui/material';
 
-import { useDwvAppService } from '../services/DwvAppServiceProvider.jsx';
+import {
+  DwvAppServiceProvider,
+  useDwvAppService
+} from '../services/DwvAppServiceProvider.jsx';
+import {
+  AnnotationServiceProvider
+} from '../services/AnnotationServiceProvider.jsx';
 
 import Header from './Header.jsx';
 import Content from './Content.jsx';
@@ -30,7 +36,7 @@ export const getUrlList = (urls) => {
 };
 
 /**
- * DWV viewer.
+ * Viewer content: to use inside the viewer service providers.
  *
  * Data inputs are checked in order `uri`, `urls`, then
  *   `loadFromWindowLocation`; the first one that is set is used.
@@ -47,7 +53,7 @@ export const getUrlList = (urls) => {
  * @param {boolean} [props.showLegend] Show the footer legend.
  * @returns {JSX.Element} The component.
  */
-const DwvViewer = ({
+const Viewer = ({
   uri,
   urls,
   loadFromWindowLocation = false,
@@ -132,6 +138,29 @@ const DwvViewer = ({
     </Root>
   );
 
-} // DwvViewer
+} // Viewer
+
+/**
+ * DWV viewer: creates its own services (one `DwvAppService` and one
+ *   `AnnotationService` per viewer) and renders the viewer content.
+ *   See `Viewer` for the properties.
+ *
+ * @param {object} props The component properties.
+ * @param {string} [props.uri] URI with search arguments describing
+ *   the data to load (see dwv `App.loadFromUri`), watched.
+ * @param {string} [props.urls] White space separated urls
+ *   of the data to load, watched.
+ * @param {boolean} [props.loadFromWindowLocation] Use the window location
+ *   as input URI if it has search arguments, only read on init.
+ * @param {boolean} [props.showLegend] Show the footer legend.
+ * @returns {JSX.Element} The component.
+ */
+const DwvViewer = (props) => (
+  <DwvAppServiceProvider>
+    <AnnotationServiceProvider>
+      <Viewer {...props} />
+    </AnnotationServiceProvider>
+  </DwvAppServiceProvider>
+);
 
 export default (DwvViewer);

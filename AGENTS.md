@@ -62,8 +62,8 @@ look there for reference behaviour when adding features.
 ## Architecture
 
 - **Services hold the logic, components display state.** Each viewer
-  (`DwvViewer`) is wrapped in its own `DwvAppServiceProvider` and
-  `AnnotationServiceProvider` (see `App.jsx`): they create one
+  (`DwvViewer`) wraps its content in its own `DwvAppServiceProvider` and
+  `AnnotationServiceProvider` (see `DwvViewer.jsx`): they create one
   `DwvAppService` and one `AnnotationService` per viewer and share them
   through React contexts. Child components get them with the
   `useDwvAppService()` / `useAnnotationService()` hooks (and the annotation

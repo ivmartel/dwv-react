@@ -8,10 +8,6 @@ import {
 } from '@mui/material';
 
 import DwvViewer from './components/DwvViewer.jsx';
-import { DwvAppServiceProvider } from './services/DwvAppServiceProvider.jsx';
-import {
-  AnnotationServiceProvider
-} from './services/AnnotationServiceProvider.jsx';
 
 import './App.css';
 
@@ -42,13 +38,9 @@ export default function App() {
     return (
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <DwvAppServiceProvider>
-          <AnnotationServiceProvider>
-            <div className="App">
-              <DwvViewer loadFromWindowLocation showLegend />
-            </div>
-          </AnnotationServiceProvider>
-        </DwvAppServiceProvider>
+        <div className="App">
+          <DwvViewer loadFromWindowLocation showLegend />
+        </div>
       </ThemeProvider>
     );
 }
