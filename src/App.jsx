@@ -45,7 +45,7 @@ export default function App() {
         <DwvAppServiceProvider>
           <AnnotationServiceProvider>
             <div className="App">
-              <DwvComponent />
+              <DwvComponent loadFromWindowLocation showLegend />
             </div>
           </AnnotationServiceProvider>
         </DwvAppServiceProvider>
