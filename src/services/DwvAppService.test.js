@@ -89,7 +89,7 @@ const EVENT_TYPES = [
  * @returns {object} {service, app, events, eventsOf}
  */
 const setup = () => {
-  const service = new DwvAppService();
+  const service = new DwvAppService('v0');
   const app = App.instances.at(-1);
   const events = [];
   for (const type of EVENT_TYPES) {
@@ -149,10 +149,21 @@ describe('DwvAppService', () => {
     const {app, service} = setup();
     expect(app.init).toHaveBeenCalledTimes(1);
     const options = app.init.mock.calls[0][0];
-    expect(options.dataViewConfigs['*'][0].divId).toBe('layerGroup0');
+    expect(options.dataViewConfigs['*'][0].divId).toBe('v0-layerGroup');
+    expect(service.getMainLayerGroupDivId()).toBe('v0-layerGroup');
     expect(Object.keys(options.tools)).toEqual(service.getToolNames());
     expect(options.overlayConfig).toBeDefined();
     expect(service.getDwvVersion()).toBe('0.0.0-test');
+  });
+
+  it('builds element ids from the viewer id', () => {
+    const {service} = setup();
+    expect(service.getViewerId()).toBe('v0');
+    expect(service.getElementId('rightPanel')).toBe('v0-rightPanel');
+  });
+
+  it('requires a viewer id', () => {
+    expect(() => new DwvAppService()).toThrow('viewer id');
   });
 
   it('forwards load calls', () => {

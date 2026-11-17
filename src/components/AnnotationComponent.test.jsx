@@ -9,6 +9,10 @@ import AnnotationComponent from './AnnotationComponent.jsx';
 import {
   AnnotationServiceContext
 } from '../services/AnnotationServiceProvider.jsx';
+import { DwvAppServiceContext } from '../services/DwvAppServiceProvider.jsx';
+
+// fake dwv app service: only provides the element ids
+const dwvAppService = {getElementId: (name) => `v0-${name}`};
 
 /**
  * Create a fake annotation service with a given state.
@@ -50,9 +54,11 @@ const state = {
 };
 
 const renderWith = (service) => render(
-  <AnnotationServiceContext.Provider value={service}>
-    <AnnotationComponent />
-  </AnnotationServiceContext.Provider>
+  <DwvAppServiceContext.Provider value={dwvAppService}>
+    <AnnotationServiceContext.Provider value={service}>
+      <AnnotationComponent />
+    </AnnotationServiceContext.Provider>
+  </DwvAppServiceContext.Provider>
 );
 
 describe('AnnotationComponent', () => {
@@ -90,7 +96,7 @@ describe('AnnotationComponent', () => {
   it('shows the quantification', () => {
     renderWith(fakeService(state));
     const info = screen.getByTitle('Show/hide quantification');
-    const detailsId = 'qd-annotationgroup1-annotationa0';
+    const detailsId = 'v0-qd-annotationgroup1-annotationa0';
     expect(info).toHaveAttribute('aria-controls', detailsId);
     expect(info).toHaveAttribute('aria-pressed', 'false');
     expect(info).toHaveAttribute('aria-expanded', 'false');
@@ -154,7 +160,7 @@ describe('AnnotationComponent', () => {
       ...state,
       selected: {dataId: '1', annotationId: 'a0'}
     }));
-    const row = document.getElementById('annotationgroup1-annotationa0');
+    const row = document.getElementById('v0-annotationgroup1-annotationa0');
     expect(row).toHaveClass('selected');
     expect(scrollIntoView).toHaveBeenCalledWith({block: 'nearest'});
     delete window.HTMLElement.prototype.scrollIntoView;

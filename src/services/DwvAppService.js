@@ -80,7 +80,14 @@ export class DwvAppService extends EventTarget {
   #orientation;
 
   /**
-   * Name of the main layer group.
+   * Unique viewer id: prefix of the viewer HTML element ids.
+   *
+   * @type {string}
+   */
+  #viewerId;
+
+  /**
+   * Name of the main layer group: the id of its div.
    *
    * @type {string}
    */
@@ -118,11 +125,20 @@ export class DwvAppService extends EventTarget {
    */
   #activeDataId;
 
-  constructor() {
+  /**
+   * @param {string} viewerId The unique viewer id, used to build
+   *   the viewer HTML element ids (for ex `<viewerId>-layerGroup`).
+   */
+  constructor(viewerId) {
     super();
 
+    if (!viewerId) {
+      throw new Error('A viewer id is required.');
+    }
+    this.#viewerId = viewerId;
+
     // initialise app
-    this.#layerGroupName = 'layerGroup0';
+    this.#layerGroupName = this.getElementId('layerGroup');
     const viewConfig0 = new ViewConfig(this.#layerGroupName);
     const viewConfigs = {'*': [viewConfig0]};
     const appOptions = new AppOptions(viewConfigs);
@@ -132,6 +148,25 @@ export class DwvAppService extends EventTarget {
     // setup listeners
     this.#setupLoadListeners();
     this.#setupListeners();
+  }
+
+  /**
+   * Get the unique viewer id.
+   *
+   * @returns {string} The viewer id.
+   */
+  getViewerId() {
+    return this.#viewerId;
+  }
+
+  /**
+   * Get a viewer HTML element id: `<viewerId>-<name>`.
+   *
+   * @param {string} name The element name.
+   * @returns {string} The element id.
+   */
+  getElementId(name) {
+    return `${this.#viewerId}-${name}`;
   }
 
   /**

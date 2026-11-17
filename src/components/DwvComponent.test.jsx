@@ -50,6 +50,17 @@ describe('DwvComponent', () => {
     render(<Viewer />);
   });
 
+  it('builds unique element ids for several viewers', () => {
+    const { container } = render(<><Viewer /><Viewer /></>);
+    const ids = [...container.querySelectorAll('[id]')].map((el) => el.id);
+    expect(new Set(ids).size).toBe(ids.length);
+    const layerGroups = container.querySelectorAll('.layerGroup');
+    expect(layerGroups).toHaveLength(2);
+    expect(layerGroups[0].id).toMatch(/-layerGroup$/);
+    expect(layerGroups[1].id).toMatch(/-layerGroup$/);
+    expect(layerGroups[0].id).not.toBe(layerGroups[1].id);
+  });
+
   it('hides the legend by default', () => {
     const { container } = render(<Viewer />);
     expect(container.querySelector('.legend')).toBeNull();

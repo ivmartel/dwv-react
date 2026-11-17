@@ -121,13 +121,13 @@ const Content = () => {
 
   return (
     <Root className="content">
-      <div id="layerGroup0" className="layerGroup"
+      <div id={dwvAppService.getMainLayerGroupDivId()} className="layerGroup"
         ref={layerGroupRef}
         onDragOver={preventDefaultDrag}
         onDragLeave={preventDefaultDrag}
         onDrop={onDrop}
         >
-        <div id="dropBox"
+        <div
           className={boxClassName}
           style={{display: showDropbox ? 'initial' : 'none'}}
           onDragOver={onBoxDragOver}
@@ -135,10 +135,9 @@ const Content = () => {
           onDrop={onDrop}
           >
           <p>Drag and drop data here or
-            <label htmlFor="input-file">
-              <a id="input-file-link"> click here</a>
+            <label>
+              <a className="inputFileLink"> click here</a>
               <input
-                id="input-file"
                 type="file"
                 multiple
                 onChange={onInputFile}

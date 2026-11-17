@@ -9,6 +9,8 @@ import { IconButton } from '@mui/material';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
+import { useElementId } from '../services/DwvAppServiceProvider.jsx';
+
 import './RightPanel.css';
 
 /**
@@ -16,7 +18,6 @@ import './RightPanel.css';
  * Design spec: `doc/design/RightPanel.md`.
  */
 
-const PANEL_ID = 'rightPanel';
 const MIN_WIDTH = 200;
 const DEFAULT_WIDTH = 300;
 // maximum width as a fraction of the window width
@@ -81,6 +82,8 @@ const ToggleButton = styled(IconButton)({
  * @returns {React.ReactElement} The panel element.
  */
 const RightPanel = ({ children }) => {
+
+  const panelId = useElementId()('rightPanel');
 
   const [isOpen, setIsOpen] = useState(false);
   const [width, setWidth] = useState(DEFAULT_WIDTH);
@@ -180,7 +183,7 @@ const RightPanel = ({ children }) => {
       ref={toggleRef}
       title={isOpen ? 'Close panel' : 'Open panel'}
       aria-expanded={isOpen}
-      aria-controls={PANEL_ID}
+      aria-controls={panelId}
       onClick={onToggle}
       >
       {isOpen ? <ChevronRightIcon /> : <ChevronLeftIcon />}
@@ -203,7 +206,7 @@ const RightPanel = ({ children }) => {
         </ToggleStrip>
       }
       <Panel
-        id={PANEL_ID}
+        id={panelId}
         className={panelClassName}
         style={{width: isOpen ? width : 0}}
         aria-hidden={!isOpen}
@@ -217,7 +220,7 @@ const RightPanel = ({ children }) => {
             title="Resize panel"
             aria-label="Resize panel"
             aria-orientation="vertical"
-            aria-controls={PANEL_ID}
+            aria-controls={panelId}
             aria-valuenow={width}
             aria-valuemin={MIN_WIDTH}
             aria-valuemax={getMaxWidth()}

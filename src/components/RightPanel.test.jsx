@@ -1,6 +1,21 @@
 import { act, render, screen, fireEvent } from '@testing-library/react';
 
 import RightPanel from './RightPanel.jsx';
+import { DwvAppServiceContext } from '../services/DwvAppServiceProvider.jsx';
+
+// fake dwv app service: only provides the element ids
+const dwvAppService = {getElementId: (name) => `v0-${name}`};
+
+/**
+ * Render a panel inside a (fake) viewer context.
+ *
+ * @returns {object} The render result.
+ */
+const renderPanel = () => render(
+  <DwvAppServiceContext.Provider value={dwvAppService}>
+    <RightPanel><p>panel content</p></RightPanel>
+  </DwvAppServiceContext.Provider>
+);
 
 /**
  * Click the toggle button with the given name. The click moves the
@@ -22,12 +37,12 @@ const clickToggle = async (name) => {
  *   and its resize handle.
  */
 const renderOpen = async () => {
-  render(<RightPanel><p>panel content</p></RightPanel>);
+  renderPanel();
   await clickToggle('Open panel');
   const handle = screen.getByRole('separator', {name: 'Resize panel'});
   handle.setPointerCapture = () => {};
   handle.releasePointerCapture = () => {};
-  return {panel: document.getElementById('rightPanel'), handle};
+  return {panel: document.getElementById('v0-rightPanel'), handle};
 };
 
 describe('RightPanel', () => {
@@ -36,8 +51,8 @@ describe('RightPanel', () => {
   });
 
   it('is closed by default', () => {
-    render(<RightPanel><p>panel content</p></RightPanel>);
-    const panel = document.getElementById('rightPanel');
+    renderPanel();
+    const panel = document.getElementById('v0-rightPanel');
     expect(panel.tagName).toBe('ASIDE');
     expect(panel).toHaveAttribute('aria-hidden', 'true');
     expect(panel).toHaveAttribute('inert');
@@ -45,13 +60,13 @@ describe('RightPanel', () => {
     expect(screen.queryByRole('separator')).not.toBeInTheDocument();
     const toggle = screen.getByRole('button', {name: 'Open panel'});
     expect(toggle).toHaveAttribute('aria-expanded', 'false');
-    expect(toggle).toHaveAttribute('aria-controls', 'rightPanel');
+    expect(toggle).toHaveAttribute('aria-controls', 'v0-rightPanel');
   });
 
   it('opens and closes on toggle, moving the focus', async () => {
-    render(<RightPanel><p>panel content</p></RightPanel>);
+    renderPanel();
     await clickToggle('Open panel');
-    const panel = document.getElementById('rightPanel');
+    const panel = document.getElementById('v0-rightPanel');
     expect(panel).toHaveAttribute('aria-hidden', 'false');
     expect(panel.style.width).toBe('300px');
     expect(screen.getByText('panel content')).toBeVisible();
@@ -69,7 +84,7 @@ describe('RightPanel', () => {
   it('exposes the resize handle values', async () => {
     const {handle} = await renderOpen();
     expect(handle).toHaveAttribute('aria-orientation', 'vertical');
-    expect(handle).toHaveAttribute('aria-controls', 'rightPanel');
+    expect(handle).toHaveAttribute('aria-controls', 'v0-rightPanel');
     expect(handle).toHaveAttribute('aria-valuenow', '300');
     expect(handle).toHaveAttribute('aria-valuemin', '200');
     expect(handle).toHaveAttribute('aria-valuemax', '500');

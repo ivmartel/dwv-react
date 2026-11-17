@@ -168,7 +168,6 @@ const TagsTable = ({ data }) => {
     <Box sx={{padding: '10px', overflow: 'hidden'}}>
       <Stack direction="row" spacing={2}>
         <TextField
-          id="search"
           type="search"
           value={search}
           sx={{width: '45%'}}

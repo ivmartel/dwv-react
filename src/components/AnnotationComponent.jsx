@@ -29,6 +29,7 @@ import {
   useAnnotationService,
   useAnnotationState
 } from '../services/AnnotationServiceProvider.jsx';
+import { useElementId } from '../services/DwvAppServiceProvider.jsx';
 import { getQuantificationGroups } from '../services/quantification.js';
 
 import { getShapeIcon } from './shapeIcons.jsx';
@@ -50,13 +51,14 @@ const getAnnotationKey = (dataId, annotationId) =>
   `${dataId}-${annotationId}`;
 
 /**
- * Get the html element id of an annotation.
+ * Get the html element name of an annotation: to prefix
+ *   with the viewer id to get the element id.
  *
  * @param {string} dataId The annotation group data id.
  * @param {string} annotationId The annotation tracking UID.
- * @returns {string} The element id.
+ * @returns {string} The element name.
  */
-const getAnnotationElementId = (dataId, annotationId) =>
+const getAnnotationElementName = (dataId, annotationId) =>
   `annotationgroup${dataId}-annotation${annotationId}`;
 
 /**
@@ -227,6 +229,7 @@ const AnnotationItem = ({
 }) => {
 
   const annotationService = useAnnotationService();
+  const getElementId = useElementId();
   const itemRef = useRef(null);
 
   // scroll into view on selection (after rendering)
@@ -237,8 +240,9 @@ const AnnotationItem = ({
   }, [selected]);
 
   const annotationId = annotation.id;
-  const elementId = getAnnotationElementId(dataId, annotationId);
-  const detailsId = `qd-${elementId}`;
+  const elementName = getAnnotationElementName(dataId, annotationId);
+  const elementId = getElementId(elementName);
+  const detailsId = getElementId(`qd-${elementName}`);
 
   const onClick = () => {
     annotationService.selectAnnotation(dataId, annotationId);

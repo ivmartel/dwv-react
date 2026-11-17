@@ -36,7 +36,7 @@ Width limits:
 ```text
 toggleStrip                 (closed only)
 └─ toggle
-panel                       (id rightPanel)
+panel                       (id <viewerId>-rightPanel)
 ├─ resizeHandle             (left edge)
 └─ panelContent             (fixed to the panel width)
    ├─ panelHeader
