@@ -7,7 +7,6 @@ import { dwvWorkers } from './plugins/dwvWorkers.js'
 export default defineConfig({
   // the demo application, using the viewer from 'src'
   root: 'demo',
-  publicDir: '../public',
   build: {
     outDir: '../dist',
     emptyOutDir: true

@@ -109,8 +109,9 @@ push and PR.
 - `demo/` - the demo application (Vite root, see `vite.config.js`):
   `index.html`, `main.jsx` entry point and `App.jsx` with the MUI theme
   (light/dark from `prefers-color-scheme`, custom
-  `background.surfaceContainer` token for side panels). It uses the
-  viewer from `src/` and is not part of it.
+  `background.surfaceContainer` token for side panels) and `public/` for
+  its static files (`favicon.ico`, icons). It uses the viewer from `src/`
+  and is not part of it.
 - `src/` - the viewer: only code needed to embed `DwvViewer`.
 - `src/services/` - framework-independent logic wrapping dwv:
   - `DwvAppService.js` - owns the dwv `App`; extends `EventTarget` and
@@ -124,7 +125,6 @@ push and PR.
   each with a co-located `.css` file when needed.
 - `plugins/` - Vite plugins used by the build (`dwvWorkers.js`).
 - `tests/setup.js` - Vitest setup (jest-dom matchers, cleanup).
-- `public/` - static files served by the demo (`favicon.ico`, icons).
 - dwv web workers: dwv loads them at runtime from `assets/workers/`
   (relative to the page base URI). The `dwvWorkers` Vite plugin
   (`plugins/dwvWorkers.js`) serves them from
