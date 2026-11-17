@@ -49,7 +49,16 @@ export const TransitionUp = forwardRef((props, ref) => (
   <Slide direction="up" {...props} ref={ref} />
 ))
 
-const Header = () => {
+/**
+ * Viewer toolbar.
+ *
+ * @param {object} props The component props.
+ * @param {function(): HTMLElement} [props.dialogContainer] Get the
+ *   element the dialogs are attached to (the viewer root),
+ *   defaults to the document body.
+ * @returns {React.ReactElement} The element.
+ */
+const Header = ({ dialogContainer }) => {
 
   const dwvAppService = useDwvAppService();
 
@@ -362,6 +371,7 @@ const Header = () => {
       <Dialog
         open={showDicomTags}
         onClose={handleTagsDialogClose}
+        container={dialogContainer}
         slots={{ transition: TransitionUp }}
         >
           <AppBar className={classes.appBar} position="sticky">

@@ -61,6 +61,9 @@ const DwvComponent = ({
   // normalised urls (white space): only a new list triggers a load
   const urlsKey = getUrlList(urls).join(' ');
 
+  // viewer root element: container of the viewer dialogs
+  const rootRef = useRef(null);
+
   // last loaded inputs, undefined before init
   const loadedInputs = useRef(undefined);
 
@@ -112,8 +115,8 @@ const DwvComponent = ({
   };
 
   return (
-    <Root className="dwv">
-      <Header />
+    <Root className="dwv" ref={rootRef}>
+      <Header dialogContainer={() => rootRef.current} />
       <Content className="content"/>
       {showLegend && <Footer />}
       <Snackbar

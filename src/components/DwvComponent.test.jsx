@@ -1,5 +1,8 @@
-import { render } from '@testing-library/react'
-import { DwvAppServiceProvider } from '../services/DwvAppServiceProvider.jsx';
+import { act, render, screen, within } from '@testing-library/react';
+import {
+  DwvAppServiceProvider,
+  useDwvAppService
+} from '../services/DwvAppServiceProvider.jsx';
 import {
   AnnotationServiceProvider
 } from '../services/AnnotationServiceProvider.jsx';
@@ -13,13 +16,26 @@ import DwvComponent, { getUrlList } from './DwvComponent.jsx';
  * @param {object} props The component properties.
  * @returns {JSX.Element} The wrapped component.
  */
-const Viewer = (props) => (
+const Viewer = ({ onService, ...props }) => (
   <DwvAppServiceProvider>
     <AnnotationServiceProvider>
+      {onService && <ServiceProbe onService={onService} />}
       <DwvComponent {...props} />
     </AnnotationServiceProvider>
   </DwvAppServiceProvider>
 );
+
+/**
+ * Give access to the viewer service.
+ *
+ * @param {object} props The component properties.
+ * @param {Function} props.onService Called with the service.
+ * @returns {null} Nothing.
+ */
+const ServiceProbe = ({ onService }) => {
+  onService(useDwvAppService());
+  return null;
+};
 
 describe('getUrlList', () => {
   it('splits white space separated urls', () => {
@@ -129,5 +145,25 @@ describe('DwvComponent', () => {
     rerender(<Viewer uri="https://x.org/?input=b.dcm" urls=" c.dcm " />);
     expect(loadURLs).toHaveBeenCalledTimes(1);
     expect(loadFromUri).toHaveBeenCalledTimes(2);
+  });
+
+  it('attaches the tags dialog to its viewer', async () => {
+    vi.spyOn(DwvAppService.prototype, 'getMetaData').mockReturnValue({});
+    const services = [];
+    const { container } = render(<>
+      <Viewer onService={(service) => services[0] = service} />
+      <Viewer onService={(service) => services[1] = service} />
+    </>);
+    const viewers = container.querySelectorAll('.dwv');
+    act(() => {
+      services[1].dispatchEvent(
+        new CustomEvent('dataloaded', {detail: {value: true}}));
+    });
+    await act(async () => {
+      within(viewers[1]).getByTitle('Tags').click();
+    });
+    const dialog = screen.getByRole('dialog');
+    expect(viewers[1]).toContainElement(dialog);
+    expect(viewers[0]).not.toContainElement(dialog);
   });
 });
