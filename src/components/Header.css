@@ -28,8 +28,9 @@
 
 /* select-wraper */
 .select-wrapper {
-  margin-right: 3px;
-  height: 100%;
+  /* same height and vertical margins as .toolbar-item */
+  margin: 10px 3px 10px 0;
+  height: 40px;
   position: relative;
   display: flex;
   align-items: center;
