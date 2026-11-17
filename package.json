@@ -1,9 +1,26 @@
 {
-  "name": "dwv-react",
+  "name": "@ivmartel/dwv-react",
   "version": "0.11.0-beta.0",
   "description": "Medical viewer using DWV (DICOM Web Viewer) and React.",
   "author": "ivmartel",
   "license": "GPL-3.0",
+  "keywords": [
+    "dicom",
+    "medical",
+    "imaging",
+    "viewer",
+    "dwv",
+    "react",
+    "mui"
+  ],
+  "homepage": "https://github.com/ivmartel/dwv-react#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ivmartel/dwv-react.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ivmartel/dwv-react/issues"
+  },
   "type": "module",
   "module": "./dist/dwv-react-lib/index.js",
   "exports": {
@@ -18,6 +35,9 @@
   "sideEffects": [
     "**/*.css"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "dwv": "0.36.4"
   },

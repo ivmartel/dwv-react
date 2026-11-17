@@ -9,7 +9,7 @@ Medical (DICOM) image viewer component built on
 Shipped with a demo application (`demo/`).
 Not certified for diagnostic use. License: GPL-3.0.
 
-The main deliverable is the npm package
+The main deliverable is the npm package `@ivmartel/dwv-react`
 providing the `DwvViewer` component (see [Library package](#library-package));
 the repository also contains a demo app that uses it, deployed to GitHub
 Pages. The library only exposes what consumers need.
@@ -101,7 +101,7 @@ look there for reference behaviour when adding features.
 - Build: `yarn build-lib` (`vite.lib.config.js`, Vite library mode, ES
   module only) outputs `dist/dwv-react-lib/index.js` and `style.css` (the
   co-located component CSS, imported by consumers as
-  `dwv-react/style.css`). `yarn pack` runs it (`prepack`).
+  `@ivmartel/dwv-react/style.css`). `yarn pack` runs it (`prepack`).
 - Dependencies: React, React DOM, MUI and Emotion are peer dependencies
   (major version ranges; also dev dependencies for the demo and tests).
   `dwv` is a regular dependency pinned to an exact version. All of them

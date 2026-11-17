@@ -43,12 +43,12 @@ You can now open a browser at http://localhost:5173 and enjoy!
 ## Use as a library
 
 ```sh
-yarn add dwv-react react react-dom @mui/material @mui/icons-material @emotion/react @emotion/styled
+yarn add @ivmartel/dwv-react react react-dom @mui/material @mui/icons-material @emotion/react @emotion/styled
 ```
 
 ```jsx
-import { DwvViewer } from 'dwv-react';
-import 'dwv-react/style.css';
+import { DwvViewer } from '@ivmartel/dwv-react';
+import '@ivmartel/dwv-react/style.css';
 
 // the viewer fills its container: give it a height
 <div style={{height: '100vh'}}>
@@ -64,7 +64,7 @@ The viewer uses the MUI theme of the application if there is one
 With Vite, add the workers plugin (see below) to the application config:
 
 ```js
-import { dwvWorkers } from 'dwv-react/vite-plugin';
+import { dwvWorkers } from '@ivmartel/dwv-react/vite-plugin';
 
 export default defineConfig({ plugins: [react(), dwvWorkers()] });
 ```
@@ -77,7 +77,7 @@ They are not bundled automatically: the `dwvWorkers` Vite plugin (`plugins/dwvWo
 from the dwv package (`node_modules/dwv/dist/assets/workers`) in dev and copies them to
 `dist/dwv-react-app/assets/workers` in the build, so they always match the installed dwv version.
 An application embedding the viewer needs to serve them the same way: with Vite, use the
-plugin (`dwv-react/vite-plugin`), otherwise copy `node_modules/dwv/dist/assets/workers` to
+plugin (`@ivmartel/dwv-react/vite-plugin`), otherwise copy `node_modules/dwv/dist/assets/workers` to
 `assets/workers/` next to the page. Since the path is relative to the page base URI, a page
 at a nested route (for ex. `/app/viewer/123`) needs a `<base href>` pointing to where the
 workers are served.
