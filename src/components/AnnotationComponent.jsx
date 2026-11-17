@@ -35,9 +35,9 @@ import { getQuantificationGroups } from '../services/quantification.js';
 import { getShapeIcon } from './shapeIcons.jsx';
 
 /**
- * Mapped to the dwv `dev/viewer/src/annotationComponent.js`:
- *   React renderer of the annotation service state.
- * Design spec: `doc/design/AnnotationComponent.md`.
+ * Annotation list component: renders the annotation service state.
+ *
+ * Adapted from the dwv-simplistic `annotationComponent.js`.
  */
 
 /**

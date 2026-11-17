@@ -1,8 +1,6 @@
 import { i18n } from 'dwv';
 
-/**
- * Mapped to the dwv `dev/viewer/src/quantification.js`.
- */
+// see doc/design/annotationList.md, 'Quantification details'
 
 /**
  * Quantification keys related to pixel values, other keys are

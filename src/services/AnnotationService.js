@@ -7,8 +7,8 @@ import {
 } from 'dwv';
 
 /**
- * Mapped to the dwv `dev/viewer/src/annotationService.js`, adapted to
- *   the released dwv API: no 'tap' event and no annotation highlight.
+ * Note: port of the dwv-simplistic 'src/lib/annotationService.js'
+ *   (see doc/design/annotationList.md).
  */
 
 /**
