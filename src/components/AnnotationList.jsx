@@ -422,7 +422,7 @@ const AnnotationGroup = ({
  *
  * @returns {React.ReactElement} The element.
  */
-const AnnotationComponent = () => {
+const AnnotationList = () => {
 
   const state = useAnnotationState();
 
@@ -464,6 +464,6 @@ const AnnotationComponent = () => {
     </Stack>
   );
 
-} // AnnotationComponent
+} // AnnotationList
 
-export default (AnnotationComponent);
+export default (AnnotationList);

@@ -5,7 +5,7 @@ vi.mock('dwv', () => ({
   i18n: {t: () => undefined}
 }));
 
-import AnnotationComponent from './AnnotationComponent.jsx';
+import AnnotationList from './AnnotationList.jsx';
 import {
   AnnotationServiceContext
 } from '../services/AnnotationServiceProvider.jsx';
@@ -56,12 +56,12 @@ const state = {
 const renderWith = (service) => render(
   <DwvAppServiceContext.Provider value={dwvAppService}>
     <AnnotationServiceContext.Provider value={service}>
-      <AnnotationComponent />
+      <AnnotationList />
     </AnnotationServiceContext.Provider>
   </DwvAppServiceContext.Provider>
 );
 
-describe('AnnotationComponent', () => {
+describe('AnnotationList', () => {
   it('lists the groups and annotations', () => {
     renderWith(fakeService(state));
     expect(screen.getByText('group #1')).toBeInTheDocument();

@@ -8,7 +8,7 @@ import {
 
 /**
  * Note: port of the dwv-simplistic 'src/lib/annotationService.js'
- *   (see doc/design/AnnotationComponent.md).
+ *   (see doc/design/AnnotationList.md).
  */
 
 /**

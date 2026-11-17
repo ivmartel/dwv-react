@@ -117,7 +117,7 @@ push and PR.
     (`useDwvAppService`, `useAnnotationService`, `useAnnotationState`).
   - `overlays.js`, `quantification.js` - helpers.
 - `src/components/` - React function components (`DwvViewer`,
-  `AnnotationComponent`, `RightPanel`, `TagsTable`, header/footer...),
+  `AnnotationList`, `RightPanel`, `TagsTable`, header/footer...),
   each with a co-located `.css` file when needed.
 - `tests/setup.js` - Vitest setup (jest-dom matchers, cleanup).
 - `public/assets/workers/` - vendored, minified dwv web workers. They are

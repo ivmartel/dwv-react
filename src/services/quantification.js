@@ -1,6 +1,6 @@
 import { i18n } from 'dwv';
 
-// see doc/design/AnnotationComponent.md, 'Quantification details'
+// see doc/design/AnnotationList.md, 'Quantification details'
 
 /**
  * Quantification keys related to pixel values, other keys are
