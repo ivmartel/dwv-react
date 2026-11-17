@@ -7,7 +7,7 @@ import {
   colors
 } from '@mui/material';
 
-import DwvComponent from './components/DwvComponent.jsx';
+import DwvViewer from './components/DwvViewer.jsx';
 import { DwvAppServiceProvider } from './services/DwvAppServiceProvider.jsx';
 import {
   AnnotationServiceProvider
@@ -45,7 +45,7 @@ export default function App() {
         <DwvAppServiceProvider>
           <AnnotationServiceProvider>
             <div className="App">
-              <DwvComponent loadFromWindowLocation showLegend />
+              <DwvViewer loadFromWindowLocation showLegend />
             </div>
           </AnnotationServiceProvider>
         </DwvAppServiceProvider>

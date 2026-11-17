@@ -8,7 +8,7 @@ import {
 } from '../services/AnnotationServiceProvider.jsx';
 import { DwvAppService } from '../services/DwvAppService.js';
 
-import DwvComponent, { getUrlList } from './DwvComponent.jsx';
+import DwvViewer, { getUrlList } from './DwvViewer.jsx';
 
 /**
  * Wrap the component in its service providers.
@@ -20,7 +20,7 @@ const Viewer = ({ onService, ...props }) => (
   <DwvAppServiceProvider>
     <AnnotationServiceProvider>
       {onService && <ServiceProbe onService={onService} />}
-      <DwvComponent {...props} />
+      <DwvViewer {...props} />
     </AnnotationServiceProvider>
   </DwvAppServiceProvider>
 );
@@ -46,7 +46,7 @@ describe('getUrlList', () => {
   });
 });
 
-describe('DwvComponent', () => {
+describe('DwvViewer', () => {
   let loadFromUri;
   let loadURLs;
 

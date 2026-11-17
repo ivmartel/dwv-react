@@ -12,7 +12,7 @@ import Header from './Header.jsx';
 import Content from './Content.jsx';
 import Footer from './Footer.jsx';
 
-import './DwvComponent.css';
+import './DwvViewer.css';
 
 const Root = styled('div')();
 
@@ -47,7 +47,7 @@ export const getUrlList = (urls) => {
  * @param {boolean} [props.showLegend] Show the footer legend.
  * @returns {JSX.Element} The component.
  */
-const DwvComponent = ({
+const DwvViewer = ({
   uri,
   urls,
   loadFromWindowLocation = false,
@@ -132,6 +132,6 @@ const DwvComponent = ({
     </Root>
   );
 
-} // DwvComponent
+} // DwvViewer
 
-export default (DwvComponent);
+export default (DwvViewer);
