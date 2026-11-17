@@ -8,7 +8,7 @@ export default defineConfig({
   // the demo application, using the viewer from 'src'
   root: 'demo',
   build: {
-    outDir: '../dist',
+    outDir: '../dist/dwv-react-app',
     emptyOutDir: true
   },
   plugins: [
