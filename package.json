@@ -4,12 +4,30 @@
   "description": "Medical viewer using DWV (DICOM Web Viewer) and React.",
   "author": "ivmartel",
   "license": "GPL-3.0",
-  "private": true,
   "type": "module",
+  "module": "./dist/dwv-react-lib/index.js",
+  "exports": {
+    ".": "./dist/dwv-react-lib/index.js",
+    "./style.css": "./dist/dwv-react-lib/style.css",
+    "./vite-plugin": "./plugins/dwvWorkers.js"
+  },
+  "files": [
+    "dist/dwv-react-lib/**",
+    "plugins/dwvWorkers.js"
+  ],
+  "sideEffects": [
+    "**/*.css"
+  ],
   "dependencies": {
-    "dwv": "0.36.4",
-    "react": "^19.3.1",
-    "react-dom": "^19.3.1"
+    "dwv": "0.36.4"
+  },
+  "peerDependencies": {
+    "@emotion/react": "^11.0.0",
+    "@emotion/styled": "^11.0.0",
+    "@mui/icons-material": "^9.0.0",
+    "@mui/material": "^9.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
     "@emotion/react": "^11.14.0",
@@ -28,6 +46,8 @@
     "eslint-plugin-react-hooks": "^7.1.1",
     "globals": "^17.14.0",
     "jsdom": "^31.0.1",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
     "vite": "^8.3.8",
     "vite-plugin-pwa": "^2.0.0",
     "vitest": "^5.1.0"
@@ -37,6 +57,8 @@
     "build": "vite build",
     "build-trunk": "vite build --mode development --base /dwv-react/demo/trunk",
     "build-stable": "vite build --mode production --base /dwv-react/demo/stable",
+    "build-lib": "vite build --config vite.lib.config.js",
+    "prepack": "yarn build-lib",
     "preview": "vite preview",
     "lint": "eslint .",
     "test": "vitest",

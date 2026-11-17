@@ -3649,6 +3649,13 @@ __metadata:
     vite: "npm:^8.3.8"
     vite-plugin-pwa: "npm:^2.0.0"
     vitest: "npm:^5.1.0"
+  peerDependencies:
+    "@emotion/react": ^11.0.0
+    "@emotion/styled": ^11.0.0
+    "@mui/icons-material": ^9.0.0
+    "@mui/material": ^9.0.0
+    react: ^19.0.0
+    react-dom: ^19.0.0
   languageName: unknown
   linkType: soft
 

@@ -9,6 +9,11 @@ Medical (DICOM) image viewer component built on
 Shipped with a demo application (`demo/`).
 Not certified for diagnostic use. License: GPL-3.0.
 
+The main deliverable is the npm package
+providing the `DwvViewer` component (see [Library package](#library-package));
+the repository also contains a demo app that uses it, deployed to GitHub
+Pages. The library only exposes what consumers need.
+
 ## Requirements
 
 - Viewer inputs:
@@ -87,6 +92,36 @@ look there for reference behaviour when adding features.
   `DwvAppServiceContext` value with `getElementId` (see
   `RightPanel.test.jsx`).
 
+## Library package
+
+- Public API: the exports of `src/index.js`, currently `DwvViewer` only.
+  Keep it minimal, everything exported has to be kept stable. Consumers
+  render `<DwvViewer />` without any setup: the viewer creates its own
+  services.
+- Build: `yarn build-lib` (`vite.lib.config.js`, Vite library mode, ES
+  module only) outputs `dist/dwv-react-lib/index.js` and `style.css` (the
+  co-located component CSS, imported by consumers as
+  `dwv-react/style.css`). `yarn pack` runs it (`prepack`).
+- Dependencies: React, React DOM, MUI and Emotion are peer dependencies
+  (major version ranges; also dev dependencies for the demo and tests).
+  `dwv` is a regular dependency pinned to an exact version. All of them
+  stay external in the build: a new runtime import must be added to the
+  build externals and to the peer or regular dependencies.
+- `package.json` `exports`: `.` (the entry), `./style.css` and
+  `./vite-plugin` (`plugins/dwvWorkers.js`, shipped as source: it is Node
+  code, never import it from `src/`). `files` entries under `dist/` are
+  globs (`dist/dwv-react-lib/**`): Yarn applies `.gitignore` when packing
+  and `/dist` is ignored, a plain folder entry would drop files.
+- Web workers: dwv loads them at runtime from `assets/workers/` relative
+  to the page base URI. The `dwvWorkers` Vite plugin serves them from
+  `node_modules/dwv/dist/assets/workers` in dev and copies them to the
+  build, for the demo and for consumers; do not vendor them.
+- Consumers provide (see the README): a container with a height, the
+  stylesheet import and the workers; an MUI theme is optional (the
+  `background.surfaceContainer` token has a fallback).
+- Check a packaging change end to end: `yarn pack`, install the tarball
+  in a scratch Vite app and build it.
+
 ## Commands
 
 Package manager is Yarn 4 (via Corepack). Node 24 is used in CI.
@@ -96,7 +131,8 @@ Package manager is Yarn 4 (via Corepack). Node 24 is used in CI.
 - `yarn lint` - ESLint
 - `yarn test` - Vitest in watch mode; `yarn test run` for a single run
 - `yarn test-ci` - single run with coverage (as in CI)
-- `yarn build` - production build to `dist/`
+- `yarn build` - production build of the demo to `dist/dwv-react-app/`
+- `yarn build-lib` - library build to `dist/dwv-react-lib/`
 
 Before considering a change done, follow the `verify` skill
 (`.agents/skills/verify/SKILL.md`): tests, lint and a review against
@@ -113,6 +149,8 @@ push and PR.
   its static files (`favicon.ico`, icons). It uses the viewer from `src/`
   and is not part of it.
 - `src/` - the viewer: only code needed to embed `DwvViewer`.
+- `src/index.js` - library entry point (see
+  [Library package](#library-package)).
 - `src/services/` - framework-independent logic wrapping dwv:
   - `DwvAppService.js` - owns the dwv `App`; extends `EventTarget` and
     re-dispatches selected dwv events as `CustomEvent`s.
@@ -123,13 +161,10 @@ push and PR.
 - `src/components/` - React function components (`DwvViewer`,
   `AnnotationList`, `RightPanel`, `TagsTable`, header/footer...),
   each with a co-located `.css` file when needed.
-- `plugins/` - Vite plugins used by the build (`dwvWorkers.js`).
+- `plugins/` - Vite plugins (`dwvWorkers.js`, see
+  [Library package](#library-package)).
+- `vite.config.js` - demo build; `vite.lib.config.js` - library build.
 - `tests/setup.js` - Vitest setup (jest-dom matchers, cleanup).
-- dwv web workers: dwv loads them at runtime from `assets/workers/`
-  (relative to the page base URI). The `dwvWorkers` Vite plugin
-  (`plugins/dwvWorkers.js`) serves them from
-  `node_modules/dwv/dist/assets/workers` in dev and copies them to the
-  build; do not vendor them.
 
 ## Conventions
 
@@ -152,7 +187,6 @@ push and PR.
   component props and the theme over custom CSS or `sx` overrides.
 - Style: 2-space indent, single quotes, semicolons, private class fields
   (`#field`) for service internals. Unused args must be prefixed with `_`.
-- Pin `dwv` to an exact version.
 - Do not patch dwv (no edits in `node_modules/dwv`, no `patch-package` or
   Yarn patches, no monkey-patching at runtime). If a fix or feature is
   needed in dwv itself, propose a pull request to the
