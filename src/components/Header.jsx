@@ -331,7 +331,10 @@ const Header = ({ dialogContainer }) => {
 
   return (
     <Root className="header">
-      <LinearProgress variant="determinate" value={loadProgress} />
+      <LinearProgress
+        variant="determinate"
+        value={loadProgress}
+        sx={{width: '100%'}} />
 
       {getToolsButtons()}
 
