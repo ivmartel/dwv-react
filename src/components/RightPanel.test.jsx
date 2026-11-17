@@ -1,16 +1,29 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { act, render, screen, fireEvent } from '@testing-library/react';
 
 import RightPanel from './RightPanel.jsx';
 
 /**
+ * Click the toggle button with the given name. The click moves the
+ *   focus to the new toggle whose (lazy) MUI focus ripple starts
+ *   asynchronously: awaiting an async act lets it settle.
+ *
+ * @param {string} name The toggle accessible name.
+ */
+const clickToggle = async (name) => {
+  await act(async () => {
+    fireEvent.click(screen.getByRole('button', {name: name}));
+  });
+};
+
+/**
  * Render an open panel with a mocked pointer capture on its handle.
  *
- * @returns {{panel: HTMLElement, handle: HTMLElement}} The panel
+ * @returns {Promise<{panel: HTMLElement, handle: HTMLElement}>} The panel
  *   and its resize handle.
  */
-const renderOpen = () => {
+const renderOpen = async () => {
   render(<RightPanel><p>panel content</p></RightPanel>);
-  fireEvent.click(screen.getByRole('button', {name: 'Open panel'}));
+  await clickToggle('Open panel');
   const handle = screen.getByRole('separator', {name: 'Resize panel'});
   handle.setPointerCapture = () => {};
   handle.releasePointerCapture = () => {};
@@ -35,9 +48,9 @@ describe('RightPanel', () => {
     expect(toggle).toHaveAttribute('aria-controls', 'rightPanel');
   });
 
-  it('opens and closes on toggle, moving the focus', () => {
+  it('opens and closes on toggle, moving the focus', async () => {
     render(<RightPanel><p>panel content</p></RightPanel>);
-    fireEvent.click(screen.getByRole('button', {name: 'Open panel'}));
+    await clickToggle('Open panel');
     const panel = document.getElementById('rightPanel');
     expect(panel).toHaveAttribute('aria-hidden', 'false');
     expect(panel.style.width).toBe('300px');
@@ -48,13 +61,13 @@ describe('RightPanel', () => {
     expect(screen.queryByRole('button', {name: 'Open panel'}))
       .not.toBeInTheDocument();
 
-    fireEvent.click(close);
+    await clickToggle('Close panel');
     expect(panel).toHaveAttribute('aria-hidden', 'true');
     expect(screen.getByRole('button', {name: 'Open panel'})).toHaveFocus();
   });
 
-  it('exposes the resize handle values', () => {
-    const {handle} = renderOpen();
+  it('exposes the resize handle values', async () => {
+    const {handle} = await renderOpen();
     expect(handle).toHaveAttribute('aria-orientation', 'vertical');
     expect(handle).toHaveAttribute('aria-controls', 'rightPanel');
     expect(handle).toHaveAttribute('aria-valuenow', '300');
@@ -63,8 +76,8 @@ describe('RightPanel', () => {
     expect(handle).toHaveAttribute('tabindex', '0');
   });
 
-  it('resizes when dragging the handle', () => {
-    const {panel, handle} = renderOpen();
+  it('resizes when dragging the handle', async () => {
+    const {panel, handle} = await renderOpen();
 
     // other buttons are ignored
     fireEvent.pointerDown(handle, {pointerId: 1, button: 2, clientX: 700});
@@ -89,8 +102,8 @@ describe('RightPanel', () => {
     expect(panel.style.width).toBe('500px');
   });
 
-  it('resizes with the keyboard', () => {
-    const {panel, handle} = renderOpen();
+  it('resizes with the keyboard', async () => {
+    const {panel, handle} = await renderOpen();
     fireEvent.keyDown(handle, {key: 'ArrowLeft'});
     expect(panel.style.width).toBe('320px');
     fireEvent.keyDown(handle, {key: 'ArrowRight'});
@@ -104,12 +117,12 @@ describe('RightPanel', () => {
     expect(panel.style.width).toBe('200px');
   });
 
-  it('keeps the width while closed', () => {
-    const {panel, handle} = renderOpen();
+  it('keeps the width while closed', async () => {
+    const {panel, handle} = await renderOpen();
     fireEvent.keyDown(handle, {key: 'ArrowLeft'});
-    fireEvent.click(screen.getByRole('button', {name: 'Close panel'}));
+    await clickToggle('Close panel');
     expect(panel.style.width).toBe('0px');
-    fireEvent.click(screen.getByRole('button', {name: 'Open panel'}));
+    await clickToggle('Open panel');
     expect(panel.style.width).toBe('320px');
   });
 });

@@ -193,9 +193,13 @@ describe('AnnotationComponent', () => {
   });
 
   it('shows save errors', () => {
+    const consoleError = vi.spyOn(console, 'error')
+      .mockImplementation(() => {});
     const service = fakeService(state);
     renderWith(service);
     fireEvent.click(screen.getByTitle('Save annotation group'));
+    expect(consoleError).toHaveBeenCalledTimes(1);
+    consoleError.mockRestore();
     expect(screen.getByText('save error')).toBeInTheDocument();
   });
 });

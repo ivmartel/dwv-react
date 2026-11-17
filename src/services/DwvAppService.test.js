@@ -207,6 +207,8 @@ describe('DwvAppService', () => {
   });
 
   it('does not change the active data on a non rendered overlay', () => {
+    const consoleError = vi.spyOn(console, 'error')
+      .mockImplementation(() => {});
     const {app, service, eventsOf} = setup();
     simulateLoad(app, '0');
     // overlay rejected at render: no view layer, no renderend
@@ -215,6 +217,8 @@ describe('DwvAppService', () => {
     app.fire('load', {dataid: '1'});
     app.fire('loadend', {dataid: '1'});
 
+    expect(consoleError).toHaveBeenCalledTimes(1);
+    consoleError.mockRestore();
     expect(eventsOf('error')).toEqual(['Load error: incompatible geometries']);
     expect(eventsOf('dataloaded').at(-1)).toBe(true);
     service.applyTool('Scroll');
