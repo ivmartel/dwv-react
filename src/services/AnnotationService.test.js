@@ -57,7 +57,8 @@ const fakeGroup = (list = []) => {
     setEditable(flag) {
       editable = flag;
       for (const listener of this.listeners) {
-        listener({type: 'annotationgroupeditablechange', data: flag});
+        listener(new CustomEvent('annotationgroupeditablechange',
+          {detail: {data: flag}}));
       }
     },
     listeners: new Set(),

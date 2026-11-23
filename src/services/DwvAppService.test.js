@@ -34,7 +34,7 @@ vi.mock('dwv', () => {
     }
     fire(type, event = {}) {
       for (const callback of this.#listeners[type] ?? []) {
-        callback({type, ...event});
+        callback(new CustomEvent(type, {detail: event}));
       }
     }
     getActiveLayerGroup() {
@@ -253,7 +253,7 @@ describe('DwvAppService', () => {
     it('reports load errors once at load end', () => {
       const {app, eventsOf} = setup();
       app.fire('loadstart', {dataid: '0'});
-      // dwv 0.36 fires load errors as 'error'
+      // dwv fires load errors as 'error'
       app.fire('error', {error: new Error('bad file')});
       app.fire('loaderror', {error: new Error('other bad file')});
       expect(eventsOf('error')).toEqual([]);

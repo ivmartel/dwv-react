@@ -1819,7 +1819,7 @@ __metadata:
     "@types/react": "npm:^19.3.0"
     "@vitejs/plugin-react": "npm:^6.3.0"
     "@vitest/coverage-v8": "npm:^5.1.0"
-    dwv: "npm:0.36.4"
+    dwv: "npm:0.37.0"
     eslint: "npm:^10.15.0"
     eslint-plugin-react-hooks: "npm:^7.1.1"
     globals: "npm:^17.14.0"
@@ -3543,6 +3543,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"dcmstdtojs@npm:0.2.0":
+  version: 0.2.0
+  resolution: "dcmstdtojs@npm:0.2.0"
+  checksum: 10c0/655e070c586bbd2058dc85bba08677a10a72f32eeb881ba08074a7fc02ea45094ae6d8301f3cbd232b62b566200367e2374a0c4e838f799bc33a1d049a6473e4
+  languageName: node
+  linkType: hard
+
 "debug@npm:4, debug@npm:^4.1.0, debug@npm:^4.1.1, debug@npm:^4.3.1, debug@npm:^4.3.4, debug@npm:^4.3.6":
   version: 4.4.1
   resolution: "debug@npm:4.4.1"
@@ -3659,14 +3666,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dwv@npm:0.36.4":
-  version: 0.36.4
-  resolution: "dwv@npm:0.36.4"
+"dwv@npm:0.37.0":
+  version: 0.37.0
+  resolution: "dwv@npm:0.37.0"
   dependencies:
+    dcmstdtojs: "npm:0.2.0"
     jszip: "npm:^3.10.1"
-    konva: "npm:~10.2.0"
+    konva: "npm:~10.9.0"
     magic-wand-tool: "npm:~1.1.7"
-  checksum: 10c0/7b07be1e3ff70d09fc98eca497a912f613adbf3fc0718277b586897a8cf5c536bc4a448ecf8bb2db3906a18178e3d53ff39abe7fd636ccd2b797fb75bd182261
+  checksum: 10c0/8309134992d6a755b3cf6a3bde64781ccbc411c0479fc932a4050b4ae5fe0b366674df3694ba22d398fa3f557efcd9dce3986af05935cb7bc965e763c0289b5e
   languageName: node
   linkType: hard
 
@@ -5057,10 +5065,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"konva@npm:~10.2.0":
-  version: 10.2.0
-  resolution: "konva@npm:10.2.0"
-  checksum: 10c0/afbb59a8a83c41c75f6e3103aa7f2ddb7f4f2132dab612d54e7dcefcd50f9b28b6b02fb88ce1387fe2b33905e67dc73ba2dba2cd1cb01abfc47250798f61c88f
+"konva@npm:~10.9.0":
+  version: 10.9.1
+  resolution: "konva@npm:10.9.1"
+  peerDependencies:
+    canvas: ^3.0.0
+    skia-canvas: ^3.0.0
+  peerDependenciesMeta:
+    canvas:
+      optional: true
+    skia-canvas:
+      optional: true
+  checksum: 10c0/497e89546a59c92abab6b485f72fa8582dcf72eae3d485ff6e39d9bcce76af47997f9ecf9dee2c38e0b7de9ca61f9969718640b0e1251e28a36cf84819881d50
   languageName: node
   linkType: hard
 

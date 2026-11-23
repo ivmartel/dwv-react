@@ -39,7 +39,7 @@
     "access": "public"
   },
   "dependencies": {
-    "dwv": "0.36.4"
+    "dwv": "0.37.0"
   },
   "peerDependencies": {
     "@emotion/react": "^11.0.0",

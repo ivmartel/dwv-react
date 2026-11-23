@@ -9,7 +9,7 @@ import { overlayConfig } from './overlays';
 
 /**
  * dwv app event types forwarded by the service as `CustomEvent`s:
- *   the event detail is a copy of the app event (for ex
+ *   the event detail is a copy of the app event detail (for ex
  *   `{dataid, data}`).
  */
 const forwardedEventTypes = [
@@ -248,17 +248,17 @@ export class DwvAppService extends EventTarget {
       }
       loadErrors = [];
       nReceivedLoadAbort = 0;
-      notYetRendered.add(event.dataid);
-      loading.add(event.dataid);
+      notYetRendered.add(event.detail.dataid);
+      loading.add(event.detail.dataid);
     });
     this.#dwvApp.addEventListener('loadprogress', (event) => {
-      this.#dispatch('loadprogress', {value: event.loaded});
+      this.#dispatch('loadprogress', {value: event.detail.loaded});
     });
     this.#dwvApp.addEventListener('renderend', (event) => {
-      if (notYetRendered.has(event.dataid)) {
-        notYetRendered.delete(event.dataid);
-        this.#activeDataId = event.dataid;
-        const vl = this.#dwvApp.getViewLayersByDataId(event.dataid)[0];
+      if (notYetRendered.has(event.detail.dataid)) {
+        notYetRendered.delete(event.detail.dataid);
+        this.#activeDataId = event.detail.dataid;
+        const vl = this.#dwvApp.getViewLayersByDataId(event.detail.dataid)[0];
         const vc = vl.getViewController();
         // available tools
         this.#canScroll = vc.canScroll();
@@ -272,9 +272,9 @@ export class DwvAppService extends EventTarget {
     this.#dwvApp.addEventListener('load', (event) => {
       // set dicom tags if the data is displayed
       // (an overlay can be rejected at render, see 'error')
-      if (event.dataid === this.#activeDataId) {
+      if (event.detail.dataid === this.#activeDataId) {
         this.#metaData =
-          structuredClone(this.#dwvApp.getMetaData(event.dataid));
+          structuredClone(this.#dwvApp.getMetaData(event.detail.dataid));
         const pixelDataKey = '7FE00010';
         if (typeof this.#metaData[pixelDataKey] !== 'undefined') {
           delete this.#metaData[pixelDataKey];
@@ -286,8 +286,8 @@ export class DwvAppService extends EventTarget {
       this.#dispatch('dataloaded', {value: this.#activeDataId !== undefined});
     });
     this.#dwvApp.addEventListener('loadend', (event) => {
-      notYetRendered.delete(event.dataid);
-      loading.delete(event.dataid);
+      notYetRendered.delete(event.detail.dataid);
+      loading.delete(event.detail.dataid);
       if (loadErrors.length !== 0) {
         this.#dispatch('loadprogress', {value: 0});
         let message = 'Load error: ' + loadErrors[0];
@@ -304,12 +304,12 @@ export class DwvAppService extends EventTarget {
         nReceivedLoadAbort = 0;
       }
     });
-    // dwv (0.36) fires load errors as 'error' (and aborts as 'abort'),
+    // dwv fires load errors as 'error' (and aborts as 'abort'),
     // render errors (for example an overlay with incompatible
     // geometry) are also fired as 'error'
     const onError = (event) => {
-      console.error(event.error);
-      const message = event.error?.message ?? String(event.error);
+      console.error(event.detail.error);
+      const message = event.detail.error?.message ?? String(event.detail.error);
       if (loading.size !== 0) {
         // reported at load end
         loadErrors.push(message);
@@ -335,7 +335,7 @@ export class DwvAppService extends EventTarget {
     this.#dwvApp.addEventListener('wlchange', (event) => {
       // value: [center, width, name]
       const manualStr = 'manual';
-      if (event.value[2] === manualStr) {
+      if (event.detail.value[2] === manualStr) {
         if (!this.#presetNames.includes(manualStr)) {
           this.#setPresetNames([...this.#presetNames, manualStr]);
         }
@@ -347,15 +347,13 @@ export class DwvAppService extends EventTarget {
 
     // handle key events
     this.#dwvApp.addEventListener('keydown', (event) => {
-      this.#dwvApp.defaultOnKeydown(event);
+      this.#dwvApp.defaultOnKeydown(event.detail);
     });
 
     // forward data and annotation events
     for (const type of forwardedEventTypes) {
       this.#dwvApp.addEventListener(type, (event) => {
-        const detail = {...event};
-        delete detail.type;
-        this.#dispatch(type, detail);
+        this.#dispatch(type, {...event.detail});
       });
     }
   }

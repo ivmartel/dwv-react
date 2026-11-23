@@ -17,26 +17,51 @@ import {
   Box
 } from '@mui/material';
 
-import { getTagFromKey } from 'dwv';
+import { getDicomTagInfo, getTagFromKey } from 'dwv';
 
 import Search from '@mui/icons-material/Search';
 
 /**
- * Get the sorted instance numbers ('00200013') of the meta data.
+ * Key of the list of merge ids in merged meta data: dwv merges
+ *   the meta data of the slices of a volume and stores the ids
+ *   of the merged slices (the instance number, followed by
+ *   '-<volume index>' for multi-volume data) under this key.
+ */
+const mergeIdKey = 'mergeId';
+
+/**
+ * Get the sorted merge ids of the meta data.
  *
  * @param {object} metaData The meta data.
- * @returns {number[]} The sorted list, empty if no instance number.
+ * @returns {string[]} The sorted list, empty if not merged.
  */
-const getInstanceNumbers = (metaData) => {
-  const instanceElement = metaData['00200013'];
-  if (typeof instanceElement === 'undefined') {
+const getMergeIds = (metaData) => {
+  const ids = metaData[mergeIdKey];
+  if (!Array.isArray(ids)) {
     return [];
   }
-  let values = instanceElement.value;
-  if (typeof values === 'string') {
-    values = [values];
+  return [...ids].sort(
+    (a, b) => a.localeCompare(b, undefined, {numeric: true}));
+};
+
+/**
+ * Get the value of a meta data element for a merge id: values that
+ *   differ between the merged slices are objects indexed by merge id.
+ *
+ * @param {*} value The element value.
+ * @param {string|undefined} mergeId The merge id.
+ * @returns {*} The value for the merge id.
+ */
+const getMergedValue = (value, mergeId) => {
+  if (typeof mergeId !== 'undefined' &&
+    value !== null &&
+    typeof value === 'object' &&
+    !Array.isArray(value) &&
+    !ArrayBuffer.isView(value) &&
+    typeof value[mergeId] !== 'undefined') {
+    return value[mergeId];
   }
-  return values.map(Number).sort((a, b) => a - b);
+  return value;
 };
 
 /**
@@ -53,13 +78,14 @@ const isDicomMeta = (metaData) => {
  * Get a non DICOM tag reducer.
  *
  * @param {object} tagData The meta data.
+ * @param {string|undefined} mergeId The merge id.
  * @returns {Function} The reducer.
  */
-const getTagReducer = (tagData) => {
+const getTagReducer = (tagData, mergeId) => {
   return (accumulator, currentValue) => {
     accumulator.push({
       name: currentValue,
-      value: tagData[currentValue].value
+      value: getMergedValue(tagData[currentValue].value, mergeId)
     });
     return accumulator;
   };
@@ -69,30 +95,20 @@ const getTagReducer = (tagData) => {
  * Get a DICOM tag reducer.
  *
  * @param {object} tagData The meta data.
- * @param {number} instanceNumber The instance number.
+ * @param {string|undefined} mergeId The merge id.
  * @param {string} prefix The tag name prefix (used for sequences).
  * @returns {Function} The reducer.
  */
-const getDicomTagReducer = (tagData, instanceNumber, prefix) => {
+const getDicomTagReducer = (tagData, mergeId, prefix) => {
   return (accumulator, currentValue) => {
     const tag = getTagFromKey(currentValue);
-    let name = tag.getNameFromDictionary();
+    let name = getDicomTagInfo(tag)?.getName();
     if (typeof name === 'undefined') {
       // add 'x' to help sorting
       name = 'x' + tag.getKey();
     }
     const element = tagData[currentValue];
-    let value = element.value;
-    // possible 'merged' object
-    // (use slice method as test for array and typed array)
-    if (typeof value.slice === 'undefined' &&
-      typeof value[instanceNumber] !== 'undefined') {
-      value = value[instanceNumber];
-    }
-    // force instance number (otherwise takes value in non indexed array)
-    if (name === 'InstanceNumber') {
-      value = instanceNumber;
-    }
+    let value = getMergedValue(element.value, mergeId);
     const fullName = (prefix ? prefix + ' ' : '') + name;
     // recurse for sequence
     if (element.vr === 'SQ') {
@@ -102,7 +118,7 @@ const getDicomTagReducer = (tagData, instanceNumber, prefix) => {
       for (let i = 0; i < value.length; ++i) {
         const sqItems = value[i];
         const res = Object.keys(sqItems).reduce(
-          getDicomTagReducer(sqItems, instanceNumber, prefix + '[' + i + ']'),
+          getDicomTagReducer(sqItems, mergeId, prefix + '[' + i + ']'),
           []
         );
         accumulator = accumulator.concat(res);
@@ -123,14 +139,33 @@ const getDicomTagReducer = (tagData, instanceNumber, prefix) => {
  * Get the list of {name, value} items of the meta data.
  *
  * @param {object} metaData The meta data.
- * @param {number} instanceNumber The instance number.
+ * @param {string|undefined} mergeId The merge id.
  * @returns {object[]} The list of items.
  */
-const getMetaArray = (metaData, instanceNumber) => {
+const getMetaArray = (metaData, mergeId) => {
   const reducer = isDicomMeta(metaData)
-    ? getDicomTagReducer(metaData, instanceNumber, '')
-    : getTagReducer(metaData);
-  return Object.keys(metaData).reduce(reducer, []);
+    ? getDicomTagReducer(metaData, mergeId, '')
+    : getTagReducer(metaData, mergeId);
+  return Object.keys(metaData)
+    .filter((key) => key !== mergeIdKey)
+    .reduce(reducer, []);
+};
+
+/**
+ * Get the instance number ('00200013') of the meta data
+ *   for a merge id.
+ *
+ * @param {object} metaData The meta data.
+ * @param {string|undefined} mergeId The merge id.
+ * @returns {string} The instance number, empty if none.
+ */
+const getInstanceNumber = (metaData, mergeId) => {
+  const element = metaData['00200013'];
+  if (typeof element === 'undefined') {
+    return '';
+  }
+  const value = getMergedValue(element.value, mergeId);
+  return Array.isArray(value) ? String(value[0]) : String(value);
 };
 
 /**
@@ -151,17 +186,16 @@ const filterItems = (items, search) => {
 
 const TagsTable = ({ data }) => {
 
-  const instanceNumbers = useMemo(() => getInstanceNumbers(data), [data]);
+  const mergeIds = useMemo(() => getMergeIds(data), [data]);
   const [sliderIndex, setSliderIndex] = useState(0);
   const [search, setSearch] = useState('');
 
-  const instanceNumber = instanceNumbers.length !== 0
-    ? instanceNumbers[sliderIndex]
-    : 0;
+  const mergeId = mergeIds[sliderIndex];
+  const instanceNumber = getInstanceNumber(data, mergeId);
 
   const displayData = useMemo(
-    () => filterItems(getMetaArray(data, instanceNumber), search),
-    [data, instanceNumber, search]
+    () => filterItems(getMetaArray(data, mergeId), search),
+    [data, mergeId, search]
   );
 
   return (
@@ -190,7 +224,7 @@ const TagsTable = ({ data }) => {
             sx={{margin: '20px'}}
             marks
             min={0}
-            max={Math.max(instanceNumbers.length - 1, 0)}
+            max={Math.max(mergeIds.length - 1, 0)}
             value={sliderIndex}
             onChange={(_event, value) => setSliderIndex(value)}
           />
