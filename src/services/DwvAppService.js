@@ -3,7 +3,8 @@ import {
   AppOptions,
   ViewConfig,
   ToolConfig,
-  getDwvVersion
+  getDwvVersion,
+  getURLsFromKeyValueUri
 } from 'dwv';
 import { overlayConfig } from './overlays';
 
@@ -262,7 +263,8 @@ export class DwvAppService extends EventTarget {
       if (notYetRendered.has(event.detail.dataid)) {
         notYetRendered.delete(event.detail.dataid);
         this.#activeDataId = event.detail.dataid;
-        const vl = this.#dwvApp.getViewLayersByDataId(event.detail.dataid)[0];
+        const vl = this.#dwvApp.getStageController()
+          .getViewLayersByDataId(event.detail.dataid)[0];
         const vc = vl.getViewController();
         // available tools
         this.#canScroll = vc.canScroll();
@@ -278,7 +280,8 @@ export class DwvAppService extends EventTarget {
       // (an overlay can be rejected at render, see 'error')
       if (event.detail.dataid === this.#activeDataId) {
         this.#metaData =
-          structuredClone(this.#dwvApp.getMetaData(event.detail.dataid));
+          structuredClone(this.#dwvApp.getDataController()
+            .get(event.detail.dataid).meta);
         const pixelDataKey = '7FE00010';
         if (typeof this.#metaData[pixelDataKey] !== 'undefined') {
           delete this.#metaData[pixelDataKey];
@@ -378,7 +381,7 @@ export class DwvAppService extends EventTarget {
    * @returns {object|undefined} The dwv layer group.
    */
   getLayerGroupByDivId(divId) {
-    return this.#dwvApp.getLayerGroupByDivId(divId);
+    return this.#dwvApp.getStageController().getLayerGroupByDivId(divId);
   }
 
   /**
@@ -388,7 +391,7 @@ export class DwvAppService extends EventTarget {
    * @returns {object[]} The dwv draw layers.
    */
   getDrawLayersByDataId(dataId) {
-    return this.#dwvApp.getDrawLayersByDataId(dataId);
+    return this.#dwvApp.getStageController().getDrawLayersByDataId(dataId);
   }
 
   /**
@@ -398,7 +401,7 @@ export class DwvAppService extends EventTarget {
    * @returns {object|undefined} The dwv data.
    */
   getData(dataId) {
-    return this.#dwvApp.getData(dataId);
+    return this.#dwvApp.getDataController().get(dataId);
   }
 
   /**
@@ -407,7 +410,7 @@ export class DwvAppService extends EventTarget {
    * @param {object} command The dwv command.
    */
   addToUndoStack = (command) => {
-    this.#dwvApp.addToUndoStack(command);
+    this.#dwvApp.getUndoController().addToUndoStack(command);
   };
 
   /**
@@ -464,12 +467,16 @@ export class DwvAppService extends EventTarget {
   }
 
   /**
-   * Load a from uri.
+   * Load from a uri: its `input` search argument holds the url(s)
+   *   of the data to load.
    *
    * @param {string} uri The uri.
    */
   loadFromUri(uri) {
-    this.#dwvApp.loadFromUri(uri);
+    const urls = getURLsFromKeyValueUri(uri);
+    if (urls && urls.length !== 0) {
+      this.#dwvApp.loadURLs(urls);
+    }
   }
 
   /**
@@ -523,7 +530,7 @@ export class DwvAppService extends EventTarget {
       this.#dwvApp.setToolFeatures(features);
     }
 
-    const lg = this.#dwvApp.getActiveLayerGroup();
+    const lg = this.#dwvApp.getStageController().getActiveLayerGroup();
     if (lg === undefined) {
       return;
     }
@@ -552,7 +559,8 @@ export class DwvAppService extends EventTarget {
     if (this.#activeDataId === undefined) {
       return;
     }
-    const vl = this.#dwvApp.getViewLayersByDataId(this.#activeDataId)[0];
+    const vl = this.#dwvApp.getStageController()
+      .getViewLayersByDataId(this.#activeDataId)[0];
     vl?.getViewController().setWindowLevelPreset(presetName);
   }
 
@@ -576,11 +584,12 @@ export class DwvAppService extends EventTarget {
     const viewConfig0 = new ViewConfig(this.#layerGroupName);
     viewConfig0.orientation = this.#orientation;
     const viewConfigs = {'*': [viewConfig0]};
-    this.#dwvApp.setDataViewConfigs(viewConfigs);
+    const stage = this.#dwvApp.getStageController();
+    stage.setDataViewConfigs(viewConfigs);
     // render data
-    const dataIds = this.#dwvApp.getDataIds();
+    const dataIds = this.#dwvApp.getDataController().getDataIds();
     for (const dataId of dataIds) {
-      this.#dwvApp.render(dataId);
+      stage.render(dataId);
     }
   }
 
@@ -588,6 +597,6 @@ export class DwvAppService extends EventTarget {
    * Reset the layout.
    */
   reset() {
-    this.#dwvApp.resetZoomPan();
+    this.#dwvApp.getStageController().resetZoomPan();
   }
 }

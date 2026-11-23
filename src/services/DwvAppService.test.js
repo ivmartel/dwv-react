@@ -18,12 +18,8 @@ vi.mock('dwv', () => {
     init = vi.fn();
     loadFiles = vi.fn();
     loadURLs = vi.fn();
-    loadFromUri = vi.fn();
     setTool = vi.fn();
     setToolFeatures = vi.fn();
-    setDataViewConfigs = vi.fn();
-    render = vi.fn();
-    resetZoomPan = vi.fn();
     defaultOnKeydown = vi.fn();
     onResize = vi.fn();
     constructor() {
@@ -37,18 +33,24 @@ vi.mock('dwv', () => {
         callback(new CustomEvent(type, {detail: event}));
       }
     }
-    getActiveLayerGroup() {
-      return this.layerGroup;
+    stage = {
+      setDataViewConfigs: vi.fn(),
+      render: vi.fn(),
+      resetZoomPan: vi.fn(),
+      getActiveLayerGroup: () => this.layerGroup,
+      getViewLayersByDataId: (dataId) => {
+        const vl = this.viewLayers[dataId];
+        return vl ? [vl] : [];
+      }
+    };
+    getStageController() {
+      return this.stage;
     }
-    getViewLayersByDataId(dataId) {
-      const vl = this.viewLayers[dataId];
-      return vl ? [vl] : [];
-    }
-    getMetaData(dataId) {
-      return this.metaData[dataId];
-    }
-    getDataIds() {
-      return this.dataIds;
+    getDataController() {
+      return {
+        get: (dataId) => ({meta: this.metaData[dataId]}),
+        getDataIds: () => this.dataIds
+      };
     }
   }
   class ViewConfig {
@@ -71,11 +73,13 @@ vi.mock('dwv', () => {
     ViewConfig,
     AppOptions,
     ToolConfig,
-    getDwvVersion: () => '0.0.0-test'
+    getDwvVersion: () => '0.0.0-test',
+    getURLsFromKeyValueUri: vi.fn((uri) =>
+      uri.includes('input=') ? ['url-from-uri'] : undefined)
   };
 });
 
-import { App } from 'dwv';
+import { App, getURLsFromKeyValueUri } from 'dwv';
 import { DwvAppService } from './DwvAppService.js';
 
 const EVENT_TYPES = [
@@ -170,10 +174,22 @@ describe('DwvAppService', () => {
     const {app, service} = setup();
     service.loadFiles(['file']);
     service.loadURLs(['url']);
-    service.loadFromUri('uri');
     expect(app.loadFiles).toHaveBeenCalledWith(['file']);
     expect(app.loadURLs).toHaveBeenCalledWith(['url']);
-    expect(app.loadFromUri).toHaveBeenCalledWith('uri');
+  });
+
+  it('loads the urls of a uri', () => {
+    const {app, service} = setup();
+    const uri = 'https://x.org/?input=a.dcm';
+    service.loadFromUri(uri);
+    expect(getURLsFromKeyValueUri).toHaveBeenCalledWith(uri);
+    expect(app.loadURLs).toHaveBeenCalledWith(['url-from-uri']);
+  });
+
+  it('loads nothing from a uri without input', () => {
+    const {app, service} = setup();
+    service.loadFromUri('https://x.org/?other=a.dcm');
+    expect(app.loadURLs).not.toHaveBeenCalled();
   });
 
   it('translates a first load into service events', () => {
@@ -362,18 +378,18 @@ describe('DwvAppService', () => {
     const orientations = [];
     for (let i = 0; i < 4; ++i) {
       service.toggleOrientation();
-      const configs = app.setDataViewConfigs.mock.calls.at(-1)[0];
+      const configs = app.stage.setDataViewConfigs.mock.calls.at(-1)[0];
       orientations.push(configs['*'][0].orientation);
     }
     expect(orientations).toEqual(['coronal', 'sagittal', 'axial', 'coronal']);
-    expect(app.render).toHaveBeenCalledTimes(8);
-    expect(app.render).toHaveBeenCalledWith('1');
+    expect(app.stage.render).toHaveBeenCalledTimes(8);
+    expect(app.stage.render).toHaveBeenCalledWith('1');
   });
 
   it('resets the zoom and pan', () => {
     const {app, service} = setup();
     service.reset();
-    expect(app.resetZoomPan).toHaveBeenCalledTimes(1);
+    expect(app.stage.resetZoomPan).toHaveBeenCalledTimes(1);
   });
 
   it('connects and disconnects the window resize listener', () => {
