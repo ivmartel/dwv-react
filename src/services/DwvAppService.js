@@ -10,7 +10,10 @@ import { overlayConfig } from './overlays';
 /**
  * dwv app event types forwarded by the service as `CustomEvent`s:
  *   the event detail is a copy of the app event detail (for ex
- *   `{dataid, data}`).
+ *   `{dataid, data}`). The 'tap' event is fired by the scroll and
+ *   zoom and pan tools, its detail is `{position, annotations, segments}`
+ *   with `annotations` the top most annotation hit per draw layer
+ *   (`{dataid, annotationid}`, empty if none).
  */
 const forwardedEventTypes = [
   'dataadd',
@@ -19,7 +22,8 @@ const forwardedEventTypes = [
   'annotationadd',
   'annotationupdate',
   'annotationremove',
-  'annotationselect'
+  'annotationselect',
+  'tap'
 ];
 
 /**

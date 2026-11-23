@@ -413,4 +413,19 @@ describe('DwvAppService', () => {
     app.fire('annotationadd', {dataid: '1', data: annotation});
     expect(details).toEqual([{dataid: '1', data: annotation}]);
   });
+
+  it('forwards tap events', () => {
+    const {app, service} = setup();
+    const details = [];
+    service.addEventListener('tap', (event) => {
+      details.push(event.detail);
+    });
+    const detail = {
+      position: [1, 2, 0],
+      annotations: [{dataid: '1', annotationid: 'a0'}],
+      segments: []
+    };
+    app.fire('tap', detail);
+    expect(details).toEqual([detail]);
+  });
 });

@@ -82,7 +82,8 @@ const fakeDwvAppService = () => {
   service.drawLayer = {
     setAnnotationVisibility: vi.fn(),
     setLabelsVisibility: vi.fn(),
-    setCurrentPosition: vi.fn()
+    setCurrentPosition: vi.fn(),
+    highlightAnnotation: vi.fn()
   };
   service.getData = (dataId) => service.data[dataId];
   service.getDrawLayersByDataId = () => [service.drawLayer];
@@ -213,6 +214,31 @@ describe('AnnotationService', () => {
     service.gotoAnnotation('1', 'a0');
     expect(dwvAppService.drawLayer.setCurrentPosition)
       .toHaveBeenCalledWith({x: 1});
+    expect(dwvAppService.drawLayer.highlightAnnotation)
+      .toHaveBeenCalledWith('a0');
+  });
+
+  it('selects the tapped annotation', () => {
+    const {dwvAppService, service} = setup();
+    dwvAppService.fire('tap', {
+      position: [0, 0, 0],
+      annotations: [{dataid: '1', annotationid: 'a0'}],
+      segments: []
+    });
+    expect(service.getSnapshot().selected)
+      .toEqual({dataId: '1', annotationId: 'a0'});
+    // unknown annotation clears the selection
+    dwvAppService.fire('tap', {
+      position: [0, 0, 0],
+      annotations: [{dataid: '1', annotationid: 'unknown'}],
+      segments: []
+    });
+    expect(service.getSnapshot().selected).toBeUndefined();
+    // no hit clears the selection
+    service.selectAnnotation('1', 'a0');
+    dwvAppService.fire('tap',
+      {position: [0, 0, 0], annotations: [], segments: []});
+    expect(service.getSnapshot().selected).toBeUndefined();
   });
 
   it('changes colour and deletes with undoable commands', () => {
